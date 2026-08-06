@@ -355,3 +355,32 @@ transform:rotate(360deg);
 }
 
 }
+
+.screen{
+    display:none;
+    min-height:100vh;
+}
+
+.screen.active{
+    display:block;
+}
+
+.logo-area{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    text-align:center;
+}
+
+.logo-area h1{
+    color:#0A4DA3;
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+.logo-area p{
+    color:#666;
+    margin-bottom:40px;
+}
