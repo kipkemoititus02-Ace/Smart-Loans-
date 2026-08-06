@@ -323,3 +323,35 @@ border:2px solid #0A4DA3;
 border-radius:12px;
 
 }
+
+/* Processing Loader */
+
+.loader{
+
+width:80px;
+
+height:80px;
+
+border:8px solid #d9e6f7;
+
+border-top:8px solid #0A4DA3;
+
+border-radius:50%;
+
+margin:auto;
+
+animation:spin 1s linear infinite;
+
+}
+
+@keyframes spin{
+
+0%{
+transform:rotate(0deg);
+}
+
+100%{
+transform:rotate(360deg);
+}
+
+}
