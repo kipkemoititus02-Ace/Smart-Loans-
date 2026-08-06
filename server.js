@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 const pool = new Pool({
@@ -17,29 +18,39 @@ const pool = new Pool({
   }
 });
 
-// Home Route
+// Home Page
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
 
-// Test Database Connection
+// Health Check
+app.get("/health", (req, res) => {
+  res.json({
+    status: "OK",
+    app: "Smart Loans",
+    version: "1.0.0"
+  });
+});
+
+// Test Database
 app.get("/test-db", async (req, res) => {
   try {
     const result = await pool.query("SELECT NOW()");
     res.json({
       success: true,
-      time: result.rows[0].now
+      database: "Connected",
+      serverTime: result.rows[0].now
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({
       success: false,
-      error: err.message
+      error: error.message
     });
   }
 });
 
 // Start Server
 app.listen(PORT, () => {
-  console.log(`Smart Loans Server running on port ${PORT}`);
+  console.log(`✅ Smart Loans Server running on port ${PORT}`);
 });
