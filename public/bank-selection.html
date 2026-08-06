@@ -1,1 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Select Bank | Smart Loans</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="app-header">
+
+<button class="back-btn" onclick="history.back()">
+← Back
+</button>
+
+<div>
+
+<div class="app-title">
+Smart Loans
+</div>
+
+<div class="app-subtitle">
+Fast • Secure • Convenient
+</div>
+
+</div>
+
+<div class="secure">
+🔒 Secure
+</div>
+
+</div>
+
+<div class="progress-bar">
+<div class="progress-fill" style="width:60%;"></div>
+</div>
+
+<div class="welcome-card">
+
+<h2>Select Your Bank</h2>
+
+<p class="intro">
+Choose the bank where you would like your approved loan to be deposited.
+</p>
+
+<div class="bank-card" data-bank="NMB Bank">
+
+<img src="images/banks/nmb.png">
+
+<h3>NMB Bank</h3>
+
+</div>
+
+<div class="bank-card" data-bank="CABS">
+
+<img src="images/banks/cabs.png">
+
+<h3>CABS</h3>
+
+</div>
+
+<div class="bank-card" data-bank="CBZ Bank">
+
+<img src="images/banks/cbz.png">
+
+<h3>CBZ Bank</h3>
+
+</div>
+
+<div class="bank-card" data-bank="BancABC">
+
+<img src="images/banks/bancabc.png">
+
+<h3>BancABC</h3>
+
+</div>
+
+<button id="continueBank" disabled>
+
+Continue
+
+</button>
+
+</div>
+
+</div>
+
+<script src="js/bank-selection.js"></script>
+
+</body>
+
+</html>
