@@ -1,22 +1,15 @@
-// Smart Loans Application
-
 document.addEventListener("DOMContentLoaded", () => {
 
-    const startBtn = document.getElementById("startBtn");
+    const splash = document.getElementById("splashScreen");
+    const app = document.getElementById("app");
 
-    if (startBtn) {
-        startBtn.addEventListener("click", () => {
+    setTimeout(() => {
 
-            // Save application progress
-            sessionStorage.setItem("currentStep", "calculator");
+        splash.style.display = "none";
+        app.classList.add("active");
 
-            // Temporary message
-            alert("Welcome to Smart Loans!\n\nLet's calculate your loan.");
+        loadWelcomeScreen();
 
-            // Next screen (we'll build this next)
-            window.location.href = "calculator.html";
-
-        });
-    }
+    }, 2000);
 
 });
