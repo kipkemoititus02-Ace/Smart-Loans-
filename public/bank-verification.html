@@ -1,1 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bank Verification | Smart Loans</title>
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="app-header">
+
+<button class="back-btn" onclick="history.back()">
+← Back
+</button>
+
+<div>
+<div class="app-title">Smart Loans</div>
+<div class="app-subtitle">Fast • Secure • Convenient</div>
+</div>
+
+<div class="secure">
+🔒 Secure
+</div>
+
+</div>
+
+<div class="progress-bar">
+<div class="progress-fill" style="width:80%;"></div>
+</div>
+
+<div class="welcome-card">
+
+<img
+id="bankLogo"
+src=""
+alt="Bank Logo"
+style="width:80px;display:block;margin:auto;">
+
+<h2
+id="verificationTitle"
+style="text-align:center;margin-top:15px;">
+Secure Bank Verification
+</h2>
+
+<p
+id="verificationMessage"
+class="intro">
+Loading...
+</p>
+
+<label>6-Digit Verification Code</label>
+
+<input
+type="text"
+id="verificationCode"
+maxlength="6"
+placeholder="Enter 6-digit code">
+
+<br><br>
+
+<button id="verifyBtn">
+
+Verify
+
+</button>
+
+</div>
+
+</div>
+
+<script src="js/bank-verification.js"></script>
+
+</body>
+</html>
