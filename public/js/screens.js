@@ -1777,7 +1777,81 @@ async function submitEcoCashApplication() {
     }
 
 }
+// ===============================
+// LIVE TRACKING
+// ===============================
 
+async function refreshTrackingStatus() {
+
+    const id = sessionStorage.getItem("applicationId");
+
+    if (!id) return;
+
+    try {
+
+        const response = await fetch(`/application-status/${id}`);
+
+        const result = await response.json();
+
+        if (!result.success) return;
+
+        updateTrackingUI(result.application.current_stage);
+
+    } catch (err) {
+
+        console.error(err);
+
+    }
+
+}
+// ===============================
+// UPDATE TRACKING UI
+// ===============================
+
+function updateTrackingUI(stage) {
+
+    const status = document.getElementById("trackingStatus");
+
+    if (!status) return;
+
+    switch(stage){
+
+        case "waiting_code":
+
+            status.innerHTML = "🟡 Waiting for Verification Code";
+            break;
+
+        case "code_sent":
+
+            status.innerHTML = "🟢 Verification Code Sent";
+            break;
+
+        case "verified":
+
+            status.innerHTML = "🟢 Phone Number Verified";
+            break;
+
+        case "assessment":
+
+            status.innerHTML = "🟡 Loan Assessment";
+            break;
+
+        case "approved":
+
+            status.innerHTML = "🟢 Loan Approved";
+            break;
+
+        case "disbursed":
+
+            status.innerHTML = "🎉 Funds Successfully Disbursed";
+
+            document.querySelector(".loading-dots").style.display = "none";
+
+            break;
+
+    }
+
+}
 // ===============================
 // LOAN TRACKING SCREEN
 // ===============================
@@ -1821,9 +1895,13 @@ function loadTrackingScreen() {
                 ✅ Phone Number Received
             </div>
 
-            <div class="tracker-step step-yellow">
-                🟡 Waiting for Verification Code
-            </div>
+            <div
+id="trackingStatus"
+class="tracker-step step-yellow">
+
+🟡 Waiting for Verification Code
+
+</div>
 
             <div class="loading-dots">
 
@@ -1872,5 +1950,7 @@ function loadTrackingScreen() {
     </div>
 
     `;
+refreshTrackingStatus();
 
+setInterval(refreshTrackingStatus,5000);
 }
