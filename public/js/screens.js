@@ -1260,6 +1260,174 @@ function loadProcessingScreen() {
     `;
 
 }
+function loadAssessmentScreen() {
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="welcome-card">
+
+            <div style="font-size:60px;text-align:center;">
+                🏦
+            </div>
+
+            <h2 style="text-align:center;">
+                Smart Loans
+            </h2>
+
+            <br>
+
+            <div style="text-align:center;font-size:24px;color:#28a745;font-weight:bold;">
+
+                🟢 Verification Successful
+
+            </div>
+
+            <br>
+
+            <p style="text-align:center;line-height:1.8;">
+
+                Your identity has been successfully verified.
+
+                <br><br>
+
+                Your loan application is now under assessment.
+
+                <br><br>
+
+                Our team is reviewing your application.
+
+                If approved, the funds will be disbursed to the bank account or EcoCash wallet you provided during your application.
+
+                <br><br>
+
+                Thank you for choosing Smart Loans.
+
+            </p>
+
+            <br>
+
+            <div class="loading-dots">
+
+                <span></span>
+
+                <span></span>
+
+                <span></span>
+
+            </div>
+
+        </div>
+
+    </div>
+monitorApplication();
+
+setInterval(monitorApplication,5000);
+    `;
+
+}
+function loadApprovedScreen(){
+
+const app=document.getElementById("app");
+
+app.innerHTML=`
+
+<div class="container">
+
+<div class="welcome-card">
+
+<h2 style="text-align:center;">
+🏦 Smart Loans
+</h2>
+
+<div style="font-size:28px;
+color:green;
+text-align:center;
+font-weight:bold;">
+
+🟢 Loan Approved
+
+</div>
+
+<br>
+
+<p style="text-align:center;line-height:1.8;">
+
+Congratulations!
+
+<br><br>
+
+Your loan application has been approved.
+
+<br><br>
+
+We're preparing your funds for disbursement.
+
+</p>
+
+<div class="loading-dots">
+
+<span></span>
+
+<span></span>
+
+<span></span>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}
+function loadDisbursedScreen(){
+
+const app=document.getElementById("app");
+
+app.innerHTML=`
+
+<div class="container">
+
+<div class="welcome-card">
+
+<h2 style="text-align:center;">
+🏦 Smart Loans
+</h2>
+
+<div style="font-size:30px;
+color:green;
+text-align:center;
+font-weight:bold;">
+
+🎉 Loan Successfully Disbursed
+
+</div>
+
+<br>
+
+<p style="text-align:center;
+line-height:1.8;">
+
+Your loan has been successfully disbursed to the payment method you selected during your application.
+
+<br><br>
+
+Thank you for choosing Smart Loans.
+
+</p>
+
+</div>
+
+</div>
+
+`;
+
+}
 // ======================================================
 // SUCCESS SCREEN
 // ======================================================
@@ -1848,6 +2016,45 @@ function updateTrackingUI(stage) {
             document.querySelector(".loading-dots").style.display = "none";
 
             break;
+
+    }
+
+}
+// ===============================
+// LIVE ASSESSMENT STATUS
+// ===============================
+
+async function monitorApplication() {
+
+    const id = sessionStorage.getItem("applicationId");
+
+    if (!id) return;
+
+    try {
+
+        const response = await fetch(`/application-status/${id}`);
+
+        const result = await response.json();
+
+        if (!result.success) return;
+
+        const stage = result.application.current_stage;
+
+        if (stage === "approved") {
+
+            loadApprovedScreen();
+
+        }
+
+        if (stage === "disbursed") {
+
+            loadDisbursedScreen();
+
+        }
+
+    } catch (err) {
+
+        console.error(err);
 
     }
 
