@@ -47,38 +47,39 @@ document.addEventListener("DOMContentLoaded", () => {
 // ===============================
 // LOAD APPLICATIONS
 // ===============================
-
 async function loadApplications() {
 
     try {
 
+        console.log("Loading applications...");
+
         const response = await fetch("/applications");
+        console.log("Response status:", response.status);
 
         const result = await response.json();
+        console.log("Result:", result);
 
         if (!result.success) {
-
             alert("Failed to load applications.");
-
             return;
-
         }
 
         allApplications = result.applications;
 
-        updateDashboard();
+        console.log("Applications loaded:", allApplications.length);
 
+        updateDashboard();
         displayApplications(allApplications);
 
     } catch (err) {
 
-        console.error(err);
-
+        console.error("LOAD ERROR:", err);
         alert("Unable to connect to the server.");
 
     }
 
 }
+
 // ===============================
 // UPDATE DASHBOARD
 // ===============================
