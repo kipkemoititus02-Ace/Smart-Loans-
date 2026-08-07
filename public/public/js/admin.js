@@ -47,38 +47,78 @@ document.addEventListener("DOMContentLoaded", () => {
 // ===============================
 // LOAD APPLICATIONS
 // ===============================
+
 async function loadApplications() {
+
+    const container = document.getElementById("applicationsList");
+
+    container.innerHTML = "<p>Loading applications...</p>";
 
     try {
 
         console.log("Loading applications...");
 
         const response = await fetch("/applications");
-        console.log("Response status:", response.status);
 
-        const result = await response.json();
-        console.log("Result:", result);
+        if (!response.ok) {
 
-        if (!result.success) {
-            alert("Failed to load applications.");
-            return;
+            throw new Error("Server returned " + response.status);
+
         }
 
-        allApplications = result.applications;
+        const result = await response.json();
 
-        console.log("Applications loaded:", allApplications.length);
+        console.log(result);
+
+        if (!result.success) {
+
+            container.innerHTML =
+                "<p>Failed to load applications.</p>";
+
+            return;
+
+        }
+
+        allApplications = result.applications || [];
 
         updateDashboard();
+
         displayApplications(allApplications);
 
     } catch (err) {
 
-        console.error("LOAD ERROR:", err);
-        alert("Unable to connect to the server.");
+        console.error("LOAD APPLICATIONS ERROR:", err);
+
+        container.innerHTML = `
+
+            <div class="feature">
+
+                <h3>Unable to load applications</h3>
+
+                <p>${err.message}</p>
+
+                <button id="retryBtn">
+
+                    Retry
+
+                </button>
+
+            </div>
+
+        `;
+
+        const retryBtn = document.getElementById("retryBtn");
+
+        if (retryBtn) {
+
+            retryBtn.addEventListener("click", loadApplications);
+
+        }
 
     }
 
 }
+    
 
 // ===============================
 // UPDATE DASHBOARD
