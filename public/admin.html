@@ -1,1 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Smart Loans Admin</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="app-header">
+
+        <div>
+
+            <div class="app-title">
+                Smart Loans Admin
+            </div>
+
+            <div class="app-subtitle">
+                Application Management Dashboard
+            </div>
+
+        </div>
+
+        <div class="secure">
+            👨‍💼 Admin
+        </div>
+
+    </div>
+
+    <div class="welcome-card">
+
+        <h2>Dashboard</h2>
+
+        <input
+            type="text"
+            id="searchBox"
+            placeholder="Search by Name, ID or Phone">
+
+        <br><br>
+
+        <div class="feature">
+
+            <strong>Total Applications</strong>
+
+            <h2 id="totalApplications">0</h2>
+
+        </div>
+
+        <br>
+
+        <div class="feature">
+
+            <strong>Bank Applications</strong>
+
+            <h2 id="bankApplications">0</h2>
+
+        </div>
+
+        <br>
+
+        <div class="feature">
+
+            <strong>EcoCash Applications</strong>
+
+            <h2 id="ecoApplications">0</h2>
+
+        </div>
+
+        <br>
+
+        <button id="refreshBtn">
+
+            Refresh Applications
+
+        </button>
+
+    </div>
+
+    <br>
+
+    <div class="welcome-card">
+
+        <h2>Recent Applications</h2>
+
+        <div id="applicationsList">
+
+            Loading...
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="js/admin.js"></script>
+
+</body>
+
+</html>
