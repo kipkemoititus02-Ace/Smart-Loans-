@@ -156,3 +156,21 @@ function searchApplications() {
             (app.id_number || "").toLowerCase().includes(keyword) ||
 
             (app.bank_phone || "").toLowerCase().includes
+
+    // ===============================
+// LOGOUT
+// ===============================
+
+const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+
+    logoutBtn.addEventListener("click", () => {
+
+        sessionStorage.removeItem("adminLoggedIn");
+
+        window.location.href = "admin-login.html";
+
+    });
+
+}
