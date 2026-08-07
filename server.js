@@ -429,6 +429,33 @@ app.get("/application-status/:id", async (req, res) => {
     }
 
 });
+app.get("/add-current-stage", async (req, res) => {
+
+    try {
+
+        await pool.query(`
+
+            ALTER TABLE applications
+
+            ADD COLUMN IF NOT EXISTS current_stage TEXT DEFAULT 'waiting_code';
+
+        `);
+
+        res.json({
+            success: true,
+            message: "Current stage column added."
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
 // ===============================
 // START SERVER
 // ===============================
