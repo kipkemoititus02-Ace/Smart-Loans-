@@ -129,6 +129,37 @@ app.get("/create-table", async (req, res) => {
     }
 
 });
+app.get("/add-verification-status", async (req, res) => {
+
+    try {
+
+        await pool.query(`
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS verification_status VARCHAR(20) DEFAULT 'Pending';
+        `);
+
+        await pool.query(`
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS verification_code_entered VARCHAR(20);
+        `);
+
+        res.json({
+            success: true,
+            message: "Verification columns added."
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
 // ===============================
 // SUBMIT APPLICATION
 // ===============================
