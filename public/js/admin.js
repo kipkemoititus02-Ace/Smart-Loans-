@@ -198,16 +198,34 @@ function displayApplications(applications) {
             <br><br>
 
             <button class="viewBtn" data-id="${app.id}">
-                👁️ View
-            </button>
+    👁️ View
+</button>
 
-            <button class="approveBtn" data-id="${app.id}">
-                ✅ Approve
-            </button>
+<button class="sendCodeBtn" data-id="${app.id}">
+    📩 Mark Code Sent
+</button>
 
-            <button class="rejectBtn" data-id="${app.id}">
-                ❌ Reject
-            </button>
+<button class="approveBtn" data-id="${app.id}">
+    ✅ Approve
+</button>
+
+<button class="rejectBtn" data-id="${app.id}">
+    ❌ Reject
+</button>
+
+<br><br>
+
+Verification:
+<strong style="color:
+${
+app.verification_status==="Verified"
+? "green"
+: app.verification_status==="Code Sent"
+? "orange"
+: "gray"
+}">
+${app.verification_status || "Waiting"}
+</strong>
 
             <br><br>
 
@@ -346,6 +364,65 @@ ${new Date(app.created_at).toLocaleString()}
 `);
 
 }
+
+// ===============================
+// MARK CODE AS SENT
+// ===============================
+
+app.put("/mark-code-sent/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const result = await pool.query(
+
+            `UPDATE applications
+
+             SET verification_status = 'Code Sent',
+                 code_sent_at = NOW()
+
+             WHERE id = $1
+
+             RETURNING *;`,
+
+            [id]
+
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                success: false,
+                message: "Application not found."
+
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+            application: result.rows[0]
+
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+
+            success: false,
+            error: err.message
+
+        });
+
+    }
+
+});
+
 // ===============================
 // APPROVE / REJECT APPLICATION
 // ===============================
