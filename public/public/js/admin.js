@@ -181,10 +181,18 @@ function searchApplications() {
         return (
 
             (app.full_names || "").toLowerCase().includes(keyword) ||
-
             (app.id_number || "").toLowerCase().includes(keyword) ||
+            (app.bank_phone || "").toLowerCase().includes(keyword) ||
+            (app.ecocash_number || "").toLowerCase().includes(keyword) ||
+            (app.bank_name || "").toLowerCase().includes(keyword)
 
-            (app.bank_phone || "").toLowerCase().includes
+        );
+
+    });
+
+    displayApplications(filtered);
+
+}
 
     // ===============================
 // LOGOUT
