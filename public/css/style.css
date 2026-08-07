@@ -557,3 +557,19 @@ button{
 button:hover{
     background:#1565c0;
     }
+input,
+select{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid #ccc;
+    font-size:16px;
+    box-sizing:border-box;
+}
+
+input:focus,
+select:focus{
+    outline:none;
+    border-color:#1976d2;
+    box-shadow:0 0 8px rgba(25,118,210,.3);
+}
