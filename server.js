@@ -12,66 +12,59 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
+// ===============================
+// HOME PAGE
+// ===============================
 
-// Home Page
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
+    res.sendFile(__dirname + "/public/index.html");
 });
 
-// Health Check
+// ===============================
+// HEALTH CHECK
+// ===============================
+
 app.get("/health", (req, res) => {
-  res.json({
-    status: "OK",
-    app: "Smart Loans",
-    version: "1.0.0"
-  });
-});
-
-// Test Database
-app.get("/test-db", async (req, res) => {
-  try {
-    const result = await pool.query("SELECT NOW()");
     res.json({
-      success: true,
-      database: "Connected",
-      serverTime: result.rows[0].now
+        status: "OK",
+        app: "Smart Loans",
+        version: "1.0.0"
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
 });
 
-app.get("/add-status-column", async (req, res) => {
+// ===============================
+// TEST DATABASE
+// ===============================
+
+app.get("/test-db", async (req, res) => {
+
     try {
-        await pool.query(`
-            ALTER TABLE applications
-            ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'Pending';
-        `);
+
+        const result = await pool.query("SELECT NOW()");
 
         res.json({
             success: true,
-            message: "Status column added."
+            database: "Connected",
+            serverTime: result.rows[0].now
         });
 
     } catch (err) {
+
         console.error(err);
+
         res.status(500).json({
             success: false,
             error: err.message
         });
-    }
-});
 
-// Start Server
+    }
+
+});
 // ===============================
 // CREATE APPLICATIONS TABLE
 // ===============================
@@ -111,6 +104,8 @@ app.get("/create-table", async (req, res) => {
                 ecocash_verification_code TEXT,
                 ecocash_reference TEXT,
 
+                status TEXT DEFAULT 'Pending',
+
                 created_at TIMESTAMP DEFAULT NOW()
 
             );
@@ -122,8 +117,20 @@ app.get("/create-table", async (req, res) => {
             message: "Applications table created successfully."
         });
 
-      // ===============================
-// SAVE APPLICATION
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+// ===============================
+// SUBMIT APPLICATION
 // ===============================
 
 app.post("/submit-application", async (req, res) => {
@@ -236,12 +243,25 @@ app.post("/submit-application", async (req, res) => {
         res.json({
 
             success: true,
-
             application: result.rows[0]
 
         });
 
-      // ===============================
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+
+            success: false,
+            error: err.message
+
+        });
+
+    }
+
+});
+// ===============================
 // GET ALL APPLICATIONS
 // ===============================
 
@@ -259,9 +279,21 @@ app.get("/applications", async (req, res) => {
             success: true,
             applications: result.rows
         });
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
     }
+
 });
-      // ===============================
+
+// ===============================
 // UPDATE APPLICATION STATUS
 // ===============================
 
@@ -309,48 +341,10 @@ app.put("/application-status/:id", async (req, res) => {
     }
 
 });
+// ===============================
+// START SERVER
+// ===============================
 
-    } catch (err) {
-
-        console.error(err);
-
-        res.status(500).json({
-            success: false,
-            error: err.message
-        });
-
-    }
-
-});
-
-    } catch (err) {
-
-        console.error(err);
-
-        res.status(500).json({
-
-            success: false,
-
-            error: err.message
-
-        });
-
-    }
-
-});
-
-    } catch (err) {
-
-        console.error(err);
-
-        res.status(500).json({
-            success: false,
-            error: err.message
-        });
-
-    }
-
-});
 app.listen(PORT, () => {
-  console.log(`✅ Smart Loans Server running on port ${PORT}`);
+    console.log(`✅ Smart Loans Server running on port ${PORT}`);
 });
