@@ -12,49 +12,89 @@ function loadWelcomeScreen() {
 
     <div class="container">
 
-        <div class="app-header">
+        <div class="dashboard-card">
 
-            <div>
-
-                <div class="app-title">
-                    Smart Loans
-                </div>
-
-                <div class="app-subtitle">
-                    Fast • Secure • Convenient
-                </div>
-
+            <div class="logo-circle">
+                💰
             </div>
 
-            <div class="secure">
-                🔒 Secure
+            <h1 class="dashboard-title">
+                Smart Loans
+            </h1>
+
+            <p class="dashboard-subtitle">
+                Fast • Secure • Convenient
+            </p>
+
+            <div class="secure-badge">
+                🔒 Secure Platform
             </div>
 
         </div>
 
-        <div class="progress-bar">
-            <div class="progress-fill" style="width:10%;"></div>
+        <div class="progress-card">
+
+            <small>Application Progress</small>
+
+            <div class="progress-bar">
+
+                <div class="progress-fill"
+                     style="width:10%;">
+                </div>
+
+            </div>
+
+            <span>10% Complete</span>
+
         </div>
 
         <div class="welcome-card">
 
-            <h2>Welcome</h2>
+            <h2>
+                Welcome 👋
+            </h2>
 
-            <p class="intro">
+            <p>
 
-                Welcome to Smart Loans.
+                Get quick access to affordable personal loans.
 
-                Apply for your loan quickly and securely using your Bank Account or EcoCash Wallet.
+                Complete your application in just a few minutes and receive your money securely through your preferred payment method.
 
             </p>
 
-            <button id="startApplication">
+        </div>
 
-                Start Application
+        <div class="feature">
 
-            </button>
+            ⚡ Fast Approval
 
         </div>
+
+        <div class="feature">
+
+            🔒 Secure Application
+
+        </div>
+
+        <div class="feature">
+
+            💳 Bank & EcoCash Disbursement
+
+        </div>
+
+        <div class="feature">
+
+            📞 Professional Customer Support
+
+        </div>
+
+        <br>
+
+        <button id="startApplication">
+
+            APPLY NOW
+
+        </button>
 
     </div>
 
@@ -62,13 +102,10 @@ function loadWelcomeScreen() {
 
     document
         .getElementById("startApplication")
-        .addEventListener("click", () => {
-
-            loadCalculatorScreen();
-
-        });
+        .addEventListener("click", loadCalculatorScreen);
 
 }
+
 // ======================================================
 // LOAN CALCULATOR SCREEN
 // ======================================================
