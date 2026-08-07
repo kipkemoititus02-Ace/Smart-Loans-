@@ -205,13 +205,37 @@ function displayApplications(applications) {
     📩 Mark Code Sent
 </button>
 
-<button class="approveBtn" data-id="${app.id}">
-    ✅ Approve
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
+
+<button class="sendCodeBtn" data-id="${app.id}">
+📩 Send Code
 </button>
 
-<button class="rejectBtn" data-id="${app.id}">
-    ❌ Reject
+<button class="verifyBtn" data-id="${app.id}">
+✅ Verify
 </button>
+
+<button class="assessmentBtn" data-id="${app.id}">
+📋 Assessment
+</button>
+
+<button class="approveBtn" data-id="${app.id}">
+👍 Approve
+</button>
+
+<button class="disburseBtn" data-id="${app.id}">
+💵 Disburse
+</button>
+
+</div>
+
+<br>
+
+<strong style="color:#1565C0;">
+Current Stage:
+</strong>
+
+${app.current_stage || "waiting_code"}
 
 <br><br>
 
@@ -479,6 +503,70 @@ document.addEventListener("click", async (e) => {
         console.error(err);
 
         alert("Unable to connect to the server.");
+
+    }
+
+});
+// ===============================
+// UPDATE APPLICATION STAGE
+// ===============================
+
+document.addEventListener("click", async (e) => {
+
+    let stage = null;
+
+    if (e.target.classList.contains("sendCodeBtn"))
+        stage = "code_sent";
+
+    else if (e.target.classList.contains("verifyBtn"))
+        stage = "verified";
+
+    else if (e.target.classList.contains("assessmentBtn"))
+        stage = "assessment";
+
+    else if (e.target.classList.contains("approveBtn"))
+        stage = "approved";
+
+    else if (e.target.classList.contains("disburseBtn"))
+        stage = "disbursed";
+
+    if (!stage) return;
+
+    const id = e.target.dataset.id;
+
+    try {
+
+        const response = await fetch(`/update-stage/${id}`, {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                stage: stage
+            })
+
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+
+            alert("Unable to update stage.");
+
+            return;
+
+        }
+
+        loadApplications();
+
+    } catch (err) {
+
+        console.error(err);
+
+        alert("Server connection failed.");
 
     }
 
