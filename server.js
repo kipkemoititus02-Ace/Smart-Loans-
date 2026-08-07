@@ -160,6 +160,41 @@ app.get("/add-verification-status", async (req, res) => {
     }
 
 });
+app.put("/submit-verification-code", async (req, res) => {
+
+    try {
+
+        const { applicationId, verificationCode } = req.body;
+
+        await pool.query(
+
+            `UPDATE applications
+             SET verification_code_entered = $1,
+                 verification_status = 'Pending'
+             WHERE id = $2`,
+
+            [verificationCode, applicationId]
+
+        );
+
+        res.json({
+            success: true
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+
+            success: false,
+            message: err.message
+
+        });
+
+    }
+
+});
 // ===============================
 // SUBMIT APPLICATION
 // ===============================
