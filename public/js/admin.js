@@ -197,12 +197,8 @@ function displayApplications(applications) {
 
             <br><br>
 
-            <button class="viewBtn" data-id="${app.id}">
+<button class="viewBtn" data-id="${app.id}">
     👁️ View
-</button>
-
-<button class="sendCodeBtn" data-id="${app.id}">
-    📩 Mark Code Sent
 </button>
 
 <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
@@ -212,7 +208,7 @@ function displayApplications(applications) {
 </button>
 
 <button class="verifyBtn" data-id="${app.id}">
-✅ Verify
+✅ Verify Code
 </button>
 
 <button class="assessmentBtn" data-id="${app.id}">
@@ -228,6 +224,7 @@ function displayApplications(applications) {
 </button>
 
 </div>
+
 
 <br>
 
@@ -294,7 +291,45 @@ function searchApplications() {
     displayApplications(filtered);
 
 }
+// ===============================
+// VERIFY CODE
+// ===============================
 
+document.addEventListener("click", async (e) => {
+
+    if (!e.target.classList.contains("verifyBtn")) return;
+
+    const id = e.target.dataset.id;
+
+    try {
+
+        const response = await fetch(`/verify-code/${id}`, {
+            method: "PUT"
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+
+            alert(result.message || "Unable to verify code.");
+
+            return;
+
+        }
+
+        alert("Verification code verified successfully.");
+
+        await loadApplications();
+
+    } catch (err) {
+
+        console.error(err);
+
+        alert("Unable to connect to the server.");
+
+    }
+
+});
 // ===============================
 // VIEW APPLICATION
 // ===============================
