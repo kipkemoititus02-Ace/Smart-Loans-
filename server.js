@@ -220,6 +220,38 @@ app.post("/submit-application", async (req, res) => {
 
         });
 
+      // ===============================
+// GET ALL APPLICATIONS
+// ===============================
+
+app.get("/applications", async (req, res) => {
+
+    try {
+
+        const result = await pool.query(`
+            SELECT *
+            FROM applications
+            ORDER BY created_at DESC;
+        `);
+
+        res.json({
+            success: true,
+            applications: result.rows
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+
     } catch (err) {
 
         console.error(err);
