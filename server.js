@@ -641,6 +641,49 @@ app.put("/update-stage/:id", async (req, res) => {
 // START SERVER
 // ===============================
 
+// ======================================================
+// VERIFY APPLICATION
+// ======================================================
+
+app.put("/verify-code/:id", async (req, res) => {
+
+    try {
+
+        const result = await pool.query(
+            `UPDATE applications
+             SET verification_status = 'Verified'
+             WHERE id = $1
+             RETURNING id, verification_status`,
+            [req.params.id]
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Application not found."
+            });
+
+        }
+
+        res.json({
+            success: true,
+            application: result.rows[0]
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+
+    }
+
+});
+
 app.listen(PORT, () => {
     console.log(`✅ Smart Loans Server running on port ${PORT}`);
 });
