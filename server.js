@@ -259,7 +259,8 @@ app.get("/applications", async (req, res) => {
             success: true,
             applications: result.rows
         });
-
+    }
+});
       // ===============================
 // UPDATE APPLICATION STATUS
 // ===============================
