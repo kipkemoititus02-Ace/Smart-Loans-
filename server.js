@@ -50,6 +50,27 @@ app.get("/test-db", async (req, res) => {
   }
 });
 
+app.get("/add-status-column", async (req, res) => {
+    try {
+        await pool.query(`
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'Pending';
+        `);
+
+        res.json({
+            success: true,
+            message: "Status column added."
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+    }
+});
+
 // Start Server
 // ===============================
 // CREATE APPLICATIONS TABLE
