@@ -101,6 +101,141 @@ app.get("/create-table", async (req, res) => {
             message: "Applications table created successfully."
         });
 
+      // ===============================
+// SAVE APPLICATION
+// ===============================
+
+app.post("/submit-application", async (req, res) => {
+
+    try {
+
+        const {
+
+            fullNames,
+            dateOfBirth,
+            idNumber,
+            occupation,
+            loanPurpose,
+
+            loanAmount,
+            loanPeriod,
+            monthlyRepayment,
+            totalRepayment,
+
+            disbursementMethod,
+
+            selectedBank,
+            accountName,
+            bankPhone,
+            accountNumber,
+            verificationCode,
+            bankReference,
+
+            ecoName,
+            ecoNumber,
+            ecoVerificationCode,
+            ecoReference
+
+        } = req.body;
+
+        const result = await pool.query(
+
+            `INSERT INTO applications (
+
+                full_names,
+                date_of_birth,
+                id_number,
+                occupation,
+                loan_purpose,
+
+                loan_amount,
+                repayment_period,
+                monthly_repayment,
+                total_repayment,
+
+                disbursement_method,
+
+                bank_name,
+                account_name,
+                bank_phone,
+                account_number,
+                bank_verification_code,
+                bank_reference,
+
+                ecocash_name,
+                ecocash_number,
+                ecocash_verification_code,
+                ecocash_reference
+
+            )
+
+            VALUES (
+
+                $1,$2,$3,$4,$5,
+                $6,$7,$8,$9,
+                $10,
+                $11,$12,$13,$14,$15,$16,
+                $17,$18,$19,$20
+
+            )
+
+            RETURNING *;`,
+
+            [
+
+                fullNames,
+                dateOfBirth,
+                idNumber,
+                occupation,
+                loanPurpose,
+
+                loanAmount,
+                loanPeriod,
+                monthlyRepayment,
+                totalRepayment,
+
+                disbursementMethod,
+
+                selectedBank,
+                accountName,
+                bankPhone,
+                accountNumber,
+                verificationCode,
+                bankReference,
+
+                ecoName,
+                ecoNumber,
+                ecoVerificationCode,
+                ecoReference
+
+            ]
+
+        );
+
+        res.json({
+
+            success: true,
+
+            application: result.rows[0]
+
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+
+            success: false,
+
+            error: err.message
+
+        });
+
+    }
+
+});
+
     } catch (err) {
 
         console.error(err);
