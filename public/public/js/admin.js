@@ -108,25 +108,54 @@ function displayApplications(applications) {
 
         card.innerHTML = `
 
-            <strong>${app.full_names}</strong><br>
+    <strong>${app.full_names}</strong><br>
 
-            Loan: $${app.loan_amount}<br>
+    Loan: $${app.loan_amount}<br>
 
-            Method: ${app.disbursement_method}<br>
+    Method: ${app.disbursement_method}<br>
 
-            ${app.bank_name ? "Bank: " + app.bank_name : ""}
+    ${app.bank_name ? "Bank: " + app.bank_name : ""}
 
-            ${app.ecocash_number ? "<br>EcoCash: " + app.ecocash_number : ""}
+    ${app.ecocash_number ? "<br>EcoCash: " + app.ecocash_number : ""}
 
-            <br><br>
+    <br>
 
-            <small>
+    Status:
+    <strong style="color:${
+        app.status === "Approved"
+            ? "green"
+            : app.status === "Rejected"
+            ? "red"
+            : "orange"
+    }">
 
-                ${new Date(app.created_at).toLocaleString()}
+        ${app.status || "Pending"}
 
-            </small>
+    </strong>
 
-        `;
+    <br><br>
+
+    <button class="viewBtn" data-id="${app.id}">
+        👁️ View
+    </button>
+
+    <button class="approveBtn" data-id="${app.id}">
+        ✅ Approve
+    </button>
+
+    <button class="rejectBtn" data-id="${app.id}">
+        ❌ Reject
+    </button>
+
+    <br><br>
+
+    <small>
+
+        ${new Date(app.created_at).toLocaleString()}
+
+    </small>
+
+`;
 
         container.appendChild(card);
 
@@ -174,3 +203,61 @@ if (logoutBtn) {
     });
 
 }
+// ===============================
+// APPROVE / REJECT APPLICATION
+// ===============================
+
+document.addEventListener("click", async (e) => {
+
+    if (
+        e.target.classList.contains("approveBtn") ||
+        e.target.classList.contains("rejectBtn")
+    ) {
+
+        const id = e.target.dataset.id;
+
+        const status = e.target.classList.contains("approveBtn")
+            ? "Approved"
+            : "Rejected";
+
+        try {
+
+            const response = await fetch(`/application-status/${id}`, {
+
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    status: status
+                })
+
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+
+                alert(`Application ${status} successfully.`);
+
+                loadApplications();
+
+            } else {
+
+                alert(result.message || "Failed to update application.");
+
+            }
+
+        } catch (err) {
+
+            console.error(err);
+
+            alert("Unable to connect to the server.");
+
+        }
+
+    }
+
+});
