@@ -1091,7 +1091,7 @@ function saveBankReference() {
 // ======================================================
 
 async function submitApplication() {
-
+alert("submitApplication() was called");
     const data = {
 
         fullNames: sessionStorage.getItem("fullNames"),
