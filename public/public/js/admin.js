@@ -1,4 +1,13 @@
 // ===============================
+// ADMIN SECURITY
+// ===============================
+
+if (sessionStorage.getItem("adminLoggedIn") !== "true") {
+
+    window.location.href = "admin-login.html";
+
+}
+// ===============================
 // SMART LOANS ADMIN DASHBOARD
 // ===============================
 
