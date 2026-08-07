@@ -261,3 +261,95 @@ document.addEventListener("click", async (e) => {
     }
 
 });
+// ===============================
+// VIEW APPLICATION
+// ===============================
+
+document.addEventListener("click", (e) => {
+
+    if (!e.target.classList.contains("viewBtn")) return;
+
+    const id = Number(e.target.dataset.id);
+
+    const app = allApplications.find(a => a.id === id);
+
+    if (!app) return;
+
+    showApplication(app);
+
+});
+        // ===============================
+// SHOW APPLICATION DETAILS
+// ===============================
+
+function showApplication(app){
+
+    alert(`
+
+SMART LOANS APPLICATION
+
+--------------------------------
+
+Full Names:
+${app.full_names}
+
+Date of Birth:
+${app.date_of_birth}
+
+National ID:
+${app.id_number}
+
+Occupation:
+${app.occupation}
+
+Loan Purpose:
+${app.loan_purpose}
+
+--------------------------------
+
+Loan Amount:
+$${app.loan_amount}
+
+Repayment Period:
+${app.repayment_period}
+
+Monthly Repayment:
+$${app.monthly_repayment}
+
+Total Repayment:
+$${app.total_repayment}
+
+--------------------------------
+
+Disbursement:
+${app.disbursement_method}
+
+Bank:
+${app.bank_name || "-"}
+
+Account Name:
+${app.account_name || "-"}
+
+Phone:
+${app.bank_phone || app.ecocash_number || "-"}
+
+Account Number:
+${app.account_number || "-"}
+
+Verification Code:
+${app.bank_verification_code || app.ecocash_verification_code || "-"}
+
+Reference Number:
+${app.bank_reference || app.ecocash_reference || "-"}
+
+--------------------------------
+
+Status:
+${app.status}
+
+Submitted:
+${new Date(app.created_at).toLocaleString()}
+
+`);
+
+    }
