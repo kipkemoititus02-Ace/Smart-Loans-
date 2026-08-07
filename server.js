@@ -457,6 +457,60 @@ app.get("/add-current-stage", async (req, res) => {
 
 });
 // ===============================
+// UPDATE CURRENT STAGE
+// ===============================
+
+app.put("/update-stage/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+        const { stage } = req.body;
+
+        const result = await pool.query(
+
+            `UPDATE applications
+             SET current_stage = $1
+             WHERE id = $2
+             RETURNING *;`,
+
+            [stage, id]
+
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                success: false,
+                message: "Application not found."
+
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+            application: result.rows[0]
+
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+
+            success: false,
+            error: err.message
+
+        });
+
+    }
+
+});
+// ===============================
 // START SERVER
 // ===============================
 
