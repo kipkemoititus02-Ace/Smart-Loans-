@@ -342,6 +342,8 @@ document.addEventListener("click", async (e) => {
 
         const result = await response.json();
 
+        console.log(result);
+        
         if (!result.success) {
 
             alert(result.message || "Unable to update application.");
