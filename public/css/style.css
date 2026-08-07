@@ -573,3 +573,18 @@ select:focus{
     border-color:#1976d2;
     box-shadow:0 0 8px rgba(25,118,210,.3);
 }
+label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:bold;
+    color:#0d47a1;
+}
+
+input,
+select{
+    margin-bottom:10px;
+}
+
+button:last-child{
+    margin-top:10px;
+}
