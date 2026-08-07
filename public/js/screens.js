@@ -290,45 +290,29 @@ function loadPersonalInformationScreen() {
 
     <div class="container">
 
-        <div class="app-header">
+        <div class="dashboard-card">
 
-            <button class="back-btn" id="backCalculator">
-                ← Back
-            </button>
+            <h2>👤 Personal Information</h2>
 
-            <div>
-
-                <div class="app-title">
-                    Smart Loans
-                </div>
-
-                <div class="app-subtitle">
-                    Fast • Secure • Convenient
-                </div>
-
-            </div>
-
-            <div class="secure">
-                🔒 Secure
-            </div>
+            <p>Please complete your personal details.</p>
 
         </div>
 
-        <div class="progress-bar">
+        <div class="progress-card">
 
-            <div class="progress-fill" style="width:35%;"></div>
+            <small>Application Progress</small>
+
+            <div class="progress-bar">
+                <div class="progress-fill" style="width:40%;"></div>
+            </div>
+
+            <span>40% Complete</span>
 
         </div>
 
         <div class="welcome-card">
 
-            <h2>Personal Information</h2>
-
-            <p class="intro">
-                Complete your personal details below.
-            </p>
-
-            <label>Full Names</label>
+            <label>👤 Full Names</label>
 
             <input
                 type="text"
@@ -337,7 +321,7 @@ function loadPersonalInformationScreen() {
 
             <br><br>
 
-            <label>Date of Birth</label>
+            <label>🎂 Date of Birth</label>
 
             <input
                 type="date"
@@ -345,22 +329,24 @@ function loadPersonalInformationScreen() {
 
             <br><br>
 
-            <label>ID Number</label>
+            <label>🪪 National ID Number</label>
 
             <input
                 type="text"
                 id="idNumber"
-                placeholder="Enter ID number">
+                placeholder="Enter ID Number">
 
             <br><br>
 
-            <label>Current Occupation</label>
+            <label>💼 Occupation</label>
 
             <select id="occupation">
 
                 <option value="">Select Occupation</option>
                 <option>Employed</option>
                 <option>Self Employed</option>
+                <option>Business Owner</option>
+                <option>Civil Servant</option>
                 <option>Student</option>
                 <option>Not Employed</option>
 
@@ -368,22 +354,28 @@ function loadPersonalInformationScreen() {
 
             <br><br>
 
-            <label>Purpose of Loan</label>
+            <label>🎯 Purpose of Loan</label>
 
             <input
                 type="text"
                 id="loanPurpose"
-                placeholder="e.g. Business, School Fees">
-
-            <br><br>
-
-            <button id="continuePersonal">
-
-                Continue
-
-            </button>
+                placeholder="School Fees, Business, Rent...">
 
         </div>
+
+        <button id="continuePersonal">
+
+            CONTINUE →
+
+        </button>
+
+        <button
+            id="backCalculator"
+            style="background:#777;">
+
+            ← BACK
+
+        </button>
 
     </div>
 
@@ -398,6 +390,7 @@ function loadPersonalInformationScreen() {
         .addEventListener("click", savePersonalInformation);
 
 }
+
 // ======================================================
 // SAVE PERSONAL INFORMATION
 // ======================================================
