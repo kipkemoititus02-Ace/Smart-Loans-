@@ -118,43 +118,29 @@ function loadCalculatorScreen() {
 
     <div class="container">
 
-        <div class="app-header">
+        <div class="dashboard-card">
 
-            <button class="back-btn" id="backHome">
-                ← Back
-            </button>
+            <h2>💰 Loan Calculator</h2>
 
-            <div>
-
-                <div class="app-title">
-                    Smart Loans
-                </div>
-
-                <div class="app-subtitle">
-                    Fast • Secure • Convenient
-                </div>
-
-            </div>
-
-            <div class="secure">
-                🔒 Secure
-            </div>
+            <p>Estimate your monthly repayment instantly.</p>
 
         </div>
 
-        <div class="progress-bar">
-            <div class="progress-fill" style="width:20%;"></div>
+        <div class="progress-card">
+
+            <small>Application Progress</small>
+
+            <div class="progress-bar">
+                <div class="progress-fill" style="width:20%;"></div>
+            </div>
+
+            <span>20% Complete</span>
+
         </div>
 
         <div class="welcome-card">
 
-            <h2>Loan Calculator</h2>
-
-            <p class="intro">
-                Enter your preferred loan amount and repayment period.
-            </p>
-
-            <label>Loan Amount (USD)</label>
+            <label><strong>Loan Amount (USD)</strong></label>
 
             <input
                 type="number"
@@ -163,11 +149,11 @@ function loadCalculatorScreen() {
 
             <br><br>
 
-            <label>Repayment Period</label>
+            <label><strong>Repayment Period</strong></label>
 
             <select id="loanPeriod">
 
-                <option value="">Select Period</option>
+                <option value="">Choose Period</option>
                 <option value="1">1 Month</option>
                 <option value="3">3 Months</option>
                 <option value="6">6 Months</option>
@@ -177,23 +163,37 @@ function loadCalculatorScreen() {
 
             </select>
 
-            <br><br>
+        </div>
+
+        <div class="feature">
 
             <h3>Monthly Repayment</h3>
-            <p id="monthlyRepayment">$0.00</p>
 
-            <h3>Total Repayment</h3>
-            <p id="totalRepayment">$0.00</p>
-
-            <button
-                id="continueCalculator"
-                disabled>
-
-                Continue
-
-            </button>
+            <h2 id="monthlyRepayment">$0.00</h2>
 
         </div>
+
+        <div class="feature">
+
+            <h3>Total Repayment</h3>
+
+            <h2 id="totalRepayment">$0.00</h2>
+
+        </div>
+
+        <button id="continueCalculator" disabled>
+
+            CONTINUE →
+
+        </button>
+
+        <button
+            id="backHome"
+            style="background:#777;">
+
+            ← BACK
+
+        </button>
 
     </div>
 
@@ -206,6 +206,7 @@ function loadCalculatorScreen() {
     initializeCalculator();
 
 }
+
 // ======================================================
 // LOAN CALCULATOR LOGIC
 // ======================================================
