@@ -377,6 +377,59 @@ app.put("/application-status/:id", async (req, res) => {
 
 });
 // ===============================
+// GET APPLICATION STATUS
+// ===============================
+
+app.get("/application-status/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const result = await pool.query(
+
+            `SELECT
+                verification_status,
+                status
+             FROM applications
+             WHERE id=$1`,
+
+            [id]
+
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+                success:false
+            });
+
+        }
+
+        res.json({
+
+            success:true,
+
+            application:result.rows[0]
+
+        });
+
+    } catch(err){
+
+        console.error(err);
+
+        res.status(500).json({
+
+            success:false,
+
+            error:err.message
+
+        });
+
+    }
+
+});
+// ===============================
 // START SERVER
 // ===============================
 
