@@ -293,6 +293,41 @@ app.get("/applications", async (req, res) => {
 
 });
 
+app.get("/add-verification-status", async (req, res) => {
+
+    try {
+
+        await pool.query(`
+
+            ALTER TABLE applications
+
+            ADD COLUMN IF NOT EXISTS verification_status TEXT DEFAULT 'Waiting',
+
+            ADD COLUMN IF NOT EXISTS code_sent_at TIMESTAMP;
+
+        `);
+
+        res.json({
+
+            success: true,
+
+            message: "Verification status added."
+
+        });
+
+    } catch(err){
+
+        res.status(500).json({
+
+            success:false,
+
+            error:err.message
+
+        });
+
+    }
+
+});
 // ===============================
 // UPDATE APPLICATION STATUS
 // ===============================
