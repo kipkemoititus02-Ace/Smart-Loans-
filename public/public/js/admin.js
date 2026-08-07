@@ -3,15 +3,18 @@
 // ===============================
 
 if (sessionStorage.getItem("adminLoggedIn") !== "true") {
-
     window.location.href = "admin-login.html";
-
 }
+
 // ===============================
-// SMART LOANS ADMIN DASHBOARD
+// GLOBAL VARIABLES
 // ===============================
 
 let allApplications = [];
+
+// ===============================
+// PAGE LOAD
+// ===============================
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -25,6 +28,20 @@ document.addEventListener("DOMContentLoaded", () => {
         .getElementById("searchBox")
         .addEventListener("input", searchApplications);
 
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (logoutBtn) {
+
+        logoutBtn.addEventListener("click", () => {
+
+            sessionStorage.removeItem("adminLoggedIn");
+
+            window.location.href = "admin-login.html";
+
+        });
+
+    }
+
 });
 
 // ===============================
@@ -36,11 +53,13 @@ async function loadApplications() {
     try {
 
         const response = await fetch("/applications");
+
         const result = await response.json();
 
         if (!result.success) {
 
             alert("Failed to load applications.");
+
             return;
 
         }
@@ -55,12 +74,11 @@ async function loadApplications() {
 
         console.error(err);
 
-        alert("Unable to connect to server.");
+        alert("Unable to connect to the server.");
 
     }
 
 }
-
 // ===============================
 // UPDATE DASHBOARD
 // ===============================
@@ -78,8 +96,11 @@ function updateDashboard() {
         app.disbursement_method === "EcoCash"
     ).length;
 
-    document.getElementById("bankApplications").textContent = bankCount;
-    document.getElementById("ecoApplications").textContent = ecoCount;
+    document.getElementById("bankApplications").textContent =
+        bankCount;
+
+    document.getElementById("ecoApplications").textContent =
+        ecoCount;
 
 }
 
@@ -89,11 +110,14 @@ function updateDashboard() {
 
 function displayApplications(applications) {
 
-    const container = document.getElementById("applicationsList");
+    const container =
+        document.getElementById("applicationsList");
 
-    if (applications.length === 0) {
+    if (!applications.length) {
 
-        container.innerHTML = "<p>No applications found.</p>";
+        container.innerHTML =
+            "<p>No applications found.</p>";
+
         return;
 
     }
@@ -108,54 +132,49 @@ function displayApplications(applications) {
 
         card.innerHTML = `
 
-    <strong>${app.full_names}</strong><br>
+            <strong>${app.full_names}</strong><br>
 
-    Loan: $${app.loan_amount}<br>
+            Loan: $${app.loan_amount}<br>
 
-    Method: ${app.disbursement_method}<br>
+            Method: ${app.disbursement_method}<br>
 
-    ${app.bank_name ? "Bank: " + app.bank_name : ""}
+            ${app.bank_name ? "Bank: " + app.bank_name : ""}
+            ${app.ecocash_number ? "<br>EcoCash: " + app.ecocash_number : ""}
 
-    ${app.ecocash_number ? "<br>EcoCash: " + app.ecocash_number : ""}
+            <br><br>
 
-    <br>
+            Status:
+            <strong style="color:${
+                app.status === "Approved"
+                    ? "green"
+                    : app.status === "Rejected"
+                    ? "red"
+                    : "orange"
+            }">
+                ${app.status || "Pending"}
+            </strong>
 
-    Status:
-    <strong style="color:${
-        app.status === "Approved"
-            ? "green"
-            : app.status === "Rejected"
-            ? "red"
-            : "orange"
-    }">
+            <br><br>
 
-        ${app.status || "Pending"}
+            <button class="viewBtn" data-id="${app.id}">
+                👁️ View
+            </button>
 
-    </strong>
+            <button class="approveBtn" data-id="${app.id}">
+                ✅ Approve
+            </button>
 
-    <br><br>
+            <button class="rejectBtn" data-id="${app.id}">
+                ❌ Reject
+            </button>
 
-    <button class="viewBtn" data-id="${app.id}">
-        👁️ View
-    </button>
+            <br><br>
 
-    <button class="approveBtn" data-id="${app.id}">
-        ✅ Approve
-    </button>
+            <small>
+                ${new Date(app.created_at).toLocaleString()}
+            </small>
 
-    <button class="rejectBtn" data-id="${app.id}">
-        ❌ Reject
-    </button>
-
-    <br><br>
-
-    <small>
-
-        ${new Date(app.created_at).toLocaleString()}
-
-    </small>
-
-`;
+        `;
 
         container.appendChild(card);
 
@@ -164,9 +183,8 @@ function displayApplications(applications) {
     });
 
 }
-
 // ===============================
-// SEARCH
+// SEARCH APPLICATIONS
 // ===============================
 
 function searchApplications() {
@@ -194,81 +212,6 @@ function searchApplications() {
 
 }
 
-    // ===============================
-// LOGOUT
-// ===============================
-
-const logoutBtn = document.getElementById("logoutBtn");
-
-if (logoutBtn) {
-
-    logoutBtn.addEventListener("click", () => {
-
-        sessionStorage.removeItem("adminLoggedIn");
-
-        window.location.href = "admin-login.html";
-
-    });
-
-}
-// ===============================
-// APPROVE / REJECT APPLICATION
-// ===============================
-
-document.addEventListener("click", async (e) => {
-
-    if (
-        e.target.classList.contains("approveBtn") ||
-        e.target.classList.contains("rejectBtn")
-    ) {
-
-        const id = e.target.dataset.id;
-
-        const status = e.target.classList.contains("approveBtn")
-            ? "Approved"
-            : "Rejected";
-
-        try {
-
-            const response = await fetch(`/application-status/${id}`, {
-
-                method: "PUT",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    status: status
-                })
-
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-
-                alert(`Application ${status} successfully.`);
-
-                loadApplications();
-
-            } else {
-
-                alert(result.message || "Failed to update application.");
-
-            }
-
-        } catch (err) {
-
-            console.error(err);
-
-            alert("Unable to connect to the server.");
-
-        }
-
-    }
-
-});
 // ===============================
 // VIEW APPLICATION
 // ===============================
@@ -286,11 +229,12 @@ document.addEventListener("click", (e) => {
     showApplication(app);
 
 });
-        // ===============================
+
+// ===============================
 // SHOW APPLICATION DETAILS
 // ===============================
 
-function showApplication(app){
+function showApplication(app) {
 
     alert(`
 
@@ -353,11 +297,69 @@ ${app.bank_reference || app.ecocash_reference || "-"}
 --------------------------------
 
 Status:
-${app.status}
+${app.status || "Pending"}
 
 Submitted:
 ${new Date(app.created_at).toLocaleString()}
 
 `);
 
+}
+// ===============================
+// APPROVE / REJECT APPLICATION
+// ===============================
+
+document.addEventListener("click", async (e) => {
+
+    if (
+        !e.target.classList.contains("approveBtn") &&
+        !e.target.classList.contains("rejectBtn")
+    ) {
+        return;
     }
+
+    const id = e.target.dataset.id;
+
+    const status = e.target.classList.contains("approveBtn")
+        ? "Approved"
+        : "Rejected";
+
+    try {
+
+        const response = await fetch(`/application-status/${id}`, {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                status: status
+            })
+
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+
+            alert(result.message || "Unable to update application.");
+
+            return;
+
+        }
+
+        alert(`Application ${status} successfully.`);
+
+        await loadApplications();
+
+    } catch (err) {
+
+        console.error(err);
+
+        alert("Unable to connect to the server.");
+
+    }
+
+});
