@@ -260,6 +260,42 @@ app.get("/applications", async (req, res) => {
             applications: result.rows
         });
 
+      // ===============================
+// UPDATE APPLICATION STATUS
+// ===============================
+
+app.put("/application-status/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+        const { status } = req.body;
+
+        const result = await pool.query(
+
+            `UPDATE applications
+             SET status = $1
+             WHERE id = $2
+             RETURNING *;`,
+
+            [status, id]
+
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Application not found."
+            });
+
+        }
+
+        res.json({
+            success: true,
+            application: result.rows[0]
+        });
+
     } catch (err) {
 
         console.error(err);
@@ -272,24 +308,6 @@ app.get("/applications", async (req, res) => {
     }
 
 });
-
-      // ===============================
-// ADD STATUS COLUMN
-// ===============================
-
-app.get("/add-status-column", async (req, res) => {
-
-    try {
-
-        await pool.query(`
-            ALTER TABLE applications
-            ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'Pending';
-        `);
-
-        res.json({
-            success: true,
-            message: "Status column added."
-        });
 
     } catch (err) {
 
