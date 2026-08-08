@@ -610,7 +610,7 @@ app.put("/update-stage/:id", async (req, res) => {
 
 });
 // ======================================================
-// MARK VERIFICATION CODE AS SENT
+// MARK DEMO VERIFICATION CODE AS SENT
 // ======================================================
 
 app.put("/mark-code-sent/:id", async (req, res) => {
@@ -630,7 +630,10 @@ app.put("/mark-code-sent/:id", async (req, res) => {
 
             WHERE id = $1
 
-            RETURNING *
+            RETURNING
+                id,
+                verification_status,
+                current_stage;
             `,
             [id]
         );
@@ -638,15 +641,21 @@ app.put("/mark-code-sent/:id", async (req, res) => {
         if (result.rows.length === 0) {
 
             return res.status(404).json({
+
                 success: false,
+
                 message: "Application not found."
+
             });
 
         }
 
         res.json({
+
             success: true,
+
             application: result.rows[0]
+
         });
 
     } catch (err) {
@@ -657,8 +666,11 @@ app.put("/mark-code-sent/:id", async (req, res) => {
         );
 
         res.status(500).json({
+
             success: false,
+
             error: err.message
+
         });
 
     }
