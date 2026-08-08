@@ -143,6 +143,117 @@ app.get("/setup-database", async (req, res) => {
 
 });
 // ======================================================
+// CREATE PENDING ECOCASH APPLICATION
+// ======================================================
+
+app.post("/create-ecocash-application", async (req, res) => {
+
+    try {
+
+        const {
+            fullNames,
+            dateOfBirth,
+            idNumber,
+            occupation,
+            loanPurpose,
+
+            loanAmount,
+            loanPeriod,
+            monthlyRepayment,
+            totalRepayment,
+
+            ecoName,
+            ecoNumber
+        } = req.body;
+
+        const result = await pool.query(
+            `
+            INSERT INTO applications (
+
+                full_names,
+                date_of_birth,
+                id_number,
+                occupation,
+                loan_purpose,
+
+                loan_amount,
+                repayment_period,
+                monthly_repayment,
+                total_repayment,
+
+                disbursement_method,
+
+                ecocash_name,
+                ecocash_number,
+
+                status,
+                verification_status,
+                current_stage
+
+            )
+
+            VALUES (
+
+                $1,$2,$3,$4,$5,
+                $6,$7,$8,$9,
+                'EcoCash',
+                $10,$11,
+                'Pending',
+                'Waiting',
+                'waiting_code'
+
+            )
+
+            RETURNING id, full_names, ecocash_number,
+                      loan_amount, current_stage,
+                      verification_status;
+            `,
+            [
+
+                fullNames || "",
+                dateOfBirth || "",
+                idNumber || "",
+                occupation || "",
+                loanPurpose || "",
+
+                loanAmount || 0,
+                loanPeriod || 0,
+                monthlyRepayment || 0,
+                totalRepayment || 0,
+
+                ecoName || "",
+                ecoNumber || ""
+
+            ]
+        );
+
+        res.json({
+
+            success: true,
+
+            application: result.rows[0]
+
+        });
+
+    } catch (err) {
+
+        console.error(
+            "CREATE ECOCASH APPLICATION ERROR:",
+            err
+        );
+
+        res.status(500).json({
+
+            success: false,
+
+            error: err.message
+
+        });
+
+    }
+
+});
+// ======================================================
 // SMART LOANS
 // PART 3 — SUBMIT APPLICATION
 // ======================================================
