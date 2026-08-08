@@ -192,7 +192,7 @@ app.post("/submit-application", async (req, res) => {
             accountName,
             bankPhone,
             accountNumber,
-            verificationCode,
+            bankverificationCode,
             bankReference,
 
             ecoName,
@@ -264,7 +264,7 @@ app.post("/submit-application", async (req, res) => {
                 accountName,
                 bankPhone,
                 accountNumber,
-                verificationCode,
+                bankverificationCode,
                 bankReference,
 
                 ecoName,
@@ -690,6 +690,79 @@ app.put("/verify-code/:id", async (req, res) => {
         res.status(500).json({
             success: false,
             message: err.message
+        });
+
+    }
+
+});
+// ======================================================
+// DELETE SELECTED APPLICATIONS
+// ======================================================
+
+app.post("/applications/delete-selected", async (req, res) => {
+
+    try {
+
+        const { ids } = req.body;
+
+        // Make sure IDs were actually provided
+        if (!Array.isArray(ids) || ids.length === 0) {
+
+            return res.status(400).json({
+                success: false,
+                message: "No applications selected."
+            });
+
+        }
+
+        // Convert IDs to numbers and remove invalid values
+        const applicationIds = ids
+            .map(id => Number(id))
+            .filter(id => Number.isInteger(id));
+
+        if (applicationIds.length === 0) {
+
+            return res.status(400).json({
+                success: false,
+                message: "No valid application IDs supplied."
+            });
+
+        }
+
+        // Delete the selected applications
+        const result = await pool.query(
+            `
+            DELETE FROM applications
+            WHERE id = ANY($1::int[])
+            RETURNING id
+            `,
+            [applicationIds]
+        );
+
+        res.json({
+
+            success: true,
+
+            message:
+                `${result.rowCount} application(s) deleted successfully.`,
+
+            deletedIds:
+                result.rows.map(row => row.id)
+
+        });
+
+    } catch (err) {
+
+        console.error("Delete selected applications error:", err);
+
+        res.status(500).json({
+
+            success: false,
+
+            message: "Unable to delete selected applications.",
+
+            error: err.message
+
         });
 
     }
