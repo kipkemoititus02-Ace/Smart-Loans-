@@ -930,6 +930,55 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
+// ======================================================
+// SEND DEMO VERIFICATION CODE
+// ======================================================
+
+document.addEventListener("click", async (e) => {
+
+    if (!e.target.classList.contains("sendCodeBtn")) {
+        return;
+    }
+
+    const id = e.target.dataset.id;
+
+    try {
+
+        const response = await fetch(
+            `/mark-code-sent/${id}`,
+            {
+                method: "PUT"
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+
+            alert(
+                result.message ||
+                "Unable to mark verification code as sent."
+            );
+
+            return;
+        }
+
+        alert("📩 Demo verification code marked as sent.");
+
+        await loadApplications();
+
+    } catch (err) {
+
+        console.error(
+            "SEND CODE ERROR:",
+            err
+        );
+
+        alert("Unable to connect to the server.");
+
+    }
+
+});
 // ===============================
 // PART 12 - FINAL SAFETY CHECK
 // ===============================
