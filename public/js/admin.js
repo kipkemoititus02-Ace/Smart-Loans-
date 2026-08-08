@@ -1,15 +1,14 @@
 // ===============================
-// ADMIN SECURITY
+// SMART LOANS ADMIN DASHBOARD
+// PART 1 - SECURITY & GLOBALS
 // ===============================
 
+// Admin security
 if (sessionStorage.getItem("adminLoggedIn") !== "true") {
     window.location.href = "admin-login.html";
 }
 
-// ===============================
-// GLOBAL VARIABLES
-// ===============================
-
+// Store all applications loaded from the server
 let allApplications = [];
 
 // ===============================
@@ -20,55 +19,75 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadApplications();
 
-    document
-        .getElementById("refreshBtn")
-        .addEventListener("click", loadApplications);
+    const refreshBtn =
+        document.getElementById("refreshBtn");
 
-    document
-        .getElementById("searchBox")
-        .addEventListener("input", searchApplications);
+    if (refreshBtn) {
+        refreshBtn.addEventListener(
+            "click",
+            loadApplications
+        );
+    }
 
-    const logoutBtn = document.getElementById("logoutBtn");
+    const searchBox =
+        document.getElementById("searchBox");
+
+    if (searchBox) {
+        searchBox.addEventListener(
+            "input",
+            searchApplications
+        );
+    }
+
+    const logoutBtn =
+        document.getElementById("logoutBtn");
 
     if (logoutBtn) {
 
         logoutBtn.addEventListener("click", () => {
 
-            sessionStorage.removeItem("adminLoggedIn");
+            sessionStorage.removeItem(
+                "adminLoggedIn"
+            );
 
-            window.location.href = "admin-login.html";
+            window.location.href =
+                "admin-login.html";
 
         });
 
     }
 
 });
-
 // ===============================
-// LOAD APPLICATIONS
+// PART 2 - LOAD APPLICATIONS
 // ===============================
 
 async function loadApplications() {
 
-    const container = document.getElementById("applicationsList");
+    const container =
+        document.getElementById("applicationsList");
 
-    container.innerHTML = "<p>Loading applications...</p>";
+    if (!container) return;
+
+    container.innerHTML =
+        "<p>Loading applications...</p>";
 
     try {
 
-        console.log("Loading applications...");
-
-        const response = await fetch("/applications");
+        const response =
+            await fetch("/applications");
 
         if (!response.ok) {
 
-            throw new Error("Server returned " + response.status);
+            throw new Error(
+                "Server returned " +
+                response.status
+            );
 
         }
 
-        const result = await response.json();
-
-        console.log(result);
+        const result =
+            await response.json();
 
         if (!result.success) {
 
@@ -79,74 +98,102 @@ async function loadApplications() {
 
         }
 
-        allApplications = result.applications || [];
+        allApplications =
+            result.applications || [];
 
         updateDashboard();
 
-        displayApplications(allApplications);
+        displayApplications(
+            allApplications
+        );
 
     } catch (err) {
 
-        console.error("LOAD APPLICATIONS ERROR:", err);
+        console.error(
+            "LOAD APPLICATIONS ERROR:",
+            err
+        );
 
         container.innerHTML = `
 
             <div class="feature">
 
-                <h3>Unable to load applications</h3>
+                <h3>
+                    Unable to load applications
+                </h3>
 
-                <p>${err.message}</p>
+                <p>
+                    ${err.message}
+                </p>
 
                 <button id="retryBtn">
-
                     Retry
-
                 </button>
 
             </div>
 
         `;
 
-        const retryBtn = document.getElementById("retryBtn");
+        const retryBtn =
+            document.getElementById(
+                "retryBtn"
+            );
 
         if (retryBtn) {
 
-            retryBtn.addEventListener("click", loadApplications);
+            retryBtn.addEventListener(
+                "click",
+                loadApplications
+            );
 
         }
 
     }
 
 }
-    
-
 // ===============================
-// UPDATE DASHBOARD
+// PART 3 - UPDATE DASHBOARD
 // ===============================
 
 function updateDashboard() {
 
-    document.getElementById("totalApplications").textContent =
-        allApplications.length;
+    const total =
+        document.getElementById("totalApplications");
 
-    const bankCount = allApplications.filter(app =>
-        app.disbursement_method === "Bank"
-    ).length;
+    const bank =
+        document.getElementById("bankApplications");
 
-    const ecoCount = allApplications.filter(app =>
-        app.disbursement_method === "EcoCash"
-    ).length;
+    const eco =
+        document.getElementById("ecoApplications");
 
-    document.getElementById("bankApplications").textContent =
-        bankCount;
+    const bankCount =
+        allApplications.filter(
+            app => app.disbursement_method === "Bank"
+        ).length;
 
-    document.getElementById("ecoApplications").textContent =
-        ecoCount;
+    const ecoCount =
+        allApplications.filter(
+            app => app.disbursement_method === "EcoCash"
+        ).length;
+
+    if (total) {
+        total.textContent =
+            allApplications.length;
+    }
+
+    if (bank) {
+        bank.textContent =
+            bankCount;
+    }
+
+    if (eco) {
+        eco.textContent =
+            ecoCount;
+    }
 
 }
-
 // ===============================
-// DISPLAY APPLICATIONS
+// PART 4 - DISPLAY APPLICATIONS
 // ===============================
 
 function displayApplications(applications) {
@@ -154,52 +201,84 @@ function displayApplications(applications) {
     const container =
         document.getElementById("applicationsList");
 
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    // ===============================
+    // DELETE SELECTED BUTTON
+    // ===============================
+
+    const deleteButton =
+        document.createElement("button");
+
+    deleteButton.id =
+        "deleteSelectedBtn";
+
+    deleteButton.innerHTML =
+        "🗑️ Delete Selected";
+
+    deleteButton.style.marginBottom =
+        "15px";
+
+    container.appendChild(
+        deleteButton
+    );
+
+    // ===============================
+    // NO APPLICATIONS
+    // ===============================
+
     if (!applications.length) {
 
-        container.innerHTML =
+        container.innerHTML +=
             "<p>No applications found.</p>";
 
         return;
 
     }
 
-    container.innerHTML = "";
-
-    // Delete button - only ONE on the dashboard
-    const deleteButton = document.createElement("button");
-
-    deleteButton.id = "deleteSelectedBtn";
-
-    deleteButton.innerHTML =
-        "🗑️ Delete Selected";
-
-    deleteButton.style.marginBottom = "15px";
-
-    container.appendChild(deleteButton);
-
+    // ===============================
+    // APPLICATION CARDS
+    // ===============================
 
     applications.forEach(app => {
 
-        const card = document.createElement("div");
+        const card =
+            document.createElement("div");
 
-        card.className = "feature";
+        card.className =
+            "feature";
 
         card.innerHTML = `
 
-            <strong>${app.full_names}</strong><br>
+            <strong>
+                ${app.full_names || "-"}
+            </strong>
 
-            Loan: $${app.loan_amount}<br>
+            <br>
 
-            Method: ${app.disbursement_method}<br>
+            Loan:
+            $${app.loan_amount || "0"}
 
-            ${app.bank_name
-                ? "Bank: " + app.bank_name
-                : ""
+            <br>
+
+            Method:
+            ${app.disbursement_method || "-"}
+
+            <br>
+
+            ${
+                app.bank_name
+                    ? "Bank: " + app.bank_name
+                    : ""
             }
 
-            ${app.ecocash_number
-                ? "<br>EcoCash: " + app.ecocash_number
-                : ""
+            ${
+                app.ecocash_number
+                    ? "<br>EcoCash: " +
+                      app.ecocash_number
+                    : ""
             }
 
             <br><br>
@@ -229,7 +308,9 @@ function displayApplications(applications) {
             <button
                 class="viewBtn"
                 data-id="${app.id}">
+
                 👁️ View
+
             </button>
 
             <div style="
@@ -242,31 +323,41 @@ function displayApplications(applications) {
                 <button
                     class="sendCodeBtn"
                     data-id="${app.id}">
+
                     📩 Send Code
+
                 </button>
 
                 <button
                     class="verifyBtn"
                     data-id="${app.id}">
+
                     ✅ Verify Code
+
                 </button>
 
                 <button
                     class="assessmentBtn"
                     data-id="${app.id}">
+
                     📋 Assessment
+
                 </button>
 
                 <button
                     class="approveBtn"
                     data-id="${app.id}">
+
                     👍 Approve
+
                 </button>
 
                 <button
                     class="disburseBtn"
                     data-id="${app.id}">
+
                     💵 Disburse
+
                 </button>
 
             </div>
@@ -277,7 +368,9 @@ function displayApplications(applications) {
                 Current Stage:
             </strong>
 
-            ${app.current_stage || "waiting_code"}
+            <span class="currentStage">
+                ${app.current_stage || "waiting_code"}
+            </span>
 
             <br><br>
 
@@ -298,7 +391,13 @@ function displayApplications(applications) {
             <br><br>
 
             <small>
-                ${new Date(app.created_at).toLocaleString()}
+                ${
+                    app.created_at
+                        ? new Date(
+                            app.created_at
+                          ).toLocaleString()
+                        : "-"
+                }
             </small>
 
         `;
@@ -311,380 +410,42 @@ function displayApplications(applications) {
 
     });
 
-}
-
-// ===============================
-// SEARCH APPLICATIONS
-// ===============================
-
-function searchApplications() {
-
-    const keyword = document
-        .getElementById("searchBox")
-        .value
-        .toLowerCase();
-
-    const filtered = allApplications.filter(app => {
-
-        return (
-
-            (app.full_names || "").toLowerCase().includes(keyword) ||
-            (app.id_number || "").toLowerCase().includes(keyword) ||
-            (app.bank_phone || "").toLowerCase().includes(keyword) ||
-            (app.ecocash_number || "").toLowerCase().includes(keyword) ||
-            (app.bank_name || "").toLowerCase().includes(keyword)
-
-        );
-
-    });
-
-    displayApplications(filtered);
-
-}
-// ===============================
-// VERIFY CODE
-// ===============================
-
-document.addEventListener("click", async (e) => {
-
-    if (!e.target.classList.contains("verifyBtn")) return;
-
-    const id = e.target.dataset.id;
-
-    try {
-
-        const response = await fetch(`/verify-code/${id}`, {
-            method: "PUT"
-        });
-
-        const result = await response.json();
-
-        if (!result.success) {
-
-            alert(result.message || "Unable to verify code.");
-
-            return;
-
-        }
-
-        alert("Verification code verified successfully.");
-
-        await loadApplications();
-
-    } catch (err) {
-
-        console.error(err);
-
-        alert("Unable to connect to the server.");
-
-    }
-
-});
-// ===============================
-// VIEW APPLICATION
-// ===============================
-
-document.addEventListener("click", (e) => {
-
-    if (!e.target.classList.contains("viewBtn")) return;
-
-    const id = Number(e.target.dataset.id);
-
-    const app = allApplications.find(a => a.id === id);
-
-    if (!app) return;
-
-    showApplication(app);
-
-});
-
-// ===============================
-// SHOW APPLICATION DETAILS
-// ===============================
-
-function showApplication(app) {
-
-    alert(`
-
-SMART LOANS APPLICATION
-
---------------------------------
-
-Full Names:
-${app.full_names}
-
-Date of Birth:
-${app.date_of_birth}
-
-National ID:
-${app.id_number}
-
-Occupation:
-${app.occupation}
-
-Loan Purpose:
-${app.loan_purpose}
-
---------------------------------
-
-Loan Amount:
-$${app.loan_amount}
-
-Repayment Period:
-${app.repayment_period}
-
-Monthly Repayment:
-$${app.monthly_repayment}
-
-Total Repayment:
-$${app.total_repayment}
-
---------------------------------
-
-Disbursement:
-${app.disbursement_method}
-
-Bank:
-${app.bank_name || "-"}
-
-Account Name:
-${app.account_name || "-"}
-
-Phone:
-${app.bank_phone || app.ecocash_number || "-"}
-
-Account Number:
-${app.account_number || "-"}
-
-Verification Code:
-${app.bank_verification_code || app.ecocash_verification_code || "-"}
-
-Reference Number:
-${app.bank_reference || app.ecocash_reference || "-"}
-
---------------------------------
-
-Status:
-${app.status || "Pending"}
-
-Submitted:
-${new Date(app.created_at).toLocaleString()}
-
-`);
-
-}
-document
-    .getElementById("deleteSelectedBtn")
-    .addEventListener("click", async () => {
-
-        const selected = [
-            ...document.querySelectorAll(
-                ".applicationSelect:checked"
-            )
-        ].map(checkbox => checkbox.value);
-
-        if (selected.length === 0) {
-
-            alert("Please select at least one application.");
-
-            return;
-        }
-
-        const confirmed = confirm(
-            `Delete ${selected.length} selected application(s)?`
-        );
-
-        if (!confirmed) {
-            return;
-        }
-
-        try {
-
-            const response = await fetch(
-                "/applications/delete-selected",
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        ids: selected
-                    })
                 }
-            );
-
-            const result = await response.json();
-
-            if (!response.ok || !result.success) {
-
-                throw new Error(
-                    result.message ||
-                    "Delete failed."
-                );
-
-            }
-
-            alert(result.message);
-
-            loadApplications();
-
-        } catch (err) {
-
-            console.error(err);
-
-            alert("Unable to delete selected applications.");
-
-        }
-
-    });
 // ===============================
-// MARK CODE AS SENT
-// ===============================
-
-app.put("/mark-code-sent/:id", async (req, res) => {
-
-    try {
-
-        const { id } = req.params;
-
-        const result = await pool.query(
-
-            `UPDATE applications
-
-             SET verification_status = 'Code Sent',
-                 code_sent_at = NOW()
-
-             WHERE id = $1
-
-             RETURNING *;`,
-
-            [id]
-
-        );
-
-        if (result.rows.length === 0) {
-
-            return res.status(404).json({
-
-                success: false,
-                message: "Application not found."
-
-            });
-
-        }
-
-        res.json({
-
-            success: true,
-            application: result.rows[0]
-
-        });
-
-    } catch (err) {
-
-        console.error(err);
-
-        res.status(500).json({
-
-            success: false,
-            error: err.message
-
-        });
-
-    }
-
-});
-
-// ===============================
-// APPROVE / REJECT APPLICATION
+// PART 5 - ADMIN STAGE CONTROLS
 // ===============================
 
 document.addEventListener("click", async (e) => {
 
-    if (
-        !e.target.classList.contains("approveBtn") &&
-        !e.target.classList.contains("rejectBtn")
-    ) {
-        return;
-    }
+    const button = e.target.closest(
+        ".sendCodeBtn, .verifyBtn, .assessmentBtn, .approveBtn, .disburseBtn"
+    );
 
-    const id = e.target.dataset.id;
+    if (!button) return;
 
-    const status = e.target.classList.contains("approveBtn")
-        ? "Approved"
-        : "Rejected";
+    const id = button.dataset.id;
 
-    try {
+    let stage;
 
-        const response = await fetch(`/application-status/${id}`, {
-
-            method: "PUT",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                status: status
-            })
-
-        });
-
-        const result = await response.json();
-
-        console.log(result);
-        
-        if (!result.success) {
-
-            alert(result.message || "Unable to update application.");
-
-            return;
-
-        }
-
-        alert(`Application ${status} successfully.`);
-
-        await loadApplications();
-
-    } catch (err) {
-
-        console.error(err);
-
-        alert("Unable to connect to the server.");
-
-    }
-
-});
-// ===============================
-// UPDATE APPLICATION STAGE
-// ===============================
-
-document.addEventListener("click", async (e) => {
-
-    let stage = null;
-
-    if (e.target.classList.contains("sendCodeBtn"))
+    if (button.classList.contains("sendCodeBtn")) {
         stage = "code_sent";
-
-    else if (e.target.classList.contains("verifyBtn"))
+    }
+    else if (button.classList.contains("verifyBtn")) {
         stage = "verified";
-
-    else if (e.target.classList.contains("assessmentBtn"))
+    }
+    else if (button.classList.contains("assessmentBtn")) {
         stage = "assessment";
-
-    else if (e.target.classList.contains("approveBtn"))
+    }
+    else if (button.classList.contains("approveBtn")) {
         stage = "approved";
-
-    else if (e.target.classList.contains("disburseBtn"))
+    }
+    else if (button.classList.contains("disburseBtn")) {
         stage = "disbursed";
-
-    if (!stage) return;
-
-    const id = e.target.dataset.id;
+    }
 
     try {
+
+        button.disabled = true;
 
         const response = await fetch(`/update-stage/${id}`, {
 
@@ -702,22 +463,475 @@ document.addEventListener("click", async (e) => {
 
         const result = await response.json();
 
-        if (!result.success) {
+        if (!response.ok || !result.success) {
 
-            alert("Unable to update stage.");
-
-            return;
+            throw new Error(
+                result.message || "Unable to update application stage."
+            );
 
         }
 
-        loadApplications();
+        await loadApplications();
 
     } catch (err) {
 
-        console.error(err);
+        console.error("STAGE UPDATE ERROR:", err);
 
-        alert("Server connection failed.");
+        alert("Unable to update application stage.");
+
+        button.disabled = false;
+    }
+
+});
+// ===============================
+// PART 6 - VIEW APPLICATION
+// ===============================
+
+document.addEventListener("click", (e) => {
+
+    const button = e.target.closest(".viewBtn");
+
+    if (!button) return;
+
+    const id = Number(button.dataset.id);
+
+    const application =
+        allApplications.find(
+            app => Number(app.id) === id
+        );
+
+    if (!application) {
+
+        alert("Application not found.");
+
+        return;
+    }
+
+    showApplication(application);
+
+});
+
+
+// ===============================
+// SHOW APPLICATION DETAILS
+// ===============================
+
+function showApplication(app) {
+
+    alert(`
+
+SMART LOANS APPLICATION
+
+--------------------------------
+
+Full Names:
+${app.full_names || "-"}
+
+Date of Birth:
+${app.date_of_birth || "-"}
+
+National ID:
+${app.id_number || "-"}
+
+Occupation:
+${app.occupation || "-"}
+
+Loan Purpose:
+${app.loan_purpose || "-"}
+
+--------------------------------
+
+Loan Amount:
+$${app.loan_amount || "0"}
+
+Repayment Period:
+${app.repayment_period || "-"} Month(s)
+
+Monthly Repayment:
+$${app.monthly_repayment || "0"}
+
+Total Repayment:
+$${app.total_repayment || "0"}
+
+--------------------------------
+
+Disbursement:
+${app.disbursement_method || "-"}
+
+Bank:
+${app.bank_name || "-"}
+
+Account Name:
+${app.account_name || "-"}
+
+Phone:
+${app.bank_phone || app.ecocash_number || "-"}
+
+Account Number:
+${app.account_number || "-"}
+
+--------------------------------
+
+Verification Status:
+${app.verification_status || "Waiting"}
+
+Current Stage:
+${app.current_stage || "waiting_code"}
+
+Application Status:
+${app.status || "Pending"}
+
+Submitted:
+${
+    app.created_at
+        ? new Date(app.created_at).toLocaleString()
+        : "-"
+}
+
+`);
+
+}
+// ===============================
+// PART 7 - SEARCH APPLICATIONS
+// ===============================
+
+function searchApplications() {
+
+    const searchBox =
+        document.getElementById("searchBox");
+
+    if (!searchBox) return;
+
+    const keyword =
+        searchBox.value
+            .toLowerCase()
+            .trim();
+
+    const filtered =
+        allApplications.filter(app => {
+
+            return (
+
+                (app.full_names || "")
+                    .toLowerCase()
+                    .includes(keyword)
+
+                ||
+
+                (app.id_number || "")
+                    .toLowerCase()
+                    .includes(keyword)
+
+                ||
+
+                (app.bank_phone || "")
+                    .toLowerCase()
+                    .includes(keyword)
+
+                ||
+
+                (app.ecocash_number || "")
+                    .toLowerCase()
+                    .includes(keyword)
+
+                ||
+
+                (app.bank_name || "")
+                    .toLowerCase()
+                    .includes(keyword)
+
+            );
+
+        });
+
+    displayApplications(filtered);
+
+}
+// ===============================
+// PART 8 - DELETE SELECTED
+// ===============================
+
+document.addEventListener("click", async (e) => {
+
+    const button =
+        e.target.closest("#deleteSelectedBtn");
+
+    if (!button) return;
+
+    const selected = [
+        ...document.querySelectorAll(
+            ".applicationSelect:checked"
+        )
+    ].map(checkbox => checkbox.value);
+
+    if (selected.length === 0) {
+
+        alert(
+            "Please select at least one application."
+        );
+
+        return;
+    }
+
+    const confirmed = confirm(
+        `Delete ${selected.length} selected application(s)?`
+    );
+
+    if (!confirmed) return;
+
+    try {
+
+        button.disabled = true;
+
+        const response = await fetch(
+            "/applications/delete-selected",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    ids: selected
+                })
+            }
+        );
+
+        const result =
+            await response.json();
+
+        if (!response.ok || !result.success) {
+
+            throw new Error(
+                result.message ||
+                "Delete failed."
+            );
+
+        }
+
+        alert(
+            result.message ||
+            "Applications deleted successfully."
+        );
+
+        await loadApplications();
+
+    } catch (err) {
+
+        console.error(
+            "DELETE ERROR:",
+            err
+        );
+
+        alert(
+            "Unable to delete selected applications."
+        );
+
+        button.disabled = false;
+    }
+
+});
+// ===============================
+// PART 9 - APPROVE / REJECT
+// ===============================
+
+document.addEventListener("click", async (e) => {
+
+    const button =
+        e.target.closest(".approveBtn, .rejectBtn");
+
+    if (!button) return;
+
+    const id = button.dataset.id;
+
+    const status =
+        button.classList.contains("approveBtn")
+            ? "Approved"
+            : "Rejected";
+
+    const confirmed = confirm(
+        `Are you sure you want to mark this application as ${status}?`
+    );
+
+    if (!confirmed) return;
+
+    try {
+
+        button.disabled = true;
+
+        const response =
+            await fetch(
+                `/application-status/${id}`,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        status: status
+                    })
+                }
+            );
+
+        const result =
+            await response.json();
+
+        if (!response.ok || !result.success) {
+
+            throw new Error(
+                result.message ||
+                "Unable to update application."
+            );
+
+        }
+
+        alert(
+            `Application ${status} successfully.`
+        );
+
+        await loadApplications();
+
+    } catch (err) {
+
+        console.error(
+            "STATUS UPDATE ERROR:",
+            err
+        );
+
+        alert(
+            "Unable to update application status."
+        );
+
+        button.disabled = false;
 
     }
 
 });
+// ===============================
+// PART 10 - MARK CODE AS SENT
+// ===============================
+
+document.addEventListener("click", async (e) => {
+
+    const button =
+        e.target.closest(".sendCodeBtn");
+
+    if (!button) return;
+
+    const id = button.dataset.id;
+
+    const confirmed = confirm(
+        "Mark verification code as sent?"
+    );
+
+    if (!confirmed) return;
+
+    try {
+
+        button.disabled = true;
+
+        const response =
+            await fetch(
+                `/mark-code-sent/${id}`,
+                {
+                    method: "PUT"
+                }
+            );
+
+        const result =
+            await response.json();
+
+        if (!response.ok || !result.success) {
+
+            throw new Error(
+                result.message ||
+                "Unable to mark code as sent."
+            );
+
+        }
+
+        alert(
+            "📩 Verification code marked as sent."
+        );
+
+        await loadApplications();
+
+    } catch (err) {
+
+        console.error(
+            "CODE SENT ERROR:",
+            err
+        );
+
+        alert(
+            "Unable to mark the verification code as sent."
+        );
+
+        button.disabled = false;
+
+    }
+
+});
+// ===============================
+// PART 11 - PAGE INITIALIZATION
+// ===============================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    loadApplications();
+
+    const refreshBtn =
+        document.getElementById("refreshBtn");
+
+    if (refreshBtn) {
+
+        refreshBtn.addEventListener(
+            "click",
+            loadApplications
+        );
+
+    }
+
+    const searchBox =
+        document.getElementById("searchBox");
+
+    if (searchBox) {
+
+        searchBox.addEventListener(
+            "input",
+            searchApplications
+        );
+
+    }
+
+    const logoutBtn =
+        document.getElementById("logoutBtn");
+
+    if (logoutBtn) {
+
+        logoutBtn.addEventListener(
+            "click",
+            () => {
+
+                sessionStorage.removeItem(
+                    "adminLoggedIn"
+                );
+
+                window.location.href =
+                    "admin-login.html";
+
+            }
+        );
+
+    }
+
+});
+// ===============================
+// PART 12 - FINAL SAFETY CHECK
+// ===============================
+
+console.log("✅ Smart Loans admin.js loaded successfully.");
