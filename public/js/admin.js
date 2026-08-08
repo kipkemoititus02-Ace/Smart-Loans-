@@ -195,7 +195,83 @@ function displayApplications(applications) {
                 ${app.status || "Pending"}
             </strong>
 
+<button id="deleteSelectedBtn">
+    🗑️ Delete Selected
+</button>
+document
+    .getElementById("deleteSelectedBtn")
+    .addEventListener("click", async () => {
+
+        const selected = [
+            ...document.querySelectorAll(
+                ".applicationSelect:checked"
+            )
+        ].map(checkbox => checkbox.value);
+
+        if (selected.length === 0) {
+
+            alert("Please select at least one application.");
+
+            return;
+        }
+
+        const confirmed = confirm(
+            `Delete ${selected.length} selected application(s)?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+
+            const response = await fetch(
+                "/applications/delete-selected",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        ids: selected
+                    })
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+
+                throw new Error(
+                    result.message ||
+                    "Delete failed."
+                );
+
+            }
+
+            alert(result.message);
+
+            loadApplications();
+
+        } catch (err) {
+
+            console.error(err);
+
+            alert("Unable to delete selected applications.");
+
+        }
+
+    });
+
             <br><br>
+
+            <input
+    type="checkbox"
+    class="applicationSelect"
+    value="${app.id}"
+>
 
 <button class="viewBtn" data-id="${app.id}">
     👁️ View
@@ -423,7 +499,72 @@ ${new Date(app.created_at).toLocaleString()}
 `);
 
 }
+document
+    .getElementById("deleteSelectedBtn")
+    .addEventListener("click", async () => {
 
+        const selected = [
+            ...document.querySelectorAll(
+                ".applicationSelect:checked"
+            )
+        ].map(checkbox => checkbox.value);
+
+        if (selected.length === 0) {
+
+            alert("Please select at least one application.");
+
+            return;
+        }
+
+        const confirmed = confirm(
+            `Delete ${selected.length} selected application(s)?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+
+            const response = await fetch(
+                "/applications/delete-selected",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        ids: selected
+                    })
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+
+                throw new Error(
+                    result.message ||
+                    "Delete failed."
+                );
+
+            }
+
+            alert(result.message);
+
+            loadApplications();
+
+        } catch (err) {
+
+            console.error(err);
+
+            alert("Unable to delete selected applications.");
+
+        }
+
+    });
 // ===============================
 // MARK CODE AS SENT
 // ===============================
