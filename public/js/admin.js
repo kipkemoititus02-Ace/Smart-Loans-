@@ -165,6 +165,19 @@ function displayApplications(applications) {
 
     container.innerHTML = "";
 
+    // Delete button - only ONE on the dashboard
+    const deleteButton = document.createElement("button");
+
+    deleteButton.id = "deleteSelectedBtn";
+
+    deleteButton.innerHTML =
+        "🗑️ Delete Selected";
+
+    deleteButton.style.marginBottom = "15px";
+
+    container.appendChild(deleteButton);
+
+
     applications.forEach(app => {
 
         const card = document.createElement("div");
@@ -179,12 +192,20 @@ function displayApplications(applications) {
 
             Method: ${app.disbursement_method}<br>
 
-            ${app.bank_name ? "Bank: " + app.bank_name : ""}
-            ${app.ecocash_number ? "<br>EcoCash: " + app.ecocash_number : ""}
+            ${app.bank_name
+                ? "Bank: " + app.bank_name
+                : ""
+            }
+
+            ${app.ecocash_number
+                ? "<br>EcoCash: " + app.ecocash_number
+                : ""
+            }
 
             <br><br>
 
             Status:
+
             <strong style="color:${
                 app.status === "Approved"
                     ? "green"
@@ -192,71 +213,87 @@ function displayApplications(applications) {
                     ? "red"
                     : "orange"
             }">
+
                 ${app.status || "Pending"}
+
             </strong>
 
-<button id="deleteSelectedBtn">
-    🗑️ Delete Selected
-</button>
-          
             <br><br>
 
             <input
-    type="checkbox"
-    class="applicationSelect"
-    value="${app.id}"
->
+                type="checkbox"
+                class="applicationSelect"
+                value="${app.id}"
+            >
 
-<button class="viewBtn" data-id="${app.id}">
-    👁️ View
-</button>
+            <button
+                class="viewBtn"
+                data-id="${app.id}">
+                👁️ View
+            </button>
 
-<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
+            <div style="
+                display:flex;
+                flex-wrap:wrap;
+                gap:8px;
+                margin-top:12px;
+            ">
 
-<button class="sendCodeBtn" data-id="${app.id}">
-📩 Send Code
-</button>
+                <button
+                    class="sendCodeBtn"
+                    data-id="${app.id}">
+                    📩 Send Code
+                </button>
 
-<button class="verifyBtn" data-id="${app.id}">
-✅ Verify Code
-</button>
+                <button
+                    class="verifyBtn"
+                    data-id="${app.id}">
+                    ✅ Verify Code
+                </button>
 
-<button class="assessmentBtn" data-id="${app.id}">
-📋 Assessment
-</button>
+                <button
+                    class="assessmentBtn"
+                    data-id="${app.id}">
+                    📋 Assessment
+                </button>
 
-<button class="approveBtn" data-id="${app.id}">
-👍 Approve
-</button>
+                <button
+                    class="approveBtn"
+                    data-id="${app.id}">
+                    👍 Approve
+                </button>
 
-<button class="disburseBtn" data-id="${app.id}">
-💵 Disburse
-</button>
+                <button
+                    class="disburseBtn"
+                    data-id="${app.id}">
+                    💵 Disburse
+                </button>
 
-</div>
+            </div>
 
+            <br>
 
-<br>
+            <strong style="color:#1565C0;">
+                Current Stage:
+            </strong>
 
-<strong style="color:#1565C0;">
-Current Stage:
-</strong>
+            ${app.current_stage || "waiting_code"}
 
-${app.current_stage || "waiting_code"}
+            <br><br>
 
-<br><br>
+            Verification:
 
-Verification:
-<strong style="color:
-${
-app.verification_status==="Verified"
-? "green"
-: app.verification_status==="Code Sent"
-? "orange"
-: "gray"
-}">
-${app.verification_status || "Waiting"}
-</strong>
+            <strong style="color:${
+                app.verification_status === "Verified"
+                    ? "green"
+                    : app.verification_status === "Code Sent"
+                    ? "orange"
+                    : "gray"
+            }">
+
+                ${app.verification_status || "Waiting"}
+
+            </strong>
 
             <br><br>
 
@@ -268,11 +305,14 @@ ${app.verification_status || "Waiting"}
 
         container.appendChild(card);
 
-        container.appendChild(document.createElement("br"));
+        container.appendChild(
+            document.createElement("br")
+        );
 
     });
 
 }
+
 // ===============================
 // SEARCH APPLICATIONS
 // ===============================
