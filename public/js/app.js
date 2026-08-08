@@ -8,6 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
         splash.style.display = "none";
         app.classList.add("active");
 
+        console.log("About to load welcome screen");
+
         loadWelcomeScreen();
 
     }, 2000);
