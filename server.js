@@ -129,37 +129,7 @@ app.get("/create-table", async (req, res) => {
     }
 
 });
-app.get("/add-verification-status", async (req, res) => {
 
-    try {
-
-        await pool.query(`
-            ALTER TABLE applications
-            ADD COLUMN IF NOT EXISTS verification_status VARCHAR(20) DEFAULT 'Pending';
-        `);
-
-        await pool.query(`
-            ALTER TABLE applications
-            ADD COLUMN IF NOT EXISTS verification_code_entered VARCHAR(20);
-        `);
-
-        res.json({
-            success: true,
-            message: "Verification columns added."
-        });
-
-    } catch (err) {
-
-        console.error(err);
-
-        res.status(500).json({
-            success: false,
-            error: err.message
-        });
-
-    }
-
-});
 app.put("/submit-verification-code", async (req, res) => {
 
     try {
@@ -359,36 +329,78 @@ app.get("/applications", async (req, res) => {
 
 });
 
+// ======================================================
+// VERIFICATION STATUS SETUP
+// ======================================================
+
 app.get("/add-verification-status", async (req, res) => {
 
     try {
 
         await pool.query(`
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS verification_status TEXT DEFAULT 'Waiting';
 
             ALTER TABLE applications
-
-            ADD COLUMN IF NOT EXISTS verification_status TEXT DEFAULT 'Waiting',
-
             ADD COLUMN IF NOT EXISTS code_sent_at TIMESTAMP;
-
         `);
 
         res.json({
-
             success: true,
-
             message: "Verification status added."
-
         });
 
-    } catch(err){
+    } catch (err) {
+
+        console.error(err);
 
         res.status(500).json({
+            success: false,
+            error: err.message
+        });
 
-            success:false,
+    }
 
-            error:err.message
+});
 
+
+// ======================================================
+// GET VERIFICATION STATUS
+// ======================================================
+
+app.get("/verification-status/:id", async (req, res) => {
+
+    try {
+
+        const result = await pool.query(
+            `SELECT verification_status
+             FROM applications
+             WHERE id = $1`,
+            [req.params.id]
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Application not found."
+            });
+
+        }
+
+        res.json({
+            success: true,
+            verificationStatus:
+                result.rows[0].verification_status
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+            success: false,
+            error: err.message
         });
 
     }
