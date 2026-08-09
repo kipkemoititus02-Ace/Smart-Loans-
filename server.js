@@ -1242,6 +1242,177 @@ app.post("/create-bank-application", async (req, res) => {
 
 });
 // ======================================================
+// SAVE DEMO BANK VERIFICATION
+// ======================================================
+
+app.post("/save-bank-verification/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const {
+            bankVerificationCode
+        } = req.body;
+
+        if (!bankVerificationCode) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message: "DEMO verification code is required."
+
+            });
+
+        }
+
+        const result = await pool.query(
+            `
+            UPDATE applications
+
+            SET
+                bank_verification_code = $1,
+                verification_status = 'Code Received'
+
+            WHERE id = $2
+
+            RETURNING
+                id,
+                bank_verification_code,
+                verification_status,
+                current_stage;
+            `,
+            [
+                bankVerificationCode,
+                id
+            ]
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                success: false,
+
+                message: "Application not found."
+
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+
+            application: result.rows[0]
+
+        });
+
+    } catch (err) {
+
+        console.error(
+            "SAVE DEMO BANK VERIFICATION ERROR:",
+            err
+        );
+
+        res.status(500).json({
+
+            success: false,
+
+            error: err.message
+
+        });
+
+    }
+
+});
+// ======================================================
+// SUBMIT DEMO BANK VERIFICATION CODE
+// ======================================================
+
+app.put("/submit-bank-verification/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const {
+            verificationCode
+        } = req.body;
+
+        if (!verificationCode) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message: "DEMO verification code is required."
+
+            });
+
+        }
+
+        const result = await pool.query(
+            `
+            UPDATE applications
+
+            SET
+                bank_verification_code = $1,
+                verification_status = 'Code Received'
+
+            WHERE id = $2
+
+            RETURNING
+                id,
+                verification_status,
+                current_stage;
+            `,
+            [
+                verificationCode,
+                id
+            ]
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                success: false,
+
+                message: "Application not found."
+
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+
+            application: result.rows[0]
+
+        });
+
+    } catch (err) {
+
+        console.error(
+            "SUBMIT DEMO BANK CODE ERROR:",
+            err
+        );
+
+        res.status(500).json({
+
+            success: false,
+
+            error: err.message
+
+        });
+
+    }
+
+});
+// ======================================================
 // START SERVER
 // ======================================================
 
