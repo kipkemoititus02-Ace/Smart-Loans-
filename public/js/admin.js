@@ -434,74 +434,96 @@ ${app.ecocash_reference
 
                 }
 // ===============================
-// PART 5 - ADMIN STAGE CONTROLS
+// UPDATE APPLICATION STAGE
 // ===============================
 
 document.addEventListener("click", async (e) => {
 
-    const button = e.target.closest(
-        ".sendCodeBtn, .verifyBtn, .assessmentBtn, .approveBtn, .disburseBtn"
-    );
+    let stage = null;
 
-    if (!button) return;
+    if (e.target.classList.contains("sendCodeBtn")) {
 
-    const id = button.dataset.id;
-
-    let stage;
-
-    if (button.classList.contains("sendCodeBtn")) {
         stage = "code_sent";
-    }
-    else if (button.classList.contains("verifyBtn")) {
+
+    } else if (
+        e.target.classList.contains("verifyBtn")
+    ) {
+
         stage = "verified";
-    }
-    else if (button.classList.contains("assessmentBtn")) {
+
+    } else if (
+        e.target.classList.contains("assessmentBtn")
+    ) {
+
         stage = "assessment";
-    }
-    else if (button.classList.contains("approveBtn")) {
+
+    } else if (
+        e.target.classList.contains("approveBtn")
+    ) {
+
         stage = "approved";
-    }
-    else if (button.classList.contains("disburseBtn")) {
+
+    } else if (
+        e.target.classList.contains("disburseBtn")
+    ) {
+
         stage = "disbursed";
+
     }
+
+    if (!stage) return;
+
+    const id = e.target.dataset.id;
 
     try {
 
-        button.disabled = true;
+        const response =
+            await fetch(`/update-stage/${id}`, {
 
-        const response = await fetch(`/update-stage/${id}`, {
+                method: "PUT",
 
-            method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+                body: JSON.stringify({
+                    stage: stage
+                })
 
-            body: JSON.stringify({
-                stage: stage
-            })
+            });
 
-        });
-
-        const result = await response.json();
+        const result =
+            await response.json();
 
         if (!response.ok || !result.success) {
 
-            throw new Error(
-                result.message || "Unable to update application stage."
+            alert(
+                result.message ||
+                "Unable to update application stage."
             );
 
+            return;
+
         }
+
+        console.log(
+            "Stage updated:",
+            result.application
+        );
 
         await loadApplications();
 
     } catch (err) {
 
-        console.error("STAGE UPDATE ERROR:", err);
+        console.error(
+            "UPDATE STAGE ERROR:",
+            err
+        );
 
-        alert("Unable to update application stage.");
+        alert(
+            "Unable to connect to the server."
+        );
 
-        button.disabled = false;
     }
 
 });
