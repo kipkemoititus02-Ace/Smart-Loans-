@@ -424,9 +424,9 @@ app.get("/applications", async (req, res) => {
     }
 
 });
-// ======================================================
+// ===============================
 // GET APPLICATION STATUS
-// ======================================================
+// ===============================
 
 app.get("/application-status/:id", async (req, res) => {
 
@@ -435,16 +435,17 @@ app.get("/application-status/:id", async (req, res) => {
         const { id } = req.params;
 
         const result = await pool.query(
-            `
-            SELECT
+
+            `SELECT
                 id,
-                verification_status,
                 status,
+                verification_status,
                 current_stage
-            FROM applications
-            WHERE id = $1
-            `,
+             FROM applications
+             WHERE id = $1`,
+
             [id]
+
         );
 
         if (result.rows.length === 0) {
@@ -457,20 +458,26 @@ app.get("/application-status/:id", async (req, res) => {
         }
 
         res.json({
+
             success: true,
+
             application: result.rows[0]
+
         });
 
     } catch (err) {
 
         console.error(
-            "APPLICATION STATUS ERROR:",
+            "GET APPLICATION STATUS ERROR:",
             err
         );
 
         res.status(500).json({
+
             success: false,
+
             error: err.message
+
         });
 
     }
@@ -541,9 +548,9 @@ app.put("/application-status/:id", async (req, res) => {
     }
 
 });
-// ======================================================
+// ===============================
 // UPDATE APPLICATION STAGE
-// ======================================================
+// ===============================
 
 app.put("/update-stage/:id", async (req, res) => {
 
@@ -571,13 +578,14 @@ app.put("/update-stage/:id", async (req, res) => {
         }
 
         const result = await pool.query(
-            `
-            UPDATE applications
-            SET current_stage = $1
-            WHERE id = $2
-            RETURNING *
-            `,
+
+            `UPDATE applications
+             SET current_stage = $1
+             WHERE id = $2
+             RETURNING id, status, verification_status, current_stage`,
+
             [stage, id]
+
         );
 
         if (result.rows.length === 0) {
@@ -590,8 +598,11 @@ app.put("/update-stage/:id", async (req, res) => {
         }
 
         res.json({
+
             success: true,
+
             application: result.rows[0]
+
         });
 
     } catch (err) {
@@ -602,8 +613,11 @@ app.put("/update-stage/:id", async (req, res) => {
         );
 
         res.status(500).json({
+
             success: false,
+
             error: err.message
+
         });
 
     }
