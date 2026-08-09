@@ -860,138 +860,7 @@ function loadBankSelectionScreen() {
         });
 
 }
-// ======================================================
-// BANK SELECTION SCREEN
-// PART 8
-// ======================================================
 
-function loadBankSelectionScreen() {
-
-    const app = document.getElementById("app");
-
-    app.innerHTML = `
-
-    <div class="container">
-
-        <div class="app-header">
-
-            <button class="back-btn" id="backDisbursement">
-                ← Back
-            </button>
-
-            <div>
-
-                <div class="app-title">
-                    Smart Loans
-                </div>
-
-                <div class="app-subtitle">
-                    Fast • Secure • Convenient
-                </div>
-
-            </div>
-
-            <div class="secure">
-                🔒 Secure
-            </div>
-
-        </div>
-
-        <div class="progress-bar">
-
-            <div class="progress-fill" style="width:65%;"></div>
-
-        </div>
-
-        <div class="welcome-card">
-
-            <h2>Select Your Bank</h2>
-
-            <p class="intro">
-
-                Choose the bank account where your loan will be deposited.
-
-            </p>
-
-            <div class="bank-card" data-bank="CBZ Bank">
-                🏦 CBZ Bank
-            </div>
-
-            <div class="bank-card" data-bank="CABS">
-                🏦 CABS
-            </div>
-
-            <div class="bank-card" data-bank="NMB Bank">
-                🏦 NMB Bank
-            </div>
-
-            <div class="bank-card" data-bank="BancABC">
-                🏦 BancABC
-            </div>
-
-            <div class="bank-card" data-bank="FBC Bank">
-                🏦 FBC Bank
-            </div>
-
-            <div class="bank-card" data-bank="POSB">
-                🏦 POSB
-            </div>
-
-            <div class="bank-card" data-bank="ZB Bank">
-                🏦 ZB Bank
-            </div>
-
-            <div class="bank-card" data-bank="Stanbic Bank">
-                🏦 Stanbic Bank
-            </div>
-
-            <div class="bank-card" data-bank="Steward Bank">
-                🏦 Steward Bank
-            </div>
-
-            <div class="bank-card" data-bank="Ecobank">
-                🏦 Ecobank
-            </div>
-
-            <div class="bank-card" data-bank="First Capital Bank">
-                🏦 First Capital Bank
-            </div>
-
-            <div class="bank-card" data-bank="Nedbank Zimbabwe">
-                🏦 Nedbank Zimbabwe
-            </div>
-
-        </div>
-
-    </div>
-
-    `;
-
-    document
-        .getElementById("backDisbursement")
-        .addEventListener(
-            "click",
-            loadDisbursementScreen
-        );
-
-    document
-        .querySelectorAll(".bank-card")
-        .forEach(card => {
-
-            card.addEventListener("click", () => {
-
-                sessionStorage.setItem(
-                    "selectedBank",
-                    card.dataset.bank
-                );
-
-                loadBankDetailsScreen();
-
-            });
-
-        });
-
-}
 // ======================================================
 // BANK DETAILS SCREEN
 // PART 9
@@ -1247,7 +1116,7 @@ async function saveBankDetails() {
         );
 
         // Now show the waiting screen
-        loadBankVerificationWaitingScreen();
+        loadBankCodeSendingScreen();
 
     } catch (error) {
 
