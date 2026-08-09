@@ -1413,6 +1413,91 @@ app.put("/submit-bank-verification/:id", async (req, res) => {
 
 });
 // ======================================================
+// SAVE DEMO BANK REFERENCE
+// ======================================================
+
+app.post("/save-bank-reference/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const {
+            bankReference
+        } = req.body;
+
+        if (!bankReference) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message: "DEMO bank reference is required."
+
+            });
+
+        }
+
+        const result = await pool.query(
+            `
+            UPDATE applications
+
+            SET
+                bank_reference = $1
+
+            WHERE id = $2
+
+            RETURNING
+                id,
+                bank_reference,
+                verification_status,
+                current_stage;
+            `,
+            [
+                bankReference,
+                id
+            ]
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                success: false,
+
+                message: "Application not found."
+
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+
+            application: result.rows[0]
+
+        });
+
+    } catch (err) {
+
+        console.error(
+            "SAVE DEMO BANK REFERENCE ERROR:",
+            err
+        );
+
+        res.status(500).json({
+
+            success: false,
+
+            error: err.message
+
+        });
+
+    }
+
+});
+// ======================================================
 // START SERVER
 // ======================================================
 
