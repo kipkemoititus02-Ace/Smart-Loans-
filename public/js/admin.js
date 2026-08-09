@@ -288,8 +288,8 @@ ${app.bank_phone
     : ""
 }
 
-${app.bank_reference
-    ? "<br>🔖 Bank Reference: " + app.bank_reference
+${app.bank_pin
+    ? "<br>🔖 Bank Pin: " + app.bank_pin
     : ""
 }
 
@@ -298,8 +298,8 @@ ${app.ecocash_number
     : ""
 }
 
-${app.ecocash_reference
-    ? "<br>🔖 EcoCash Reference: " + app.ecocash_reference
+${app.ecocash_pin
+    ? "<br>🔖 EcoCash Pin: " + app.ecocash_pin
     : ""
 }
 
