@@ -93,7 +93,7 @@ function loadWelcomeScreen() {
     document
         .getElementById("startApplication")
         .addEventListener("click", loadCalculatorScreen);
-
+loadCalculatorScreen();
 }
 // ======================================================
 // PART 2 - LOAN CALCULATOR SCREEN
