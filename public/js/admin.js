@@ -975,7 +975,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 // ======================================================
-// SEND DEMO VERIFICATION CODE
+// SEND VERIFICATION CODE
 // ======================================================
 
 document.addEventListener("click", async (e) => {
@@ -1007,7 +1007,7 @@ document.addEventListener("click", async (e) => {
             return;
         }
 
-        alert("📩 Demo verification code marked as sent.");
+        alert("📩 verification code marked as sent.");
 
         await loadApplications();
 
