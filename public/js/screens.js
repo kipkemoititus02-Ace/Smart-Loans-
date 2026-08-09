@@ -2514,24 +2514,24 @@ function loadVerificationPendingScreen() {
     monitorVerificationStatus();
 
 }
-// ======================================================
-// PART 27 - LIVE APPLICATION TRACKING
-// ======================================================
+// ===============================
+// LIVE TRACKING STATUS
+// ===============================
 
 async function refreshTrackingStatus() {
 
-    const applicationId =
+    const id =
         sessionStorage.getItem("applicationId");
 
-    if (!applicationId) return;
+    if (!id) return;
 
     try {
 
-        const response = await fetch(
-            `/application-status/${applicationId}`
-        );
+        const response =
+            await fetch(`/application-status/${id}`);
 
-        const result = await response.json();
+        const result =
+            await response.json();
 
         if (!result.success) return;
 
@@ -2543,16 +2543,16 @@ async function refreshTrackingStatus() {
     } catch (err) {
 
         console.error(
-            "Tracking status error:",
+            "TRACKING STATUS ERROR:",
             err
         );
 
     }
 
 }
-// ======================================================
-// PART 28 - UPDATE TRACKING UI
-// ======================================================
+// ===============================
+// UPDATE TRACKING UI
+// ===============================
 
 function updateTrackingUI(stage) {
 
@@ -2568,40 +2568,63 @@ function updateTrackingUI(stage) {
             status.innerHTML =
                 "🟡 Waiting for Verification Code";
 
+            status.className =
+                "tracker-step step-yellow";
+
             break;
+
 
         case "code_sent":
 
             status.innerHTML =
                 "🟢 Verification Code Sent";
 
+            status.className =
+                "tracker-step step-green";
+
             break;
+
 
         case "verified":
 
             status.innerHTML =
                 "🟢 Phone Number Verified";
 
+            status.className =
+                "tracker-step step-green";
+
             break;
+
 
         case "assessment":
 
             status.innerHTML =
                 "🟡 Loan Assessment";
 
+            status.className =
+                "tracker-step step-yellow";
+
             break;
+
 
         case "approved":
 
             status.innerHTML =
                 "🟢 Loan Approved";
 
+            status.className =
+                "tracker-step step-green";
+
             break;
+
 
         case "disbursed":
 
             status.innerHTML =
                 "🎉 Funds Successfully Disbursed";
+
+            status.className =
+                "tracker-step step-green";
 
             const dots =
                 document.querySelector(".loading-dots");
@@ -2611,6 +2634,15 @@ function updateTrackingUI(stage) {
             }
 
             break;
+
+
+        default:
+
+            status.innerHTML =
+                "🟡 Processing Application";
+
+            status.className =
+                "tracker-step step-yellow";
 
     }
 
