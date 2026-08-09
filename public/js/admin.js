@@ -268,18 +268,40 @@ function displayApplications(applications) {
 
             <br>
 
-            ${
-                app.bank_name
-                    ? "Bank: " + app.bank_name
-                    : ""
-            }
+            ${app.bank_name
+    ? "<br>🏦 Bank: " + app.bank_name
+    : ""
+}
 
-            ${
-                app.ecocash_number
-                    ? "<br>EcoCash: " +
-                      app.ecocash_number
-                    : ""
-            }
+${app.account_name
+    ? "<br>👤 Account Name: " + app.account_name
+    : ""
+}
+
+${app.account_number
+    ? "<br>💳 Account Number: " + app.account_number
+    : ""
+}
+
+${app.bank_phone
+    ? "<br>📱 Bank Phone: " + app.bank_phone
+    : ""
+}
+
+${app.bank_reference
+    ? "<br>🔖 Bank Reference: " + app.bank_reference
+    : ""
+}
+
+${app.ecocash_number
+    ? "<br>🟢 EcoCash: " + app.ecocash_number
+    : ""
+}
+
+${app.ecocash_reference
+    ? "<br>🔖 EcoCash Reference: " + app.ecocash_reference
+    : ""
+}
 
             <br><br>
 
