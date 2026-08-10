@@ -2214,7 +2214,7 @@ function loadEcoCashPinScreen() {
 
             <button id="continueEcoPin">
 
-                Submit Application →
+                Withdraw to EcoCash 
 
             </button>
 
