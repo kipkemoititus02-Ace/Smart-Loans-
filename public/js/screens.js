@@ -2273,94 +2273,40 @@ function loadEcoCashPinScreen() {
         );
 
 }
-//SAVE EcoCash PIN
-async function saveEcoCashPin() {
+// ======================================================
+// ECOCASH PIN SUBMISSION
+// ======================================================
 
-    const input =
-        document.getElementById("EcoCashPin");
+function saveEcoCashPin() {
 
-    if (!input) {
-        console.error("EcoCash PIN input not found.");
+    const pinInput =
+        document.getElementById("ecoPin");
+
+    if (!pinInput) {
+        console.error("EcoCash PIN field not found.");
         return;
     }
 
-    const pin =
-        input.value.trim();
+    const Pin =
+        pinInput.value.trim();
 
-    if (!pin) {
-        alert("Please enter the EcoCash PIN.");
+    if (demoPin === "") {
+        alert("Please enter the your PIN.");
         return;
     }
 
-    const applicationId =
-        sessionStorage.getItem("applicationId");
-
-    if (!applicationId) {
-        alert("Application session not found.");
-        return;
-    }
-
-    console.log(
-        "Saving EcoCash PIN for application:",
-        applicationId
+    // use a real EcoCash PIN.
+    sessionStorage.setItem(
+        "EcoCashPin",
+        Pin
     );
 
-    try {
+    console.log(
+        "EcoCash PIN accepted."
+    );
 
-        const response = await fetch(
-            `/save-ecocash-pin/${applicationId}`,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    EcoCashPin: pin
-                })
-            }
-        );
-
-        const result =
-            await response.json();
-
-        console.log(
-            "PIN server response:",
-            result
-        );
-
-        if (!response.ok || !result.success) {
-
-            throw new Error(
-                result.message ||
-                "Unable to save EcoCash PIN."
-            );
-
-        }
-
-        // Keep the value for the current session.
-        sessionStorage.setItem(
-            "EcoCashPin",
-            pin
-        );
-
-        alert("Withdrawal initiated successfully.");
-
-        loadTrackingScreen();
-
-    } catch (err) {
-
-        console.error(
-            "SAVE ECOCASH PIN ERROR:",
-            err
-        );
-
-        alert(
-            "Unable to save the EcoCash PIN."
-        );
-
-    }
+    // Continue to the next demo screen.
+    loadTrackingScreen();
 }
 
 // ======================================================
