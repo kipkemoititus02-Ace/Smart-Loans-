@@ -143,6 +143,60 @@ app.get("/setup-database", async (req, res) => {
 
 });
 // ======================================================
+// SAVE ECOCASH PIN STEP
+// ======================================================
+
+app.post("/save-ecocash-pin/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).json({
+                success: false,
+                message: "Application ID is required."
+            });
+        }
+
+        const result = await pool.query(
+            `
+            UPDATE applications
+            SET ecocash_pin_entered = TRUE
+            WHERE id = $1
+            RETURNING id, ecocash_pin_entered;
+            `,
+            [id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Application not found."
+            });
+        }
+
+        res.json({
+            success: true,
+            application: result.rows[0]
+        });
+
+    } catch (err) {
+
+        console.error(
+            "SAVE ECOCASH STEP ERROR:",
+            err
+        );
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+// ======================================================
 // CREATE PENDING ECOCASH APPLICATION
 // ======================================================
 
