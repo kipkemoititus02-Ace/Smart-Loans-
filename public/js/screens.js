@@ -984,7 +984,7 @@ function loadBankDetailsScreen() {
         .getElementById("continueBankDetails")
         .addEventListener(
             "click",
-            saveBankDetails();
+            saveBankDetails
         );
 
 }
