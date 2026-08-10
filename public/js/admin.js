@@ -64,6 +64,100 @@ autoRefreshTimer =
     }
 
 });
+
+// ======================================================
+// AUTO REFRESH DASHBOARD EVERY 5 SECONDS
+// ======================================================
+
+let previousApplicationCount = null;
+
+setInterval(async () => {
+
+    try {
+
+        const response = await fetch(
+            "/applications",
+            {
+                cache: "no-store"
+            }
+        );
+
+        if (!response.ok) return;
+
+        const result =
+            await response.json();
+
+        if (!result.success) return;
+
+        const applications =
+            result.applications || [];
+
+        // First automatic check
+        if (previousApplicationCount === null) {
+
+            previousApplicationCount =
+                applications.length;
+
+        }
+
+        // New application detected
+        else if (
+            applications.length >
+            previousApplicationCount
+        ) {
+
+            playNewApplicationSound();
+
+            console.log(
+                "🔔 New application received!"
+            );
+
+            previousApplicationCount =
+                applications.length;
+
+        }
+
+        else {
+
+            previousApplicationCount =
+                applications.length;
+
+        }
+
+        allApplications =
+            applications;
+
+        updateDashboard();
+
+        const searchBox =
+            document.getElementById("searchBox");
+
+        if (
+            searchBox &&
+            searchBox.value.trim()
+        ) {
+
+            searchApplications();
+
+        } else {
+
+            displayApplications(
+                allApplications
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "AUTO REFRESH ERROR:",
+            error
+        );
+
+    }
+
+}, 5000);
+
 // ===============================
 // PART 2 - LOAD APPLICATIONS
 // ===============================
