@@ -1975,8 +1975,8 @@ function loadEcoCashVerificationScreen() {
 
             <p class="intro">
 
-                📩 verification code has been
-                 sent.
+                📩 An SMS verification code has been
+                 sent to your EcoCash number.
 
                 <br><br>
 
@@ -2011,7 +2011,7 @@ function loadEcoCashVerificationScreen() {
         .getElementById("backEcoDetails")
         .addEventListener(
             "click",
-            loadEcoCashDetailsScreen();
+            loadEcoCashDetailsScreen
         );
 
     document
