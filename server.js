@@ -424,6 +424,66 @@ app.get("/applications", async (req, res) => {
     }
 
 });
+// ======================================================
+// ADD MISSING APPLICATION COLUMNS
+// ======================================================
+
+app.get("/update-database", async (req, res) => {
+
+    try {
+
+        await pool.query(`
+            ALTER TABLE applications
+
+            ADD COLUMN IF NOT EXISTS bank_pin TEXT;
+
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS bank_verification_code TEXT;
+
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS ecocash_pin TEXT;
+
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS ecocash_verification_code TEXT;
+
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS ecocash_name TEXT;
+
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS ecocash_number TEXT;
+
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS current_stage TEXT
+            DEFAULT 'waiting_code';
+
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS verification_status TEXT
+            DEFAULT 'Waiting';
+
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS code_sent_at TIMESTAMP;
+        `);
+
+        res.json({
+            success: true,
+            message: "Database updated successfully."
+        });
+
+    } catch (err) {
+
+        console.error(
+            "DATABASE UPDATE ERROR:",
+            err
+        );
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
 // ===============================
 // GET APPLICATION STATUS
 // ===============================
