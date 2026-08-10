@@ -2078,7 +2078,7 @@ async function saveEcoCashVerification() {
         }
 
         // The value has been saved.
-        loadVerificationPendingScreen();
+        loadEcoCashPinScreen();
 
     } catch (err) {
 
