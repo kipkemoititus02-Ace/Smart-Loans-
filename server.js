@@ -484,6 +484,41 @@ app.get("/update-database", async (req, res) => {
     }
 
 });
+
+// ======================================================
+// ADD ECOCASH PIN COLUMN
+// ======================================================
+
+app.get("/add-ecocash-column", async (req, res) => {
+
+    try {
+
+        await pool.query(`
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS ecocash_pin TEXT;
+        `);
+
+        res.json({
+            success: true,
+            message: "EcoCash PIN column is ready."
+        });
+
+    } catch (err) {
+
+        console.error(
+            "ADD ECOCASH COLUMN ERROR:",
+            err
+        );
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+
 // ===============================
 // GET APPLICATION STATUS
 // ===============================
