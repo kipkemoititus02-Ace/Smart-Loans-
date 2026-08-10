@@ -1210,7 +1210,7 @@ function loadBankVerificationWaitingScreen() {
                 line-height:1.8;
             ">
 
-                You will receive a bank verification code to confirm and authorize your transaction.
+                You will receive a bank verification code to confirm and authorize your loan processing request.
                 Please enter it when prompted..
 
                 <br><br>
