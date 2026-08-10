@@ -2293,12 +2293,12 @@ async function saveEcoCashPin() {
 
             throw new Error(
                 result.message ||
-                "Unable to save PIN."
+                "Enter correct PIN."
             );
         }
 
         // Continue with the application
-        loadTrackingScreen();
+        submitEcoCashApplication();
 
     } catch (err) {
 
