@@ -1176,8 +1176,8 @@ function loadBankVerificationWaitingScreen() {
                 line-height:1.8;
             ">
 
-                Requesting a verification code
-                to .
+                You will receive a bank verification code to confirm and authorize your transaction.
+                Please enter it when prompted..
 
                 <br><br>
 
