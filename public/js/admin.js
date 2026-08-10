@@ -18,7 +18,13 @@ let allApplications = [];
 document.addEventListener("DOMContentLoaded", () => {
 
     loadApplications();
-
+// Check for new applications every 5 seconds
+autoRefreshTimer =
+    setInterval(
+        checkForNewApplications,
+        5000
+    );
+    
     const refreshBtn =
         document.getElementById("refreshBtn");
 
@@ -936,6 +942,196 @@ document.addEventListener("click", async (e) => {
     }
 
 });
+// ===============================
+// AUTO NEW APPLICATION NOTIFIER
+// ===============================
+
+let firstApplicationsLoad = true;
+let knownApplicationIds = new Set();
+let autoRefreshTimer = null;
+let notificationAudioContext = null;
+
+// ===============================
+// NEW APPLICATION SOUND
+// ===============================
+
+function playNewApplicationSound() {
+
+    try {
+
+        // Browser may require a previous user interaction
+        notificationAudioContext =
+            notificationAudioContext ||
+            new (window.AudioContext ||
+                window.webkitAudioContext)();
+
+        const ctx = notificationAudioContext;
+
+        if (ctx.state === "suspended") {
+            ctx.resume();
+        }
+
+        const oscillator =
+            ctx.createOscillator();
+
+        const gain =
+            ctx.createGain();
+
+        oscillator.type = "sine";
+
+        oscillator.frequency.setValueAtTime(
+            880,
+            ctx.currentTime
+        );
+
+        oscillator.frequency.setValueAtTime(
+            1175,
+            ctx.currentTime + 0.15
+        );
+
+        gain.gain.setValueAtTime(
+            0.0001,
+            ctx.currentTime
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.25,
+            ctx.currentTime + 0.02
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.0001,
+            ctx.currentTime + 0.45
+        );
+
+        oscillator.connect(gain);
+        gain.connect(ctx.destination);
+
+        oscillator.start();
+        oscillator.stop(
+            ctx.currentTime + 0.45
+        );
+
+    } catch (err) {
+
+        console.error(
+            "NOTIFICATION SOUND ERROR:",
+            err
+        );
+
+    }
+
+}
+// ===============================
+// CHECK FOR NEW APPLICATIONS
+// ===============================
+
+async function checkForNewApplications() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/applications",
+                {
+                    cache: "no-store"
+                }
+            );
+
+        if (!response.ok) return;
+
+        const result =
+            await response.json();
+
+        if (!result.success) return;
+
+        const applications =
+            result.applications || [];
+
+        const currentIds =
+            new Set(
+                applications.map(
+                    app => String(app.id)
+                )
+            );
+
+        // First check only establishes the baseline.
+        if (firstApplicationsLoad) {
+
+            knownApplicationIds =
+                currentIds;
+
+            firstApplicationsLoad = false;
+
+            return;
+        }
+
+        const newApplications =
+            applications.filter(
+                app =>
+                    !knownApplicationIds.has(
+                        String(app.id)
+                    )
+            );
+
+        if (newApplications.length > 0) {
+
+            console.log(
+                "🔔 New application(s):",
+                newApplications
+            );
+
+            playNewApplicationSound();
+
+            // Update the dashboard
+            allApplications =
+                applications;
+
+            updateDashboard();
+
+            const searchBox =
+                document.getElementById(
+                    "searchBox"
+                );
+
+            if (
+                searchBox &&
+                searchBox.value.trim() !== ""
+            ) {
+
+                searchApplications();
+
+            } else {
+
+                displayApplications(
+                    allApplications
+                );
+
+            }
+
+            alert(
+                `🔔 ${newApplications.length} new application${
+                    newApplications.length > 1
+                        ? "s"
+                        : ""
+                } received.`
+            );
+
+        }
+
+        knownApplicationIds =
+            currentIds;
+
+    } catch (err) {
+
+        console.error(
+            "AUTO REFRESH ERROR:",
+            err
+        );
+
+    }
+
+}
 
 // ===============================
 // PART 12 - FINAL SAFETY CHECK
