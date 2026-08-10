@@ -1115,7 +1115,7 @@ async function saveBankDetails() {
         );
 
         // Now show the waiting screen
-        loadBankVerificationWaitingScreen);
+        loadBankVerificationWaitingScreen();
 
     } catch (error) {
 
