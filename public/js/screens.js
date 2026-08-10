@@ -93,7 +93,6 @@ function loadWelcomeScreen() {
     document
         .getElementById("startApplication")
         .addEventListener("click", loadCalculatorScreen);
-loadCalculatorScreen();
 }
 // ======================================================
 // PART 2 - LOAN CALCULATOR SCREEN
@@ -290,7 +289,7 @@ function initializeCalculator() {
 
     continueBtn.addEventListener(
         "click",
-        loadPersonalInformationScreen();
+        loadPersonalInformationScreen
     );
 
 }
@@ -414,7 +413,7 @@ function loadPersonalInformationScreen() {
         .getElementById("continuePersonal")
         .addEventListener(
             "click",
-            savePersonalInformation();
+            savePersonalInformation
         );
 
 }
@@ -613,14 +612,14 @@ function loadReviewScreen() {
         .getElementById("backPersonal")
         .addEventListener(
             "click",
-            loadPersonalInformationScreen();
+            loadPersonalInformationScreen
         );
 
     document
         .getElementById("continueReview")
         .addEventListener(
             "click",
-            loadDisbursementScreen();
+            loadDisbursementScreen
         );
 
 }
@@ -704,7 +703,7 @@ function loadDisbursementScreen() {
         .getElementById("backReview")
         .addEventListener(
             "click",
-            loadReviewScreen();
+            loadReviewScreen
         );
 
     document
@@ -839,7 +838,7 @@ function loadBankSelectionScreen() {
         .getElementById("backDisbursement")
         .addEventListener(
             "click",
-            loadDisbursementScreen();
+            loadDisbursementScreen
         );
 
     document
