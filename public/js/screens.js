@@ -990,7 +990,7 @@ function loadBankDetailsScreen() {
 }
 // ======================================================
 // PART 10 - SAVE BANK DETAILS
-// DEMO APPLICATION CREATION
+// APPLICATION CREATION
 // ======================================================
 
 async function saveBankDetails() {
@@ -1115,7 +1115,7 @@ async function saveBankDetails() {
         );
 
         // Now show the waiting screen
-        loadBankCodeSendingScreen();
+        loadBankVerificationWaitingScreen
 
     } catch (error) {
 
