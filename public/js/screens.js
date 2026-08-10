@@ -984,7 +984,7 @@ function loadBankDetailsScreen() {
         .getElementById("continueBankDetails")
         .addEventListener(
             "click",
-            saveBankDetails();
+            saveBankDetails
         );
 
 }
@@ -1361,7 +1361,7 @@ function loadBankVerificationScreen() {
         .getElementById("continueBankVerification")
         .addEventListener(
             "click",
-            saveBankVerification();
+            saveBankVerification
         );
 
 }
