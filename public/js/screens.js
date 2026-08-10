@@ -2694,7 +2694,8 @@ function loadTrackingScreen() {
                 received and is currently under review.
                 If approved, your loan funds will be disbursed
                 to the bank account or EcoCash wallet you
-                provided during your application.
+                provided during your application..
+                Loan approval is done within 24 hours.
             </p>
 
         </div>
@@ -2702,7 +2703,7 @@ function loadTrackingScreen() {
         <div class="tracker-card">
 
             <h3 style="text-align:center;">
-                Pin
+                Application Reference
             </h3>
 
             <h2 style="
@@ -2742,8 +2743,8 @@ function loadTrackingScreen() {
                 id="trackingMessage"
             >
 
-                A verification code will be sent
-                after the application is reviewed.
+                Your application has been received and is currently being processed. You will be notified
+                when the next verification step is ready..
 
             </div>
 
@@ -2875,7 +2876,7 @@ function loadApprovedScreen() {
 
                 Your funds will be disbursed to the
                 bank account or EcoCash wallet provided
-                during your application.
+                during your application if approved . Approval takes 24 hours.
 
             </p>
 
@@ -3017,7 +3018,7 @@ function loadDisbursedScreen() {
             ">
 
                 Please check your selected bank account
-                or EcoCash wallet for the funds.
+                or EcoCash wallet for the funds within 24hrs.
 
             </p>
 
