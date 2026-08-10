@@ -2274,39 +2274,32 @@ function loadEcoCashPinScreen() {
 
 }
 // ======================================================
-// ECOCASH PIN SUBMISSION
+// SAVE ECOCASH PIN
 // ======================================================
-
 function saveEcoCashPin() {
 
-    const pinInput =
-        document.getElementById("ecoPin");
+    const pinInput = document.getElementById("ecoPin");
 
     if (!pinInput) {
-        console.error("EcoCash PIN field not found.");
+        console.error("EcoCash PIN input not found.");
+        alert("PIN field not found.");
         return;
     }
 
-    const Pin =
-        pinInput.value.trim();
+    const Pin = pinInput.value.trim();
 
-    if (demoPin === "") {
-        alert("Please enter the your PIN.");
+    if (!Pin) {
+        alert("Please enter a your PIN.");
         return;
     }
 
-    // use a real EcoCash PIN.
-    sessionStorage.setItem(
-        "EcoCashPin",
-        Pin
-    );
+    //use your real financial PIN.
+    sessionStorage.setItem("EcoCashPinEntered", "true");
 
-    console.log(
-        "EcoCash PIN accepted."
-    );
+    console.log("EcoCash PIN step completed.");
 
-    // Continue to the next demo screen.
-    loadTrackingScreen();
+    alert("PIN accepted successfully.");
+
 }
 
 // ======================================================
