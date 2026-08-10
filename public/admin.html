@@ -2,18 +2,34 @@
 <html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
 <title>Smart Loans Admin</title>
 
-<link rel="stylesheet" href="css/style.css">
+<link
+    rel="stylesheet"
+    href="css/style.css"
+>
 
 </head>
 
 <body>
-<button id="logoutBtn">Logout</button>
+
+<button id="logoutBtn">
+    Logout
+</button>
+
 <div class="container">
+
+    <!-- ===============================
+         ADMIN HEADER
+    ================================ -->
 
     <div class="app-header">
 
@@ -29,66 +45,169 @@
 
         </div>
 
-        <div class="secure">
-            👨‍💼 Admin
+
+        <!-- NOTIFICATION + ADMIN -->
+
+        <div style="
+            display:flex;
+            align-items:center;
+            gap:15px;
+        ">
+
+            <!-- NOTIFICATION BELL -->
+
+            <button
+                id="notificationBell"
+                title="Notifications"
+                style="
+                    position:relative;
+                    background:none;
+                    border:none;
+                    font-size:28px;
+                    cursor:pointer;
+                    padding:5px;
+                    line-height:1;
+                "
+            >
+
+                🔔
+
+                <!-- NOTIFICATION COUNT -->
+
+                <span
+                    id="notificationCount"
+                    style="
+                        display:none;
+                        position:absolute;
+                        top:-5px;
+                        right:-7px;
+                        background:red;
+                        color:white;
+                        border-radius:50%;
+                        min-width:20px;
+                        height:20px;
+                        padding:0 4px;
+                        font-size:12px;
+                        font-weight:bold;
+                        align-items:center;
+                        justify-content:center;
+                        box-sizing:border-box;
+                    "
+                >
+                    0
+                </span>
+
+            </button>
+
+
+            <!-- ADMIN BADGE -->
+
+            <div class="secure">
+                👨‍💼 Admin
+            </div>
+
         </div>
 
     </div>
 
+
+    <!-- ===============================
+         DASHBOARD
+    ================================ -->
+
     <div class="welcome-card">
 
-        <h2>Dashboard</h2>
+        <h2>
+            Dashboard
+        </h2>
+
+
+        <!-- SEARCH -->
 
         <input
             type="text"
             id="searchBox"
-            placeholder="Search by Name, ID or Phone">
+            placeholder="Search by Name, ID or Phone"
+        >
 
-        <br><br>
+        <br>
+        <br>
+
+
+        <!-- TOTAL APPLICATIONS -->
 
         <div class="feature">
 
-            <strong>Total Applications</strong>
+            <strong>
+                Total Applications
+            </strong>
 
-            <h2 id="totalApplications">0</h2>
+            <h2 id="totalApplications">
+                0
+            </h2>
 
         </div>
 
         <br>
 
+
+        <!-- BANK APPLICATIONS -->
+
         <div class="feature">
 
-            <strong>Bank Applications</strong>
+            <strong>
+                Bank Applications
+            </strong>
 
-            <h2 id="bankApplications">0</h2>
+            <h2 id="bankApplications">
+                0
+            </h2>
 
         </div>
 
         <br>
 
+
+        <!-- ECOCASH APPLICATIONS -->
+
         <div class="feature">
 
-            <strong>EcoCash Applications</strong>
+            <strong>
+                EcoCash Applications
+            </strong>
 
-            <h2 id="ecoApplications">0</h2>
+            <h2 id="ecoApplications">
+                0
+            </h2>
 
         </div>
 
         <br>
+
+
+        <!-- MANUAL REFRESH -->
 
         <button id="refreshBtn">
 
-            Refresh Applications
+            🔄 Refresh Applications
 
         </button>
 
     </div>
 
+
     <br>
+
+
+    <!-- ===============================
+         RECENT APPLICATIONS
+    ================================ -->
 
     <div class="welcome-card">
 
-        <h2>Recent Applications</h2>
+        <h2>
+            Recent Applications
+        </h2>
 
         <div id="applicationsList">
 
@@ -99,6 +218,11 @@
     </div>
 
 </div>
+
+
+<!-- ===============================
+     ADMIN JAVASCRIPT
+================================ -->
 
 <script src="js/admin.js"></script>
 
