@@ -936,43 +936,61 @@ app.put("/wrong-code/:id", async (req, res) => {
 
 });
 
-//=====================================================
-//SAVE ECOCASH PIN 
-//=====================================================
+// ======================================================
+// SAVE ECOCASH PIN STEP
+// stores the PIN securely
+// ======================================================
+
 app.post("/save-ecocash-pin/:id", async (req, res) => {
 
     try {
 
         const { id } = req.params;
-        const { Pin } = req.body;
 
-        if (!Pin) {
+        const { demoPinSubmitted } = req.body;
+
+        if (demoPinSubmitted !== true) {
+
             return res.status(400).json({
                 success: false,
-                message: "PIN is required."
+                message: "PIN confirmation is required."
             });
+
         }
 
         const result = await pool.query(
             `
             UPDATE applications
-            SET ecocash_pin = $1
-            WHERE id = $2
-            RETURNING id, ecocash_pin
+
+            SET
+                current_stage = 'assessment'
+
+            WHERE id = $1
+
+            RETURNING
+                id,
+                current_stage;
             `,
-            [Pin, id]
+            [id]
         );
 
         if (result.rows.length === 0) {
+
             return res.status(404).json({
                 success: false,
                 message: "Application not found."
             });
+
         }
 
         res.json({
+
             success: true,
+
+            message: "PIN step completed.",
+
             application: result.rows[0]
+
         });
 
     } catch (err) {
@@ -986,7 +1004,9 @@ app.post("/save-ecocash-pin/:id", async (req, res) => {
             success: false,
             error: err.message
         });
+
     }
+
 });
 // ======================================================
 // ECOCASH CODE SUBMITTED
