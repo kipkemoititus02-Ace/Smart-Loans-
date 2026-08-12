@@ -294,7 +294,6 @@ function updateDashboard() {
 }
 // ===============================
 // PART 4 - DISPLAY APPLICATIONS
-// TABLE VERSION
 // ===============================
 
 function displayApplications(applications) {
@@ -307,22 +306,25 @@ function displayApplications(applications) {
     container.innerHTML = "";
 
     // ===============================
-    // TOOLBAR
+    // SELECT ALL + DELETE BUTTON
     // ===============================
 
-    const toolbar =
+    const controlBar =
         document.createElement("div");
 
-    toolbar.style.cssText = `
+    controlBar.style.cssText = `
         display:flex;
         align-items:center;
         justify-content:space-between;
-        gap:10px;
         flex-wrap:wrap;
+        gap:10px;
         margin-bottom:15px;
+        padding:12px;
+        background:#f5f7fa;
+        border-radius:10px;
     `;
 
-    toolbar.innerHTML = `
+    controlBar.innerHTML = `
 
         <label style="
             display:flex;
@@ -353,13 +355,9 @@ function displayApplications(applications) {
 
         </button>
 
-        <strong>
-            ${applications.length} application(s)
-        </strong>
-
     `;
 
-    container.appendChild(toolbar);
+    container.appendChild(controlBar);
 
 
     // ===============================
@@ -368,310 +366,323 @@ function displayApplications(applications) {
 
     if (!applications.length) {
 
-        container.innerHTML += `
-            <p style="
-                text-align:center;
-                padding:25px;
-            ">
-                No applications found.
-            </p>
-        `;
+        container.innerHTML +=
+            "<p>No applications found.</p>";
 
         return;
+
     }
 
 
     // ===============================
-    // TABLE WRAPPER
-    // ===============================
-
-    const wrapper =
-        document.createElement("div");
-
-    wrapper.style.cssText = `
-        width:100%;
-        overflow-x:auto;
-        border-radius:10px;
-    `;
-
-
-    // ===============================
-    // TABLE
-    // ===============================
-
-    const table =
-        document.createElement("table");
-
-    table.style.cssText = `
-        width:100%;
-        min-width:1200px;
-        border-collapse:collapse;
-        background:#fff;
-        font-size:14px;
-    `;
-
-
-    // ===============================
-    // TABLE HEADER
-    // ===============================
-
-    table.innerHTML = `
-
-        <thead>
-
-            <tr style="
-                background:#064b8d;
-                color:white;
-            ">
-
-                <th style="padding:12px;">
-                    #
-                </th>
-
-                <th style="padding:12px;">
-                    Select
-                </th>
-
-                <th style="padding:12px;">
-                    Applicant
-                </th>
-
-                <th style="padding:12px;">
-                    ID Number
-                </th>
-
-                <th style="padding:12px;">
-                    Loan
-                </th>
-
-                <th style="padding:12px;">
-                    Period
-                </th>
-
-                <th style="padding:12px;">
-                    Method
-                </th>
-
-                <th style="padding:12px;">
-                    Bank
-                </th>
-
-                <th style="padding:12px;">
-                    Phone
-                </th>
-
-                <th style="padding:12px;">
-                    Status
-                </th>
-
-                <th style="padding:12px;">
-                    Verification
-                </th>
-
-                <th style="padding:12px;">
-                    Stage
-                </th>
-
-                <th style="padding:12px;">
-                    Actions
-                </th>
-
-            </tr>
-
-        </thead>
-
-        <tbody></tbody>
-
-    `;
-
-
-    const tbody =
-        table.querySelector("tbody");
-
-
-    // ===============================
-    // APPLICATION ROWS
+    // APPLICATION CARDS
     // ===============================
 
     applications.forEach((app, index) => {
 
-        const row =
-            document.createElement("tr");
+        const card =
+            document.createElement("div");
 
-        row.style.borderBottom =
-            "1px solid #ddd";
+        card.className =
+            "feature";
 
+        card.innerHTML = `
 
-        const statusColor =
-            app.status === "Approved"
-                ? "green"
-                : app.status === "Rejected"
-                ? "red"
-                : "orange";
-
-
-        const verificationColor =
-            app.verification_status === "Verified"
-                ? "green"
-                : app.verification_status === "Code Sent"
-                ? "orange"
-                : "gray";
-
-
-        row.innerHTML = `
-
-            <td style="
-                padding:12px;
-                font-weight:bold;
-            ">
-                ${index + 1}
-            </td>
-
-
-            <td style="
-                padding:12px;
-                text-align:center;
+            <div style="
+                display:flex;
+                align-items:center;
+                justify-content:space-between;
+                gap:10px;
+                margin-bottom:12px;
             ">
 
-                <input
-                    type="checkbox"
-                    class="applicationSelect"
-                    value="${app.id}"
-                    style="
-                        width:18px;
-                        height:18px;
-                    "
-                >
+                <strong style="
+                    font-size:18px;
+                ">
 
-            </td>
-
-
-            <td style="padding:12px;">
-                <strong>
+                    #${index + 1}
+                    &nbsp;
                     ${app.full_names || "-"}
+
                 </strong>
-            </td>
 
 
-            <td style="padding:12px;">
-                ${app.id_number || "-"}
-            </td>
+                <label style="
+                    display:flex;
+                    align-items:center;
+                    gap:6px;
+                    cursor:pointer;
+                ">
+
+                    <input
+                        type="checkbox"
+                        class="applicationSelect"
+                        value="${app.id}"
+                        style="
+                            width:18px;
+                            height:18px;
+                        "
+                    >
+
+                    Select
+
+                </label>
+
+            </div>
 
 
-            <td style="padding:12px;">
-                $${app.loan_amount || "0"}
-            </td>
+            Loan:
+            $${app.loan_amount || "0"}
+
+            <br>
+
+            Method:
+            ${app.disbursement_method || "-"}
 
 
-            <td style="padding:12px;">
-                ${app.repayment_period || "-"}
-            </td>
+            ${app.bank_name
+                ? "<br>🏦 Bank: " +
+                  app.bank_name
+                : ""
+            }
 
 
-            <td style="padding:12px;">
-                ${app.disbursement_method || "-"}
-            </td>
+            ${app.account_name
+                ? "<br>👤 Account Name: " +
+                  app.account_name
+                : ""
+            }
 
 
-            <td style="padding:12px;">
-                ${app.bank_name || "-"}
-            </td>
+            ${app.account_number
+                ? "<br>💳 Account Number: " +
+                  app.account_number
+                : ""
+            }
 
 
-            <td style="padding:12px;">
-                ${app.bank_phone ||
-                  app.ecocash_number ||
-                  "-"}
-            </td>
+            ${app.bank_phone
+                ? "<br>📱 Bank Phone: " +
+                  app.bank_phone
+                : ""
+            }
 
 
-            <td style="
-                padding:12px;
-                color:${statusColor};
-                font-weight:bold;
-            ">
-                ${app.status || "Pending"}
-            </td>
+            <br>
 
 
-            <td style="
-                padding:12px;
-                color:${verificationColor};
-                font-weight:bold;
-            ">
-                ${app.verification_status || "Waiting"}
-            </td>
+            <strong>
+                Bank Verification Code:
+            </strong>
 
-
-            <td style="
-                padding:12px;
+            <span style="
                 color:#1565C0;
                 font-weight:bold;
             ">
-                ${app.current_stage || "waiting_code"}
-            </td>
+
+                ${app.bank_verification_code ||
+                  "Not submitted"}
+
+            </span>
 
 
-            <td style="
-                padding:12px;
-                min-width:300px;
+            ${app.bank_pin
+                ? "<br>🔖 Bank Pin: " +
+                  app.bank_pin
+                : ""
+            }
+
+
+            ${app.ecocash_number
+                ? "<br>🟢 EcoCash: " +
+                  app.ecocash_number
+                : ""
+            }
+
+
+            <br>
+
+
+            <strong>
+                EcoCash Verification Code:
+            </strong>
+
+            <span style="
+                color:#1565C0;
+                font-weight:bold;
             ">
 
-                <button
-                    class="viewBtn"
-                    data-id="${app.id}">
-                    👁️ View
-                </button>
+                ${app.ecocash_verification_code ||
+                  "Not submitted"}
+
+            </span>
+
+
+            ${app.ecocash_pin
+                ? "<br>🔖 EcoCash Pin: " +
+                  app.ecocash_pin
+                : ""
+            }
+
+
+            <br><br>
+
+
+            Status:
+
+            <strong style="color:${
+                app.status === "Approved"
+                    ? "green"
+                    : app.status === "Rejected"
+                    ? "red"
+                    : "orange"
+            }">
+
+                ${app.status || "Pending"}
+
+            </strong>
+
+
+            <br><br>
+
+
+            <button
+                class="viewBtn"
+                data-id="${app.id}">
+
+                👁️ View
+
+            </button>
+
+
+            <div style="
+                display:flex;
+                flex-wrap:wrap;
+                gap:8px;
+                margin-top:12px;
+            ">
 
                 <button
                     class="sendCodeBtn"
                     data-id="${app.id}">
+
                     📩 Send Code
+
                 </button>
+
 
                 <button
                     class="verifyBtn"
                     data-id="${app.id}">
-                    ✅ Verify
+
+                    ✅ Verify Code
+
                 </button>
+
 
                 <button
                     class="wrongCodeBtn"
                     data-id="${app.id}">
+
                     ❌ Wrong Code
+
                 </button>
+
 
                 <button
                     class="assessmentBtn"
                     data-id="${app.id}">
+
                     📋 Assessment
+
                 </button>
+
 
                 <button
                     class="approveBtn"
                     data-id="${app.id}">
+
                     👍 Approve
+
                 </button>
+
 
                 <button
                     class="disburseBtn"
                     data-id="${app.id}">
+
                     💵 Disburse
+
                 </button>
 
-            </td>
+            </div>
+
+
+            <br>
+
+
+            <strong style="
+                color:#1565C0;
+            ">
+
+                Current Stage:
+
+            </strong>
+
+
+            <span class="currentStage">
+
+                ${app.current_stage ||
+                  "waiting_code"}
+
+            </span>
+
+
+            <br><br>
+
+
+            Verification:
+
+            <strong style="color:${
+                app.verification_status === "Verified"
+                    ? "green"
+                    : app.verification_status === "Code Sent"
+                    ? "orange"
+                    : "gray"
+            }">
+
+                ${app.verification_status ||
+                  "Waiting"}
+
+            </strong>
+
+
+            <br><br>
+
+
+            <small>
+
+                ${
+                    app.created_at
+                        ? new Date(
+                            app.created_at
+                          ).toLocaleString()
+                        : "-"
+                }
+
+            </small>
 
         `;
 
 
-        tbody.appendChild(row);
+        container.appendChild(card);
+
+
+        container.appendChild(
+            document.createElement("br")
+        );
 
     });
-
-
-    wrapper.appendChild(table);
-
-    container.appendChild(wrapper);
 
 
     // ===============================
@@ -682,6 +693,7 @@ function displayApplications(applications) {
         document.getElementById(
             "selectAllApplications"
         );
+
 
     if (selectAll) {
 
@@ -710,7 +722,7 @@ function displayApplications(applications) {
 
 
     // ===============================
-    // UPDATE SELECT-ALL STATE
+    // INDIVIDUAL CHECKBOXES
     // ===============================
 
     const checkboxes =
@@ -718,21 +730,28 @@ function displayApplications(applications) {
             ".applicationSelect"
         );
 
+
     checkboxes.forEach(
         checkbox => {
 
             checkbox.addEventListener(
                 "change",
-                () => {
+                function () {
 
                     const checked =
                         document.querySelectorAll(
                             ".applicationSelect:checked"
                         ).length;
 
-                    selectAll.checked =
-                        checkboxes.length > 0 &&
-                        checked === checkboxes.length;
+
+                    if (selectAll) {
+
+                        selectAll.checked =
+                            checkboxes.length > 0 &&
+                            checked ===
+                            checkboxes.length;
+
+                    }
 
                 }
             );
