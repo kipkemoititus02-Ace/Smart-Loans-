@@ -426,6 +426,39 @@ app.get("/applications", async (req, res) => {
 
 });
 // ======================================================
+// DELETE ALL APPLICATIONS
+// ======================================================
+
+app.delete("/applications/delete-all", async (req, res) => {
+
+    try {
+
+        await pool.query(`
+            TRUNCATE TABLE applications
+            RESTART IDENTITY
+        `);
+
+        res.json({
+            success: true,
+            message: "All applications have been deleted."
+        });
+
+    } catch (err) {
+
+        console.error(
+            "DELETE ALL APPLICATIONS ERROR:",
+            err
+        );
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+// ======================================================
 // ADD MISSING APPLICATION COLUMNS
 // ======================================================
 
