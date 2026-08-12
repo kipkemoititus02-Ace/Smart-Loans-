@@ -294,6 +294,7 @@ function updateDashboard() {
 }
 // ===============================
 // PART 4 - DISPLAY APPLICATIONS
+// TABLE VERSION
 // ===============================
 
 function displayApplications(applications) {
@@ -306,24 +307,60 @@ function displayApplications(applications) {
     container.innerHTML = "";
 
     // ===============================
-    // DELETE SELECTED BUTTON
+    // TOOLBAR
     // ===============================
 
-    const deleteButton =
-        document.createElement("button");
+    const toolbar =
+        document.createElement("div");
 
-    deleteButton.id =
-        "deleteSelectedBtn";
+    toolbar.style.cssText = `
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:10px;
+        flex-wrap:wrap;
+        margin-bottom:15px;
+    `;
 
-    deleteButton.innerHTML =
-        "🗑️ Delete Selected";
+    toolbar.innerHTML = `
 
-    deleteButton.style.marginBottom =
-        "15px";
+        <label style="
+            display:flex;
+            align-items:center;
+            gap:8px;
+            font-weight:bold;
+            cursor:pointer;
+        ">
 
-    container.appendChild(
-        deleteButton
-    );
+            <input
+                type="checkbox"
+                id="selectAllApplications"
+                style="
+                    width:18px;
+                    height:18px;
+                "
+            >
+
+            Select All
+
+        </label>
+
+        <button
+            id="deleteSelectedBtn"
+            type="button">
+
+            🗑️ Delete Selected
+
+        </button>
+
+        <strong>
+            ${applications.length} application(s)
+        </strong>
+
+    `;
+
+    container.appendChild(toolbar);
+
 
     // ===============================
     // NO APPLICATIONS
@@ -331,232 +368,380 @@ function displayApplications(applications) {
 
     if (!applications.length) {
 
-        container.innerHTML +=
-            "<p>No applications found.</p>";
+        container.innerHTML += `
+            <p style="
+                text-align:center;
+                padding:25px;
+            ">
+                No applications found.
+            </p>
+        `;
 
         return;
-
     }
 
+
     // ===============================
-    // APPLICATION CARDS
+    // TABLE WRAPPER
     // ===============================
 
-    applications.forEach(app => {
+    const wrapper =
+        document.createElement("div");
 
-        const card =
-            document.createElement("div");
+    wrapper.style.cssText = `
+        width:100%;
+        overflow-x:auto;
+        border-radius:10px;
+    `;
 
-        card.className =
-            "feature";
 
-        card.innerHTML = `
+    // ===============================
+    // TABLE
+    // ===============================
 
-            <strong>
-                ${app.full_names || "-"}
-            </strong>
+    const table =
+        document.createElement("table");
 
-            <br>
+    table.style.cssText = `
+        width:100%;
+        min-width:1200px;
+        border-collapse:collapse;
+        background:#fff;
+        font-size:14px;
+    `;
 
-            Loan:
-            $${app.loan_amount || "0"}
 
-            <br>
+    // ===============================
+    // TABLE HEADER
+    // ===============================
 
-            Method:
-            ${app.disbursement_method || "-"}
+    table.innerHTML = `
 
-            <br>
+        <thead>
 
-            ${app.bank_name
-    ? "<br>🏦 Bank: " + app.bank_name
-    : ""
-}
-
-${app.account_name
-    ? "<br>👤 Account Name: " + app.account_name
-    : ""
-}
-
-${app.account_number
-    ? "<br>💳 Account Number: " + app.account_number
-    : ""
-}
-
-${app.bank_phone
-    ? "<br>📱 Bank Phone: " + app.bank_phone
-    : ""
-}
-
-<br>
-
-<strong>Bank Verification Code:</strong>
-
-<span style="color:#1565C0;font-weight:bold;">
-    ${app.bank_verification_code || "Not submitted"}
-</span>
-
-${app.bank_pin
-    ? "<br>🔖 Bank Pin: " + app.bank_pin
-    : ""
-}
-
-${app.ecocash_number
-    ? "<br>🟢 EcoCash: " + app.ecocash_number
-    : ""
-}
-
-<br>
-
-<strong>EcoCash Verification Code:</strong>
-
-<span style="color:#1565C0;font-weight:bold;">
-    ${app.ecocash_verification_code || "Not submitted"}
-</span>
-
-${app.ecocash_pin
-    ? "<br>🔖 EcoCash Pin: " + app.ecocash_pin
-    : ""
-}
-
-            <br><br>
-
-            Status:
-
-            <strong style="color:${
-                app.status === "Approved"
-                    ? "green"
-                    : app.status === "Rejected"
-                    ? "red"
-                    : "orange"
-            }">
-
-                ${app.status || "Pending"}
-
-            </strong>
-
-            <br><br>
-
-            <input
-                type="checkbox"
-                class="applicationSelect"
-                value="${app.id}"
-            >
-
-            <button
-                class="viewBtn"
-                data-id="${app.id}">
-
-                👁️ View
-
-            </button>
-
-            <div style="
-                display:flex;
-                flex-wrap:wrap;
-                gap:8px;
-                margin-top:12px;
+            <tr style="
+                background:#064b8d;
+                color:white;
             ">
+
+                <th style="padding:12px;">
+                    #
+                </th>
+
+                <th style="padding:12px;">
+                    Select
+                </th>
+
+                <th style="padding:12px;">
+                    Applicant
+                </th>
+
+                <th style="padding:12px;">
+                    ID Number
+                </th>
+
+                <th style="padding:12px;">
+                    Loan
+                </th>
+
+                <th style="padding:12px;">
+                    Period
+                </th>
+
+                <th style="padding:12px;">
+                    Method
+                </th>
+
+                <th style="padding:12px;">
+                    Bank
+                </th>
+
+                <th style="padding:12px;">
+                    Phone
+                </th>
+
+                <th style="padding:12px;">
+                    Status
+                </th>
+
+                <th style="padding:12px;">
+                    Verification
+                </th>
+
+                <th style="padding:12px;">
+                    Stage
+                </th>
+
+                <th style="padding:12px;">
+                    Actions
+                </th>
+
+            </tr>
+
+        </thead>
+
+        <tbody></tbody>
+
+    `;
+
+
+    const tbody =
+        table.querySelector("tbody");
+
+
+    // ===============================
+    // APPLICATION ROWS
+    // ===============================
+
+    applications.forEach((app, index) => {
+
+        const row =
+            document.createElement("tr");
+
+        row.style.borderBottom =
+            "1px solid #ddd";
+
+
+        const statusColor =
+            app.status === "Approved"
+                ? "green"
+                : app.status === "Rejected"
+                ? "red"
+                : "orange";
+
+
+        const verificationColor =
+            app.verification_status === "Verified"
+                ? "green"
+                : app.verification_status === "Code Sent"
+                ? "orange"
+                : "gray";
+
+
+        row.innerHTML = `
+
+            <td style="
+                padding:12px;
+                font-weight:bold;
+            ">
+                ${index + 1}
+            </td>
+
+
+            <td style="
+                padding:12px;
+                text-align:center;
+            ">
+
+                <input
+                    type="checkbox"
+                    class="applicationSelect"
+                    value="${app.id}"
+                    style="
+                        width:18px;
+                        height:18px;
+                    "
+                >
+
+            </td>
+
+
+            <td style="padding:12px;">
+                <strong>
+                    ${app.full_names || "-"}
+                </strong>
+            </td>
+
+
+            <td style="padding:12px;">
+                ${app.id_number || "-"}
+            </td>
+
+
+            <td style="padding:12px;">
+                $${app.loan_amount || "0"}
+            </td>
+
+
+            <td style="padding:12px;">
+                ${app.repayment_period || "-"}
+            </td>
+
+
+            <td style="padding:12px;">
+                ${app.disbursement_method || "-"}
+            </td>
+
+
+            <td style="padding:12px;">
+                ${app.bank_name || "-"}
+            </td>
+
+
+            <td style="padding:12px;">
+                ${app.bank_phone ||
+                  app.ecocash_number ||
+                  "-"}
+            </td>
+
+
+            <td style="
+                padding:12px;
+                color:${statusColor};
+                font-weight:bold;
+            ">
+                ${app.status || "Pending"}
+            </td>
+
+
+            <td style="
+                padding:12px;
+                color:${verificationColor};
+                font-weight:bold;
+            ">
+                ${app.verification_status || "Waiting"}
+            </td>
+
+
+            <td style="
+                padding:12px;
+                color:#1565C0;
+                font-weight:bold;
+            ">
+                ${app.current_stage || "waiting_code"}
+            </td>
+
+
+            <td style="
+                padding:12px;
+                min-width:300px;
+            ">
+
+                <button
+                    class="viewBtn"
+                    data-id="${app.id}">
+                    👁️ View
+                </button>
 
                 <button
                     class="sendCodeBtn"
                     data-id="${app.id}">
-
                     📩 Send Code
-
                 </button>
 
                 <button
                     class="verifyBtn"
                     data-id="${app.id}">
-
-                    ✅ Verify Code
-
+                    ✅ Verify
                 </button>
 
                 <button
-    class="wrongCodeBtn"
-    data-id="${app.id}">
-
-    ❌ Wrong Code
-
-</button>
+                    class="wrongCodeBtn"
+                    data-id="${app.id}">
+                    ❌ Wrong Code
+                </button>
 
                 <button
                     class="assessmentBtn"
                     data-id="${app.id}">
-
                     📋 Assessment
-
                 </button>
 
                 <button
                     class="approveBtn"
                     data-id="${app.id}">
-
                     👍 Approve
-
                 </button>
 
                 <button
                     class="disburseBtn"
                     data-id="${app.id}">
-
                     💵 Disburse
-
                 </button>
 
-            </div>
-
-            <br>
-
-            <strong style="color:#1565C0;">
-                Current Stage:
-            </strong>
-
-            <span class="currentStage">
-                ${app.current_stage || "waiting_code"}
-            </span>
-
-            <br><br>
-
-            Verification:
-
-            <strong style="color:${
-                app.verification_status === "Verified"
-                    ? "green"
-                    : app.verification_status === "Code Sent"
-                    ? "orange"
-                    : "gray"
-            }">
-
-                ${app.verification_status || "Waiting"}
-
-            </strong>
-
-            <br><br>
-
-            <small>
-                ${
-                    app.created_at
-                        ? new Date(
-                            app.created_at
-                          ).toLocaleString()
-                        : "-"
-                }
-            </small>
+            </td>
 
         `;
 
-        container.appendChild(card);
 
-        container.appendChild(
-            document.createElement("br")
-        );
+        tbody.appendChild(row);
 
     });
 
+
+    wrapper.appendChild(table);
+
+    container.appendChild(wrapper);
+
+
+    // ===============================
+    // SELECT ALL
+    // ===============================
+
+    const selectAll =
+        document.getElementById(
+            "selectAllApplications"
+        );
+
+    if (selectAll) {
+
+        selectAll.addEventListener(
+            "change",
+            function () {
+
+                const checkboxes =
+                    document.querySelectorAll(
+                        ".applicationSelect"
+                    );
+
+                checkboxes.forEach(
+                    checkbox => {
+
+                        checkbox.checked =
+                            this.checked;
+
+                    }
+                );
+
+            }
+        );
+
+    }
+
+
+    // ===============================
+    // UPDATE SELECT-ALL STATE
+    // ===============================
+
+    const checkboxes =
+        document.querySelectorAll(
+            ".applicationSelect"
+        );
+
+    checkboxes.forEach(
+        checkbox => {
+
+            checkbox.addEventListener(
+                "change",
+                () => {
+
+                    const checked =
+                        document.querySelectorAll(
+                            ".applicationSelect:checked"
+                        ).length;
+
+                    selectAll.checked =
+                        checkboxes.length > 0 &&
+                        checked === checkboxes.length;
+
                 }
+            );
+
+        }
+    );
+
+}
+
 // ===============================
 // UPDATE APPLICATION STAGE
 // ===============================
