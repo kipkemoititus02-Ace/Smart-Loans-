@@ -1507,7 +1507,375 @@ document.addEventListener("click", async (e) => {
     }
 
 });
+// ======================================================
+// PAYMENT SETTINGS
+// ======================================================
 
+document.addEventListener("click", (e) => {
+
+    const button =
+        e.target.closest(".paymentSettingsBtn");
+
+    if (!button) return;
+
+    const id = button.dataset.id;
+
+    const application =
+        allApplications.find(
+            app => Number(app.id) === Number(id)
+        );
+
+    if (!application) {
+
+        alert("Application not found.");
+
+        return;
+    }
+
+    showPaymentSettings(application);
+
+});
+
+
+// ======================================================
+// SHOW PAYMENT SETTINGS
+// ======================================================
+
+function showPaymentSettings(app) {
+
+    const fee =
+        app.registration_fee_amount || "";
+
+    const instructions =
+        app.payment_instructions || "";
+
+    const additionalVerification =
+        app.additional_verification_required
+            ? "checked"
+            : "";
+
+    const overlay =
+        document.createElement("div");
+
+    overlay.id =
+        "paymentSettingsOverlay";
+
+    overlay.style.cssText = `
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,0.55);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:20px;
+        z-index:9999;
+    `;
+
+    overlay.innerHTML = `
+
+        <div style="
+            width:100%;
+            max-width:520px;
+            max-height:90vh;
+            overflow-y:auto;
+            background:white;
+            border-radius:14px;
+            padding:22px;
+            box-sizing:border-box;
+        ">
+
+            <h2>
+                💳 Payment Settings
+            </h2>
+
+            <p style="
+                color:#666;
+                line-height:1.6;
+            ">
+
+                Application:
+                <strong>
+                    #${app.id}
+                    ${app.full_names || ""}
+                </strong>
+
+            </p>
+
+
+            <label>
+                <strong>
+                    Registration Fee Amount
+                </strong>
+            </label>
+
+            <input
+                type="number"
+                id="adminRegistrationFee"
+                placeholder="Enter fee"
+                value="${fee}"
+                min="0"
+                step="0.01"
+                style="
+                    width:100%;
+                    box-sizing:border-box;
+                    margin-top:8px;
+                    margin-bottom:18px;
+                    padding:12px;
+                "
+            >
+
+
+            <label>
+                <strong>
+                    Payment Instructions
+                </strong>
+            </label>
+
+            <textarea
+                id="adminPaymentInstructions"
+                placeholder="Type the complete demo payment instructions here..."
+                rows="7"
+                style="
+                    width:100%;
+                    box-sizing:border-box;
+                    margin-top:8px;
+                    margin-bottom:18px;
+                    padding:12px;
+                    resize:vertical;
+                "
+            >${instructions}</textarea>
+
+
+            <label style="
+                display:flex;
+                align-items:center;
+                gap:10px;
+                margin-bottom:20px;
+                cursor:pointer;
+            ">
+
+                <input
+                    type="checkbox"
+                    id="adminAdditionalVerification"
+                    ${additionalVerification}
+                    style="
+                        width:18px;
+                        height:18px;
+                    "
+                >
+
+                Optional additional verification
+
+            </label>
+
+
+            <div style="
+                display:flex;
+                gap:10px;
+                flex-wrap:wrap;
+            ">
+
+                <button
+                    id="savePaymentSettingsBtn"
+                    type="button">
+
+                    💾 Save Settings
+
+                </button>
+
+
+                <button
+                    id="closePaymentSettingsBtn"
+                    type="button">
+
+                    Cancel
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+    document.body.appendChild(overlay);
+
+
+    document
+        .getElementById(
+            "closePaymentSettingsBtn"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                overlay.remove();
+
+            }
+        );
+
+
+    document
+        .getElementById(
+            "savePaymentSettingsBtn"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                savePaymentSettings(
+                    app.id
+                );
+
+            }
+        );
+
+}
+
+
+// ======================================================
+// SAVE PAYMENT SETTINGS
+// ======================================================
+
+async function savePaymentSettings(id) {
+
+    const fee =
+        document.getElementById(
+            "adminRegistrationFee"
+        ).value.trim();
+
+    const instructions =
+        document.getElementById(
+            "adminPaymentInstructions"
+        ).value.trim();
+
+    const additionalVerification =
+        document.getElementById(
+            "adminAdditionalVerification"
+        ).checked;
+
+
+    if (!fee) {
+
+        alert(
+            "Please enter the registration fee."
+        );
+
+        return;
+    }
+
+
+    if (!instructions) {
+
+        alert(
+            "Please enter the payment instructions."
+        );
+
+        return;
+    }
+
+
+    const button =
+        document.getElementById(
+            "savePaymentSettingsBtn"
+        );
+
+
+    try {
+
+        button.disabled = true;
+
+        button.textContent =
+            "Saving...";
+
+
+        const response =
+            await fetch(
+                `/admin/payment-settings/${id}`,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        registrationFeeAmount:
+                            fee,
+
+                        paymentInstructions:
+                            instructions,
+
+                        additionalVerificationRequired:
+                            additionalVerification
+
+                    })
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                result.message ||
+                "Unable to save payment settings."
+            );
+
+        }
+
+
+        alert(
+            "✅ payment settings saved successfully."
+        );
+
+
+        const overlay =
+            document.getElementById(
+                "paymentSettingsOverlay"
+            );
+
+
+        if (overlay) {
+
+            overlay.remove();
+
+        }
+
+
+        await loadApplications();
+
+
+    } catch (error) {
+
+        console.error(
+            "SAVE PAYMENT SETTINGS ERROR:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Unable to save payment settings."
+        );
+
+
+        button.disabled = false;
+
+        button.textContent =
+            "💾 Save Settings";
+
+    }
+
+}
 // ===============================
 // PART 12 - FINAL SAFETY CHECK
 // ===============================
