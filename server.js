@@ -2413,6 +2413,87 @@ app.put("/payment-confirmation/:id", async (req, res) => {
 
 });
 // ======================================================
+// SAVE WHATSAPP SUPPORT NUMBER
+// ======================================================
+
+app.put("/admin/whatsapp-support/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const {
+            whatsappBusinessNumber
+        } = req.body;
+
+        if (!whatsappBusinessNumber) {
+
+            return res.status(400).json({
+                success: false,
+                message: "WhatsApp support number is required."
+            });
+
+        }
+
+        const result = await pool.query(
+            `
+            UPDATE applications
+
+            SET
+                whatsapp_business_number = $1
+
+            WHERE id = $2
+
+            RETURNING
+                id,
+                whatsapp_business_number;
+            `,
+            [
+                whatsappBusinessNumber,
+                id
+            ]
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Application not found."
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+
+            message:
+                "WhatsApp support number saved successfully.",
+
+            application:
+                result.rows[0]
+
+        });
+
+    } catch (err) {
+
+        console.error(
+            "SAVE WHATSAPP SUPPORT ERROR:",
+            err
+        );
+
+        res.status(500).json({
+
+            success: false,
+
+            error: err.message
+
+        });
+
+    }
+
+});
+// ======================================================
 // START SERVER
 // ======================================================
 
