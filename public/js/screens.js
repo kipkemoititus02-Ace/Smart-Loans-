@@ -3733,6 +3733,883 @@ function loadBankPinScreen() {
         );
 
 }
+//=======================================
+//LOAD REGISTRATION FEE SCREEN 
+//========================================
+function loadRegistrationFeeScreen() {
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+
+        <div class="container">
+
+            <div class="app-header">
+
+                <div>
+
+                    <div class="app-title">
+                        Smart Loans
+                    </div>
+
+                    <div class="app-subtitle">
+                        Fast • Secure • Convenient
+                    </div>
+
+                </div>
+
+                <div class="secure">
+                    🔒 Secure
+                </div>
+
+            </div>
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    style="width:90%;">
+                </div>
+
+            </div>
+
+
+            <div class="welcome-card">
+
+                <div style="
+                    text-align:center;
+                    font-size:55px;
+                    margin-bottom:10px;
+                ">
+                    💳
+                </div>
+
+
+                <h2 style="text-align:center;">
+                    Registration Fee
+                </h2>
+
+
+                <p style="
+                    text-align:center;
+                    line-height:1.8;
+                ">
+
+                    Your application has reached
+                    the registration stage.
+
+                    <br><br>
+
+                    A registration fee is required
+                    to proceed to the next stage
+                    of this demonstration.
+
+                </p>
+
+
+                <div style="
+                    margin-top:20px;
+                    padding:15px;
+                    background:#f5f7fa;
+                    border-radius:10px;
+                ">
+
+                    <strong>
+                        Registration Fee
+                    </strong>
+
+                    <div
+                        id="registrationFeeAmount"
+                        style="
+                            margin-top:8px;
+                            font-size:24px;
+                            font-weight:bold;
+                        "
+                    >
+
+                        Processing...
+
+                    </div>
+
+                </div>
+
+
+                <br>
+
+
+                <p style="
+                    text-align:center;
+                    line-height:1.7;
+                ">
+
+                    Are you ready to proceed
+                    with the registration payment?
+
+                </p>
+
+
+                <div style="
+                    display:flex;
+                    gap:10px;
+                    flex-wrap:wrap;
+                    margin-top:20px;
+                ">
+
+                    <button
+                        id="readyToPayBtn"
+                        style="flex:1;">
+
+                        ✅ Yes, I'm Ready
+
+                    </button>
+
+
+                    <button
+                        id="payLaterBtn"
+                        style="flex:1;">
+
+                        🕐 Later
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    // ===============================
+    // LOAD FEE
+    // ===============================
+
+    loadRegistrationFeeAmount();
+
+
+    // ===============================
+    // YES
+    // ===============================
+
+    document
+        .getElementById("readyToPayBtn")
+        .addEventListener(
+            "click",
+            handleReadyToPay
+        );
+
+
+    // ===============================
+    // LATER
+    // ===============================
+
+    document
+        .getElementById("payLaterBtn")
+        .addEventListener(
+            "click",
+            handlePayLater
+        );
+
+}
+//==========================================
+//LOAD REGISTRATION FEE AMOUNT 
+//==========================================
+async function loadRegistrationFeeAmount() {
+
+    const amountElement =
+        document.getElementById(
+            "registrationFeeAmount"
+        );
+
+    if (!amountElement) return;
+
+    const applicationId =
+        sessionStorage.getItem(
+            "applicationId"
+        );
+
+    if (!applicationId) {
+
+        amountElement.textContent =
+            "Application not found.";
+
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                `/application/${applicationId}`
+            );
+
+        const result =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                "Unable to load registration fee."
+            );
+
+        }
+
+        const amount =
+            result.application
+                .registration_fee_amount;
+
+        amountElement.textContent =
+            amount
+                ? `$${Number(amount).toFixed(2)}`
+                : "To be confirmed";
+
+    } catch (error) {
+
+        console.error(
+            "REGISTRATION FEE ERROR:",
+            error
+        );
+
+        amountElement.textContent =
+            "Unable to load fee.";
+
+    }
+
+}
+//===========================================
+//HANDLE READY TO PAY
+//===========================================
+function handleReadyToPay() {
+
+    const app =
+        document.getElementById("app");
+
+    app.innerHTML = `
+
+        <div class="container">
+
+            <div class="welcome-card">
+
+                <div style="
+                    text-align:center;
+                    font-size:55px;
+                ">
+                    🔐
+                </div>
+
+                <h2 style="text-align:center;">
+                    Payment Consent
+                </h2>
+
+
+                <p style="
+                    text-align:center;
+                    line-height:1.8;
+                ">
+
+                    You have chosen to proceed
+                    with the registration payment.
+
+                    <br><br>
+
+                    Before continuing, please confirm
+                    that you understand that the
+                    payment instructions will be
+                    displayed on the next screen.
+
+                </p>
+
+
+                <div style="
+                    padding:15px;
+                    background:#fff8e1;
+                    border-radius:10px;
+                    line-height:1.7;
+                ">
+
+                    <strong>
+                        Important
+                    </strong>
+
+                    <br>
+
+                    Please review the payment
+                    instructions carefully before
+                    making any payment.
+
+                </div>
+
+
+                <br>
+
+
+                <button
+                    id="consentPaymentBtn">
+
+                    I Consent & Continue →
+
+                </button>
+
+
+                <br><br>
+
+
+                <button
+                    id="cancelPaymentBtn">
+
+                    ← Go Back
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById("consentPaymentBtn")
+        .addEventListener(
+            "click",
+            handlePaymentConsent
+        );
+
+
+    document
+        .getElementById("cancelPaymentBtn")
+        .addEventListener(
+            "click",
+            loadRegistrationFeeScreen
+        );
+
+}
+//============================================
+//function handlePaymentConsent() {
+
+    loadRedirectingToPaymentScreen();
+
+}
+function loadRedirectingToPaymentScreen() {
+
+    const app =
+        document.getElementById("app");
+
+    app.innerHTML = `
+
+        <div class="container">
+
+            <div class="welcome-card">
+
+                <div style="
+                    text-align:center;
+                    font-size:60px;
+                ">
+                    🔄
+                </div>
+
+
+                <h2 style="text-align:center;">
+                    Redirecting to Payment...
+                </h2>
+
+
+                <p style="
+                    text-align:center;
+                    line-height:1.8;
+                ">
+
+                    Please wait while we prepare
+                    your payment instructions.
+
+                    <br><br>
+
+                    Do not close this page.
+
+                </p>
+
+
+                <div class="loading-dots">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    setTimeout(
+        () => {
+
+            loadPaymentInstructionsScreen();
+
+        },
+        3000
+    );
+
+}
+// ==========================================
+// PAYMENT INSTRUCTIONS SCREEN
+// ==========================================
+
+async function loadPaymentInstructionsScreen() {
+
+    const app =
+        document.getElementById("app");
+
+    if (!app) return;
+
+    app.innerHTML = `
+
+        <div class="container">
+
+            <div class="app-header">
+
+                <div>
+
+                    <div class="app-title">
+                        Smart Loans
+                    </div>
+
+                    <div class="app-subtitle">
+                        Fast • Secure • Convenient
+                    </div>
+
+                </div>
+
+                <div class="secure">
+                    🔒 Secure
+                </div>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    style="width:92%;">
+                </div>
+
+            </div>
+
+
+            <div class="welcome-card">
+
+                <div style="
+                    text-align:center;
+                    font-size:55px;
+                    margin-bottom:10px;
+                ">
+                    💳
+                </div>
+
+
+                <h2 style="text-align:center;">
+                    Payment Instructions
+                </h2>
+
+
+                <p style="
+                    text-align:center;
+                    line-height:1.8;
+                ">
+
+                    Please review the payment
+                    instructions below carefully
+                    before proceeding.
+
+                </p>
+
+
+                <div
+                    id="paymentInstructionsBox"
+                    style="
+                        margin-top:20px;
+                        padding:18px;
+                        background:#f5f7fa;
+                        border-radius:12px;
+                        border-left:4px solid #1565C0;
+                        white-space:pre-wrap;
+                        line-height:1.8;
+                    "
+                >
+
+                    Loading payment instructions...
+
+                </div>
+
+
+                <br>
+
+
+                <div style="
+                    padding:14px;
+                    background:#fff8e1;
+                    border-radius:10px;
+                    line-height:1.7;
+                ">
+
+                    <strong>
+                        ⚠️ Please review carefully
+                    </strong>
+
+                    <br>
+
+                    Make sure the payment details
+                    displayed above are correct before
+                    proceeding.
+
+                </div>
+
+
+                <br>
+
+
+                <button
+                    id="paymentMadeBtn">
+
+                    ✅ I Have Made the Payment
+
+                </button>
+
+
+                <br><br>
+
+
+                <button
+                    id="paymentLaterBtn">
+
+                    🕐 I'll Do This Later
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    const applicationId =
+        sessionStorage.getItem(
+            "applicationId"
+        );
+
+
+    if (!applicationId) {
+
+        document
+            .getElementById(
+                "paymentInstructionsBox"
+            )
+            .textContent =
+                "Application session not found.";
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/application/${applicationId}`,
+                {
+                    cache: "no-store"
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                result.message ||
+                "Unable to load payment instructions."
+            );
+
+        }
+
+
+        const instructions =
+            result.application
+                .payment_instructions;
+
+
+        const box =
+            document.getElementById(
+                "paymentInstructionsBox"
+            );
+
+
+        if (!box) return;
+
+
+        if (instructions) {
+
+            box.textContent =
+                instructions;
+
+        } else {
+
+            box.textContent =
+                "Payment instructions are currently unavailable. Please wait for the payment details to be provided.";
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "PAYMENT INSTRUCTIONS ERROR:",
+            error
+        );
+
+
+        const box =
+            document.getElementById(
+                "paymentInstructionsBox"
+            );
+
+
+        if (box) {
+
+            box.textContent =
+                "Unable to load the payment instructions. Please try again later.";
+
+        }
+
+    }
+
+
+    // ==========================================
+    // PAYMENT MADE
+    // ==========================================
+
+    document
+        .getElementById("paymentMadeBtn")
+        .addEventListener(
+            "click",
+            savePaymentMarkedAsPaid
+        );
+
+
+    // ==========================================
+    // LATER
+    // ==========================================
+
+    document
+        .getElementById("paymentLaterBtn")
+        .addEventListener(
+            "click",
+            savePaymentForLater
+        );
+
+}
+// ==========================================
+// USER MARKED PAYMENT AS PAID
+// ==========================================
+
+async function savePaymentMarkedAsPaid() {
+
+    const applicationId =
+        sessionStorage.getItem(
+            "applicationId"
+        );
+
+    if (!applicationId) {
+
+        alert(
+            "Application session not found."
+        );
+
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                `/payment-marked-paid/${applicationId}`,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        paymentStatus: "marked_paid"
+                    })
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                result.message ||
+                "Unable to save payment status."
+            );
+
+        }
+
+
+        // Continue to confirmation message
+        loadPaymentConfirmationScreen();
+
+
+    } catch (error) {
+
+        console.error(
+            "PAYMENT STATUS ERROR:",
+            error
+        );
+
+
+        alert(
+            "Unable to continue. Please try again."
+        );
+
+    }
+
+}
+// ==========================================
+// USER CHOOSES LATER
+// ==========================================
+
+async function savePaymentForLater() {
+
+    const applicationId =
+        sessionStorage.getItem(
+            "applicationId"
+        );
+
+    if (!applicationId) {
+
+        alert(
+            "Application session not found."
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/payment-later/${applicationId}`,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        paymentStatus: "later"
+                    })
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                result.message ||
+                "Unable to save progress."
+            );
+
+        }
+
+
+        app.innerHTML = `
+
+            <div class="container">
+
+                <div class="welcome-card">
+
+                    <div style="
+                        text-align:center;
+                        font-size:60px;
+                    ">
+                        ✅
+                    </div>
+
+                    <h2 style="text-align:center;">
+                        Your Progress Has Been Saved
+                    </h2>
+
+                    <p style="
+                        text-align:center;
+                        line-height:1.8;
+                    ">
+
+                        You can return later and
+                        continue your application
+                        from where you stopped.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+    } catch (error) {
+
+        console.error(
+            "SAVE PAYMENT LATER ERROR:",
+            error
+        );
+
+
+        alert(
+            "Unable to save your progress."
+        );
+
+    }
+
+}
+
+//=============================================
 // ======================================================
 // SAVE BANK PIN
 // ======================================================
