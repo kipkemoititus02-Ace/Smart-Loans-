@@ -598,6 +598,15 @@ function displayApplications(applications) {
                 </button>
 
 
+<button
+    class="paymentSettingsBtn"
+    data-id="${app.id}">
+
+    💳 Payment Settings
+
+</button>
+
+
                 <button
                     class="approveBtn"
                     data-id="${app.id}">
