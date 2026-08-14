@@ -465,6 +465,16 @@ app.get("/update-database", async (req, res) => {
             DEFAULT 'Waiting';
 
             ALTER TABLE applications
+ADD COLUMN IF NOT EXISTS payment_status TEXT 
+DEFAULT 'pending';
+
+ALTER TABLE applications
+ADD COLUMN IF NOT EXISTS payment_confirmation_message TEXT;
+
+ALTER TABLE applications
+ADD COLUMN IF NOT EXISTS payment_marked_at TIMESTAMP;
+
+            ALTER TABLE applications
             ADD COLUMN IF NOT EXISTS code_sent_at TIMESTAMP;
         `);
 
