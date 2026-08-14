@@ -5428,6 +5428,263 @@ async function submitPaymentConfirmation() {
     }
 
 }
+// ==========================================
+// PAYMENT SUPPORT SCREEN
+// ==========================================
+
+async function loadPaymentSupportScreen() {
+
+    const app =
+        document.getElementById("app");
+
+    if (!app) return;
+
+    app.innerHTML = `
+
+        <div class="container">
+
+            <div class="app-header">
+
+                <div>
+
+                    <div class="app-title">
+                        Smart Loans
+                    </div>
+
+                    <div class="app-subtitle">
+                        Fast • Secure • Convenient
+                    </div>
+
+                </div>
+
+                <div class="secure">
+                    🔒 Secure
+                </div>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    style="width:100%;">
+                </div>
+
+            </div>
+
+
+            <div class="welcome-card">
+
+                <div style="
+                    text-align:center;
+                    font-size:60px;
+                    margin-bottom:10px;
+                ">
+                    💬
+                </div>
+
+
+                <h2 style="text-align:center;">
+                    Payment Confirmation Received
+                </h2>
+
+
+                <p style="
+                    text-align:center;
+                    line-height:1.8;
+                ">
+
+                    Your payment confirmation has
+                    been successfully recorded.
+
+                    <br><br>
+
+                    For support and quick assistance,
+                    please contact our WhatsApp
+                    Business support team.
+
+                </p>
+
+
+                <div
+                    id="whatsappSupportBox"
+                    style="
+                        margin-top:20px;
+                        padding:18px;
+                        background:#f5f7fa;
+                        border-radius:12px;
+                        text-align:center;
+                        line-height:1.8;
+                    "
+                >
+
+                    Loading support details...
+
+                </div>
+
+
+                <br>
+
+
+                <div style="
+                    padding:15px;
+                    background:#fff8e1;
+                    border-radius:10px;
+                    line-height:1.7;
+                ">
+
+                    <strong>
+                        📎 Payment Screenshot
+                    </strong>
+
+                    <br>
+
+                    If requested by our support team,
+                    please send your payment screenshot
+                    through the displayed WhatsApp
+                    Business support channel.
+
+                </div>
+
+
+                <br>
+
+
+                <p style="
+                    text-align:center;
+                    color:#666;
+                    font-size:14px;
+                ">
+
+                    Please keep your payment reference
+                    available when contacting support.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    const applicationId =
+        sessionStorage.getItem(
+            "applicationId"
+        );
+
+
+    const box =
+        document.getElementById(
+            "whatsappSupportBox"
+        );
+
+
+    if (!applicationId || !box) {
+
+        if (box) {
+
+            box.textContent =
+                "Support details are unavailable.";
+
+        }
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/application/${applicationId}`,
+                {
+                    cache: "no-store"
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                result.message ||
+                "Unable to load support details."
+            );
+
+        }
+
+
+        const whatsappNumber =
+            result.application
+                .whatsapp_business_number;
+
+
+        if (whatsappNumber) {
+
+            box.innerHTML = `
+
+                <strong style="
+                    font-size:18px;
+                ">
+
+                    💬 WhatsApp Business Support
+
+                </strong>
+
+                <br><br>
+
+                <span style="
+                    font-size:22px;
+                    font-weight:bold;
+                ">
+
+                    ${whatsappNumber}
+
+                </span>
+
+                <br><br>
+
+                <span style="
+                    color:#555;
+                ">
+
+                    Support & Quick Response
+
+                </span>
+
+            `;
+
+        } else {
+
+            box.textContent =
+                "WhatsApp Business support details are currently unavailable. Please check again later.";
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "PAYMENT SUPPORT ERROR:",
+            error
+        );
+
+
+        box.textContent =
+            "Unable to load WhatsApp support details. Please try again later.";
+
+    }
+
+}
 // ======================================================
 // PART 33 - INITIALIZE SMART LOANS
 // ======================================================
