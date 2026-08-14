@@ -5153,6 +5153,281 @@ async function loadWhatsAppSupport() {
     }
 
 }
+// ==========================================
+// PAYMENT CONFIRMATION SCREEN
+// ==========================================
+
+function loadPaymentConfirmationScreen() {
+
+    const app =
+        document.getElementById("app");
+
+    if (!app) return;
+
+    app.innerHTML = `
+
+        <div class="container">
+
+            <div class="app-header">
+
+                <div>
+
+                    <div class="app-title">
+                        Smart Loans
+                    </div>
+
+                    <div class="app-subtitle">
+                        Fast • Secure • Convenient
+                    </div>
+
+                </div>
+
+                <div class="secure">
+                    🔒 Secure
+                </div>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    style="width:95%;">
+                </div>
+
+            </div>
+
+
+            <div class="welcome-card">
+
+                <div style="
+                    text-align:center;
+                    font-size:55px;
+                    margin-bottom:10px;
+                ">
+                    ✅
+                </div>
+
+
+                <h2 style="text-align:center;">
+                    Payment Confirmation
+                </h2>
+
+
+                <p style="
+                    text-align:center;
+                    line-height:1.8;
+                ">
+
+                    Thank you for confirming your
+                    payment.
+
+                    <br><br>
+
+                    Please enter your payment
+                    confirmation message or 
+                    reference below so we can update
+                    your application record.
+
+                </p>
+
+
+                <label style="
+                    display:block;
+                    margin-top:20px;
+                    font-weight:bold;
+                ">
+
+                    Payment Confirmation
+
+                </label>
+
+
+                <textarea
+                    id="paymentConfirmationMessage"
+                    rows="5"
+                    placeholder="Enter your payment confirmation message or reference..."
+                    style="
+                        width:100%;
+                        margin-top:8px;
+                        padding:12px;
+                        border:1px solid #ccc;
+                        border-radius:10px;
+                        resize:vertical;
+                        box-sizing:border-box;
+                        font-family:inherit;
+                    "
+                ></textarea>
+
+
+                <p style="
+                    font-size:13px;
+                    color:#666;
+                    line-height:1.6;
+                    margin-top:10px;
+                ">
+
+                    Example:
+                    PAYMENT COMPLETED -
+                    Reference 001
+
+                </p>
+
+
+                <br>
+
+
+                <button
+                    id="confirmPaymentBtn">
+
+                    ✅ Confirm Payment
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById("confirmPaymentBtn")
+        .addEventListener(
+            "click",
+            submitPaymentConfirmation
+        );
+
+}
+
+
+// ==========================================
+// SUBMIT PAYMENT CONFIRMATION
+// ==========================================
+
+async function submitPaymentConfirmation() {
+
+    const applicationId =
+        sessionStorage.getItem(
+            "applicationId"
+        );
+
+
+    const messageElement =
+        document.getElementById(
+            "paymentConfirmationMessage"
+        );
+
+
+    const button =
+        document.getElementById(
+            "confirmPaymentBtn"
+        );
+
+
+    if (!applicationId) {
+
+        alert(
+            "Application session not found."
+        );
+
+        return;
+
+    }
+
+
+    const message =
+        messageElement
+            ? messageElement.value.trim()
+            : "";
+
+
+    if (!message) {
+
+        alert(
+            "Please enter your payment confirmation message."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        button.disabled = true;
+
+        button.textContent =
+            "Confirming...";
+
+
+        const response =
+            await fetch(
+                `/payment-confirmation/${applicationId}`,
+                {
+
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        paymentConfirmationMessage:
+                            message
+
+                    })
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                result.message ||
+                "Unable to save payment confirmation."
+            );
+
+        }
+
+
+        // Continue to the support screen
+        loadPaymentSupportScreen();
+
+
+    } catch (error) {
+
+        console.error(
+            "PAYMENT CONFIRMATION ERROR:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Unable to confirm payment."
+        );
+
+
+        button.disabled = false;
+
+        button.textContent =
+            "✅ Confirm Payment";
+
+    }
+
+}
 // ======================================================
 // PART 33 - INITIALIZE SMART LOANS
 // ======================================================
