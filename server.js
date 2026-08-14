@@ -2229,7 +2229,90 @@ app.put("/payment-marked-paid/:id", async (req, res) => {
     }
 
 });
+// ======================================================
+// SAVE PAYMENT SETTINGS
+// ======================================================
 
+app.put("/admin/payment-settings/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const {
+            registrationFeeAmount,
+            paymentInstructions,
+            additionalVerificationRequired
+        } = req.body;
+
+        const result = await pool.query(
+            `
+            UPDATE applications
+
+            SET
+                registration_fee_amount = $1,
+                payment_instructions = $2,
+                additional_verification_required = $3
+
+            WHERE id = $4
+
+            RETURNING
+                id,
+                registration_fee_amount,
+                payment_instructions,
+                additional_verification_required;
+            `,
+            [
+                registrationFeeAmount || null,
+                paymentInstructions || "",
+                Boolean(additionalVerificationRequired),
+                id
+            ]
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                success: false,
+
+                message:
+                    "Application not found."
+
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+
+            message:
+                "Payment settings saved successfully.",
+
+            application:
+                result.rows[0]
+
+        });
+
+    } catch (err) {
+
+        console.error(
+            "SAVE PAYMENT SETTINGS ERROR:",
+            err
+        );
+
+        res.status(500).json({
+
+            success: false,
+
+            error: err.message
+
+        });
+
+    }
+
+});
 // ======================================================
 // START SERVER
 // ======================================================
