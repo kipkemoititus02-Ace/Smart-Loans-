@@ -1760,7 +1760,6 @@ function showPaymentSettings(app) {
 
 }
 
-
 // ======================================================
 // SAVE PAYMENT SETTINGS
 // ======================================================
@@ -1777,16 +1776,25 @@ async function savePaymentSettings(id) {
             "adminPaymentInstructions"
         ).value.trim();
 
+    const whatsappField =
+        document.getElementById(
+            "adminWhatsAppNumber"
+        );
+
     const whatsappNumber =
-    document.getElementById(
-        "adminWhatsAppNumber"
-    ).value.trim();
+        whatsappField
+            ? whatsappField.value.trim()
+            : "";
 
     const additionalVerification =
         document.getElementById(
             "adminAdditionalVerification"
         ).checked;
 
+
+    // ==================================================
+    // VALIDATION
+    // ==================================================
 
     if (!fee) {
 
@@ -1795,6 +1803,7 @@ async function savePaymentSettings(id) {
         );
 
         return;
+
     }
 
 
@@ -1805,6 +1814,18 @@ async function savePaymentSettings(id) {
         );
 
         return;
+
+    }
+
+
+    if (!whatsappNumber) {
+
+        alert(
+            "Please enter the WhatsApp Business support number."
+        );
+
+        return;
+
     }
 
 
@@ -1821,6 +1842,10 @@ async function savePaymentSettings(id) {
         button.textContent =
             "Saving...";
 
+
+        // ==================================================
+        // SAVE PAYMENT SETTINGS
+        // ==================================================
 
         const response =
             await fetch(
@@ -1866,8 +1891,54 @@ async function savePaymentSettings(id) {
         }
 
 
+        // ==================================================
+        // SAVE WHATSAPP SUPPORT NUMBER
+        // ==================================================
+
+        const whatsappResponse =
+            await fetch(
+                `/admin/whatsapp-support/${id}`,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        whatsappBusinessNumber:
+                            whatsappNumber
+
+                    })
+                }
+            );
+
+
+        const whatsappResult =
+            await whatsappResponse.json();
+
+
+        if (
+            !whatsappResponse.ok ||
+            !whatsappResult.success
+        ) {
+
+            throw new Error(
+                whatsappResult.message ||
+                "Unable to save WhatsApp support number."
+            );
+
+        }
+
+
+        // ==================================================
+        // SUCCESS
+        // ==================================================
+
         alert(
-            "✅ payment settings saved successfully."
+            "✅ Payment settings and WhatsApp support number saved successfully."
         );
 
 
@@ -1905,28 +1976,11 @@ async function savePaymentSettings(id) {
 
         button.textContent =
             "💾 Save Settings";
-if (whatsappNumber) {
 
-    await fetch(
-        `/admin/whatsapp-support/${id}`,
-        {
-            method: "PUT",
-
-            headers: {
-                "Content-Type":
-                    "application/json"
-            },
-
-            body: JSON.stringify({
-
-                whatsappBusinessNumber:
-                    whatsappNumber
-
-            })
-        }
-    );
+    }
 
 }
+
 // ===============================
 // PART 12 - FINAL SAFETY CHECK
 // ===============================
