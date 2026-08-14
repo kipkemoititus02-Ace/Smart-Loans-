@@ -4089,7 +4089,10 @@ function handleReadyToPay() {
 
 }
 //============================================
-//function handlePaymentConsent() {
+// HANDLE PAYMENT CONSENT
+//============================================
+
+function handlePaymentConsent() {
 
     loadRedirectingToPaymentScreen();
 
