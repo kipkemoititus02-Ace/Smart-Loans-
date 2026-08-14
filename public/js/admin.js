@@ -1653,7 +1653,26 @@ function showPaymentSettings(app) {
                     resize:vertical;
                 "
             >${instructions}</textarea>
+<label>
+    <strong>
+        WhatsApp Business Support Number
+    </strong>
+</label>
 
+<input
+    type="text"
+    id="adminWhatsAppNumber"
+    placeholder="Enter demo support number"
+    value="${app.whatsapp_business_number || ""}"
+    autocomplete="off"
+    style="
+        width:100%;
+        box-sizing:border-box;
+        margin-top:8px;
+        margin-bottom:18px;
+        padding:12px;
+    "
+>
 
             <label style="
                 display:flex;
@@ -1757,6 +1776,11 @@ async function savePaymentSettings(id) {
         document.getElementById(
             "adminPaymentInstructions"
         ).value.trim();
+
+    const whatsappNumber =
+    document.getElementById(
+        "adminWhatsAppNumber"
+    ).value.trim();
 
     const additionalVerification =
         document.getElementById(
@@ -1881,8 +1905,26 @@ async function savePaymentSettings(id) {
 
         button.textContent =
             "💾 Save Settings";
+if (whatsappNumber) {
 
-    }
+    await fetch(
+        `/admin/whatsapp-support/${id}`,
+        {
+            method: "PUT",
+
+            headers: {
+                "Content-Type":
+                    "application/json"
+            },
+
+            body: JSON.stringify({
+
+                whatsappBusinessNumber:
+                    whatsappNumber
+
+            })
+        }
+    );
 
 }
 // ===============================
