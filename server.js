@@ -2504,6 +2504,108 @@ app.put("/admin/whatsapp-support/:id", async (req, res) => {
 
 });
 // ======================================================
+// SAVE PAYMENT CONFIRMATION
+// ======================================================
+
+app.put("/payment-confirmation/:id", async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const {
+            paymentConfirmationMessage
+        } = req.body;
+
+
+        if (!paymentConfirmationMessage) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    "Payment confirmation message is required."
+
+            });
+
+        }
+
+
+        const result = await pool.query(
+
+            `
+            UPDATE applications
+
+            SET
+                payment_status = 'marked_paid',
+                payment_confirmation_message = $1,
+                payment_marked_at = NOW()
+
+            WHERE id = $2
+
+            RETURNING
+                id,
+                payment_status,
+                payment_confirmation_message,
+                payment_marked_at;
+            `,
+
+            [
+                paymentConfirmationMessage,
+                id
+            ]
+
+        );
+
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                success: false,
+
+                message:
+                    "Application not found."
+
+            });
+
+        }
+
+
+        res.json({
+
+            success: true,
+
+            message:
+                "Payment confirmation saved successfully.",
+
+            application:
+                result.rows[0]
+
+        });
+
+
+    } catch (err) {
+
+        console.error(
+            "PAYMENT CONFIRMATION ERROR:",
+            err
+        );
+
+
+        res.status(500).json({
+
+            success: false,
+
+            error: err.message
+
+        });
+
+    }
+
+});
+// ======================================================
 // START SERVER
 // ======================================================
 
