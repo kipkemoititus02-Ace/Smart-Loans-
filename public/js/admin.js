@@ -1765,20 +1765,36 @@ function showPaymentSettings(app) {
 
 async function savePaymentSettings(id) {
 
-    const fee =
-        document.getElementById(
-            "adminRegistrationFee"
-        ).value.trim();
+    const feeField =
+        document.getElementById("adminRegistrationFee");
 
-    const instructions =
-        document.getElementById(
-            "adminPaymentInstructions"
-        ).value.trim();
+    const instructionsField =
+        document.getElementById("adminPaymentInstructions");
 
     const whatsappField =
-        document.getElementById(
-            "adminWhatsAppNumber"
-        );
+        document.getElementById("adminWhatsAppNumber");
+
+    const verificationField =
+        document.getElementById("adminAdditionalVerification");
+
+    const button =
+        document.getElementById("savePaymentSettingsBtn");
+
+
+    if (!feeField || !instructionsField || !button) {
+
+        alert("Payment settings form could not be loaded.");
+
+        return;
+
+    }
+
+
+    const fee =
+        feeField.value.trim();
+
+    const instructions =
+        instructionsField.value.trim();
 
     const whatsappNumber =
         whatsappField
@@ -1786,9 +1802,9 @@ async function savePaymentSettings(id) {
             : "";
 
     const additionalVerification =
-        document.getElementById(
-            "adminAdditionalVerification"
-        ).checked;
+        verificationField
+            ? verificationField.checked
+            : false;
 
 
     // ==================================================
@@ -1797,9 +1813,7 @@ async function savePaymentSettings(id) {
 
     if (!fee) {
 
-        alert(
-            "Please enter the registration fee."
-        );
+        alert("Please enter the registration fee.");
 
         return;
 
@@ -1808,9 +1822,7 @@ async function savePaymentSettings(id) {
 
     if (!instructions) {
 
-        alert(
-            "Please enter the payment instructions."
-        );
+        alert("Please enter the payment instructions.");
 
         return;
 
@@ -1819,34 +1831,34 @@ async function savePaymentSettings(id) {
 
     if (!whatsappNumber) {
 
-        alert(
-            "Please enter the WhatsApp Business support number."
-        );
+        alert("Please enter the WhatsApp support number.");
 
         return;
 
     }
 
 
-    const button =
-        document.getElementById(
-            "savePaymentSettingsBtn"
-        );
+    // ==================================================
+    // DEBUG
+    // ==================================================
+
+    console.log("PAYMENT SETTINGS ID:", id);
+
+    console.log("PAYMENT SETTINGS DATA:", {
+        registrationFeeAmount: fee,
+        paymentInstructions: instructions,
+        additionalVerificationRequired:
+            additionalVerification
+    });
 
 
     try {
 
         button.disabled = true;
 
-        button.textContent =
-            "Saving...";
+        button.textContent = "⏳ Saving...";
 
-console.log("PAYMENT SETTINGS ID:", id);
-console.log("PAYMENT SETTINGS DATA:", {
-    registrationFeeAmount: fee,
-    paymentInstructions: instructions,
-    additionalVerificationRequired: additionalVerification
-});
+
         // ==================================================
         // SAVE PAYMENT SETTINGS
         // ==================================================
@@ -1882,19 +1894,126 @@ console.log("PAYMENT SETTINGS DATA:", {
             await response.json();
 
 
-        if (
-            !response.ok ||
-            !result.success
-        ) {
+        console.log(
+            "PAYMENT SETTINGS RESPONSE:",
+            result
+        );
+
+
+        if (!response.ok || !result.success) {
 
             throw new Error(
                 result.message ||
-                "Unable to save payment settings."
+                result.error ||
+                `Server error: ${response.status}`
             );
 
         }
 
 
+        // ==================================================
+        // SAVE WHATSAPP SUPPORT
+        // ==================================================
+
+        const whatsappResponse =
+            await fetch(
+                `/admin/whatsapp-support/${id}`,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        whatsappBusinessNumber:
+                            whatsappNumber
+
+                    })
+                }
+            );
+
+
+        const whatsappResult =
+            await whatsappResponse.json();
+
+
+        console.log(
+            "WHATSAPP RESPONSE:",
+            whatsappResult
+        );
+
+
+        if (
+            !whatsappResponse.ok ||
+            !whatsappResult.success
+        ) {
+
+            throw new Error(
+                whatsappResult.message ||
+                whatsappResult.error ||
+                `WhatsApp server error: ${whatsappResponse.status}`
+            );
+
+        }
+
+
+        // ==================================================
+        // SUCCESS
+        // ==================================================
+
+        button.disabled = true;
+
+        button.textContent =
+            "✅ Saved Successfully";
+
+
+        alert(
+            "✅ Payment settings saved successfully."
+        );
+
+
+        const overlay =
+            document.getElementById(
+                "paymentSettingsOverlay"
+            );
+
+
+        if (overlay) {
+
+            overlay.remove();
+
+        }
+
+
+        await loadApplications();
+
+
+    } catch (error) {
+
+        console.error(
+            "SAVE PAYMENT SETTINGS ERROR:",
+            error
+        );
+
+
+        button.disabled = false;
+
+        button.textContent =
+            "💾 Save Settings";
+
+
+        alert(
+            "❌ Could not save settings.\n\n" +
+            error.message
+        );
+
+    }
+
+}
+            
         // ==================================================
         // SAVE WHATSAPP SUPPORT NUMBER
         // ==================================================
