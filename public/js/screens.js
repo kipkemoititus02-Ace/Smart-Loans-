@@ -2791,7 +2791,7 @@ function updateTrackingUI(stage) {
         case "code_sent":
 
             status.innerHTML =
-                "🟢 Verification Code Sent";
+                "🟢 Verification Code sent";
 
             status.className =
                 "tracker-step step-green";
@@ -2961,7 +2961,7 @@ function loadTrackingScreen() {
             </div>
 
             <div class="tracker-step step-green">
-                ✅ Customer Details Received
+                ✅ Application Received
             </div>
 
             <div
