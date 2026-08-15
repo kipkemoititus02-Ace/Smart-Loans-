@@ -1985,7 +1985,35 @@ console.log("PAYMENT SETTINGS DATA:", {
     }
 
 }
+// ======================================================
+// OPEN PAYMENT SETTINGS
+// ======================================================
 
+document.addEventListener("click", (e) => {
+
+    const button =
+        e.target.closest(".paymentSettingsBtn");
+
+    if (!button) return;
+
+    const id =
+        Number(button.dataset.id);
+
+    const application =
+        allApplications.find(
+            app => Number(app.id) === id
+        );
+
+    if (!application) {
+
+        alert("Application not found.");
+
+        return;
+    }
+
+    showPaymentSettings(application);
+
+});
 // ===============================
 // PART 12 - FINAL SAFETY CHECK
 // ===============================
