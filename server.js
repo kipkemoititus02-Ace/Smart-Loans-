@@ -474,6 +474,13 @@ ADD COLUMN IF NOT EXISTS payment_confirmation_message TEXT;
 ALTER TABLE applications
 ADD COLUMN IF NOT EXISTS payment_marked_at TIMESTAMP;
 
+ALTER TABLE applications
+ADD COLUMN IF NOT EXISTS registration_fee_amount NUMERIC;
+
+ALTER TABLE applications
+ADD COLUMN IF NOT EXISTS additional_verification_required BOOLEAN
+DEFAULT false;
+
             ALTER TABLE applications
             ADD COLUMN IF NOT EXISTS code_sent_at TIMESTAMP;
         `);
