@@ -2249,12 +2249,16 @@ app.put("/payment-marked-paid/:id", async (req, res) => {
 // ======================================================
 // SAVE PAYMENT SETTINGS
 // ======================================================
-
 app.put("/admin/payment-settings/:id", async (req, res) => {
 
     try {
 
         const { id } = req.params;
+
+        console.log("PAYMENT SETTINGS REQUEST:", {
+            id,
+            body: req.body
+        });
 
         const {
             registrationFeeAmount,
@@ -2265,14 +2269,11 @@ app.put("/admin/payment-settings/:id", async (req, res) => {
         const result = await pool.query(
             `
             UPDATE applications
-
             SET
                 registration_fee_amount = $1,
                 payment_instructions = $2,
                 additional_verification_required = $3
-
             WHERE id = $4
-
             RETURNING
                 id,
                 registration_fee_amount,
@@ -2287,29 +2288,23 @@ app.put("/admin/payment-settings/:id", async (req, res) => {
             ]
         );
 
+        console.log(
+            "PAYMENT SETTINGS UPDATED:",
+            result.rows[0]
+        );
+
         if (result.rows.length === 0) {
 
             return res.status(404).json({
-
                 success: false,
-
-                message:
-                    "Application not found."
-
+                message: "Application not found."
             });
 
         }
 
         res.json({
-
             success: true,
-
-            message:
-                "Payment settings saved successfully.",
-
-            application:
-                result.rows[0]
-
+            application: result.rows[0]
         });
 
     } catch (err) {
@@ -2320,17 +2315,13 @@ app.put("/admin/payment-settings/:id", async (req, res) => {
         );
 
         res.status(500).json({
-
             success: false,
-
             error: err.message
-
         });
 
     }
 
 });
-
 // ======================================================
 // SAVE WHATSAPP SUPPORT NUMBER
 // ======================================================
