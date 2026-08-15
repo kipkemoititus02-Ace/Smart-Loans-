@@ -1517,7 +1517,7 @@ document.addEventListener("click", async (e) => {
 
 });
 // ======================================================
-// PAYMENT SETTINGS
+// PAYMENT SETTINGS BUTTON
 // ======================================================
 
 document.addEventListener("click", (e) => {
@@ -1527,11 +1527,12 @@ document.addEventListener("click", (e) => {
 
     if (!button) return;
 
-    const id = button.dataset.id;
+    const id =
+        Number(button.dataset.id);
 
     const application =
         allApplications.find(
-            app => Number(app.id) === Number(id)
+            app => Number(app.id) === id
         );
 
     if (!application) {
@@ -1544,8 +1545,6 @@ document.addEventListener("click", (e) => {
     showPaymentSettings(application);
 
 });
-
-
 // ======================================================
 // SHOW PAYMENT SETTINGS
 // ======================================================
