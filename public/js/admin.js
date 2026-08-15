@@ -1842,7 +1842,12 @@ async function savePaymentSettings(id) {
         button.textContent =
             "Saving...";
 
-
+console.log("PAYMENT SETTINGS ID:", id);
+console.log("PAYMENT SETTINGS DATA:", {
+    registrationFeeAmount: fee,
+    paymentInstructions: instructions,
+    additionalVerificationRequired: additionalVerification
+});
         // ==================================================
         // SAVE PAYMENT SETTINGS
         // ==================================================
